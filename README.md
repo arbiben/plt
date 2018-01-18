@@ -1,3 +1,3 @@
 Hello World!
 
-This will be out repo for PLT!
+This will be our repo for PLT!
