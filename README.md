@@ -1,8 +1,11 @@
 # Team Fi's PLT Repo
 
 Or Aboodi oda2102@columbia.edu
+
 Geffen Huberman gh2434@columbia.edu
+
 Tomer Aharoni ta2453@columbia.edu
+
 Ben Arbib ba2490@columbia.edu
 
 This is our GitHub repo for the PLT project, Spring 2019
