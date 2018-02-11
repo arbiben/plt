@@ -10,7 +10,7 @@ Ben Arbib ba2490@columbia.edu
 
 This is our GitHub repo for the PLT project, Spring 2019
 
-## This portion needs to be submitted as Fi.zip
+### This portion needs to be submitted as Fi.zip
 
 ### Here: how to compile and execute our compiler
 
