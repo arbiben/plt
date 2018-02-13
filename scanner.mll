@@ -10,6 +10,7 @@ Things we added to micro C:
     - PRINT
     - OPEN
     - CLOSE
+    - RETURN
     
 Functions written? :
     int readlines ()
@@ -64,6 +65,7 @@ rule token = parse
 | "print"  { PRINT }
 | "open"   { OPEN }
 | "close"  { CLOSE }
+| "return" { RETURN }
 | digits as lxm { LITERAL(int_of_string lxm) }
 | ch as lxm { CHAR(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
