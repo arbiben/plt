@@ -1,13 +1,31 @@
 (* 
 An Ocamllex input file
     Specifies how to tokenize a stream of input characters
+    
+Things we added to micro C:
+    - CHAR
+    - ARR- is this a type?
+    - INDEX
+    - CLASS
+    - PRINT
+    - OPEN
+    - CLOSE
+    
+Functions written? :
+    int readlines ()
+Array declr?
+    char arr x = ['4', '5', '6']
+ 
+Do we need to implement a reserved keyword for important classes like file, directory, etc?
+
 *)
 { open Parser }
 
 let digit = ['0' - '9']
 let digits = digit+
-let ch = (* put code for all chars here*)
-let chars = ch+ (*??? Do we want chars? or char arrays?*)
+let ch = ["'"] [ _ ] ["'"] 
+let arr = ['['] ([ _ ] [,] )* [ _ ] [']'] (* do we need to account for whitespaces? does the parse rule already know?*)
+let idx = ['['] digits [']'] (* needs to be differentiated from arr? *)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -38,18 +56,19 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "bool"   { BOOL }
-| "true"   { BLIT(true)  }
-| "false"  { BLIT(false) }
-| "cls" (**)
-| "array" (**)
-| "[]" (*/*)
-| "print" (**)
-| "fun" (**)
-| "open" (*????*)
-| "close" (*?????*)
-| file (*??????*)
+| "char"   { CHAR }
+| "arr"    { ARR }
+| "T"      { BLIT(true)  }
+| "F"      { BLIT(false) }
+| "cls"    { CLS }
+| "print"  { PRINT }
+| "open"   { OPEN }
+| "close"  { CLOSE }
 | digits as lxm { LITERAL(int_of_string lxm) }
-| ch as  (* characters?*)
+| ch as lxm { CHAR(lxm) }
+| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
+| arr as lxm { ARR(lxm) }
+| idx as lxm { INDEX(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
