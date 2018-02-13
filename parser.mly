@@ -13,7 +13,10 @@ The Microc parser, for reference:
        - Char
        - INDEX
        - print/open/close
-     Possily need to implement all of them
+     
+     TODO: Tomer and Ben:
+     - Add ARR, Char, INDEX to the expr/stmt/types
+     - Look into what additions in this file we will need for CLS, print/open/close?
 *)
 
 %{
