@@ -7,22 +7,13 @@
 
 The Microc parser, for reference:
 /* Ocamlyacc parser for MicroC */
-TODO:
-     Understand how this file works.. opt?
-     Add the new variables to: 
-       - Tokens
-       - left/Right
-       - types
-       - statements
-       - expressions
      Our additions:
        - CLS
-       - Array
-       - chars/string?
-       - []
-       - print
-       - fun
-       - open/close
+       - Arr
+       - Char
+       - INDEX
+       - print/open/close
+     Possily need to implement all of them
 *)
 
 %{
@@ -34,15 +25,17 @@ open Ast
 %token RETURN IF ELSE FOR WHILE INT BOOL
 %token <int> LITERAL
 %token <bool> BLIT
-%token <string> STRINGS (****)
-%token CLS FUN ARR FILE (****)
-%token PRINT OPEN CLOSE (****)
+%token <char> CHAR 
+%token <list> ARR
+%token INDEX
+%token CLS
+%token PRINT OPEN CLOSE
 %token EOF
 
 %start program
 %type <Ast.program> program
 
-%nonassoc NOELSE (***)
+%nonassoc NOELSE
 %nonassoc ELSE
 %right ASSIGN
 %left OR
@@ -51,7 +44,8 @@ open Ast
 %left LT GT LEQ GEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
-%right NOT NEG (**)
+%right NOT NEG
+%right INDEX (*Added this- but is it right or left? *)
 
 
 %%
@@ -59,7 +53,6 @@ open Ast
 program:
   decls EOF { $1 }
 
-(*** WHAT IS THIS????*)
 decls:
    /* nothing */ { ([], [])               }
  | decls vdecl { (($2 :: fst $1), snd $1) }
@@ -84,8 +77,8 @@ formal_list:
 typ:
     INT   { Int   }
   | BOOL  { Bool  }
-  | CHAR { Char } (**)
-  | ARR { Arr }
+  | CHAR { Char } (* added *)
+  | ARR { Arr } (* added *)
 
 vdecl_list:
     /* nothing */    { [] }
