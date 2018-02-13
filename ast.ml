@@ -3,6 +3,14 @@
 
 The MicroC ast for reference:
  Abstract Syntax Tree and functions for printing it
+ 
+ TODO:
+    - Go through this file and make our original adjustments to how the reserved words look and what we took out
+    - Add what we added from scanner/parser:
+        for example, you can see that line 28 Assign of string * expr has a function (on line 70) that allows an expr to be a string;
+        so it can assign a string to an identifier.
+        Remember that we also want to be able to assign arrays to identifiers (char arr x = ['4', '5', '6']) so you need to be able
+        to recognize an array as an expr.
 
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or
