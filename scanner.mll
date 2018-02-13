@@ -1,37 +1,36 @@
-(*
-    An Ocamllex input file
+(* 
+An Ocamllex input file
     Specifies how to tokenize a stream of input characters
-
-Ocamllex scanner for MicroC for reference:
-
+*)
 { open Parser }
 
 let digit = ['0' - '9']
 let digits = digit+
+let ch = (* put code for all chars here*)
+let chars = ch+ (*??? Do we want chars? or char arrays?*)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
-| "/*"     { comment lexbuf }           (* Comments *)
+| '$'     { comment lexbuf }           (* Comments *)
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
-| ';'      { SEMI }
+| '?'      { SEMI }
 | ','      { COMMA }
 | '+'      { PLUS }
 | '-'      { MINUS }
 | '*'      { TIMES }
 | '/'      { DIVIDE }
 | '='      { ASSIGN }
-| "=="     { EQ }
-| "!="     { NEQ }
+| "is"     { EQ }
 | '<'      { LT }
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
-| "&&"     { AND }
-| "||"     { OR }
-| "!"      { NOT }
+| "and"    { AND }
+| "or"     { OR }
+| "not"    { NOT }
 | "if"     { IF }
 | "else"   { ELSE }
 | "for"    { FOR }
@@ -39,19 +38,22 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "bool"   { BOOL }
-| "float"  { FLOAT }
-| "void"   { VOID }
 | "true"   { BLIT(true)  }
 | "false"  { BLIT(false) }
+| "cls" (**)
+| "array" (**)
+| "[]" (*/*)
+| "print" (**)
+| "fun" (**)
+| "open" (*????*)
+| "close" (*?????*)
+| file (*??????*)
 | digits as lxm { LITERAL(int_of_string lxm) }
-| digits '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lxm { FLIT(lxm) }
-| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*     as lxm { ID(lxm) }
+| ch as  (* characters?*)
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse
-  "*/" { token lexbuf }
+  '$' { token lexbuf }
 | _    { comment lexbuf }
-
-
-*)
+ 

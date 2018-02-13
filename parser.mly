@@ -7,32 +7,51 @@
 
 The Microc parser, for reference:
 /* Ocamlyacc parser for MicroC */
+TODO:
+     Understand how this file works.. opt?
+     Add the new variables to: 
+       - Tokens
+       - left/Right
+       - types
+       - statements
+       - expressions
+     Our additions:
+       - CLS
+       - Array
+       - chars/string?
+       - []
+       - print
+       - fun
+       - open/close
+*)
 
 %{
 open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
-%token NOT EQ NEQ LT LEQ GT GEQ AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID
+%token NOT EQ LT LEQ GT GEQ AND OR
+%token RETURN IF ELSE FOR WHILE INT BOOL
 %token <int> LITERAL
 %token <bool> BLIT
-%token <string> ID FLIT
+%token <string> STRINGS (****)
+%token CLS FUN ARR FILE (****)
+%token PRINT OPEN CLOSE (****)
 %token EOF
 
 %start program
 %type <Ast.program> program
 
-%nonassoc NOELSE
+%nonassoc NOELSE (***)
 %nonassoc ELSE
 %right ASSIGN
 %left OR
 %left AND
-%left EQ NEQ
+%left EQ
 %left LT GT LEQ GEQ
 %left PLUS MINUS
 %left TIMES DIVIDE
-%right NOT NEG
+%right NOT NEG (**)
 
 
 %%
@@ -40,6 +59,7 @@ open Ast
 program:
   decls EOF { $1 }
 
+(*** WHAT IS THIS????*)
 decls:
    /* nothing */ { ([], [])               }
  | decls vdecl { (($2 :: fst $1), snd $1) }
@@ -64,8 +84,8 @@ formal_list:
 typ:
     INT   { Int   }
   | BOOL  { Bool  }
-  | FLOAT { Float }
-  | VOID  { Void  }
+  | CHAR { Char } (**)
+  | ARR { Arr }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -94,15 +114,12 @@ expr_opt:
 
 expr:
     LITERAL          { Literal($1)            }
-  | FLIT         { Fliteral($1)           }
   | BLIT             { BoolLit($1)            }
-  | ID               { Id($1)                 }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
   | expr DIVIDE expr { Binop($1, Div,   $3)   }
   | expr EQ     expr { Binop($1, Equal, $3)   }
-  | expr NEQ    expr { Binop($1, Neq,   $3)   }
   | expr LT     expr { Binop($1, Less,  $3)   }
   | expr LEQ    expr { Binop($1, Leq,   $3)   }
   | expr GT     expr { Binop($1, Greater, $3) }
@@ -123,4 +140,4 @@ args_list:
     expr                    { [$1] }
   | args_list COMMA expr { $3 :: $1 }
 
-*)
+
