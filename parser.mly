@@ -7,16 +7,14 @@
 
 The Microc parser, for reference:
 /* Ocamlyacc parser for MicroC */
-     Our additions:
+     Our additions so far:
        - CLS
        - Arr
        - Char
        - INDEX
        - print/open/close
-     
-     TODO: Tomer and Ben:
-     - Add ARR, Char, INDEX to the expr/stmt/types
-     - Look into what additions in this file we will need for CLS, print/open/close?
+       
+     Where do we put Class declarations?
 *)
 
 %{
@@ -60,6 +58,13 @@ decls:
    /* nothing */ { ([], [])               }
  | decls vdecl { (($2 :: fst $1), snd $1) }
  | decls fdecl { (fst $1, ($2 :: snd $1)) }
+ (* Right here do we need to declare classes? for example:
+ | decls cdec1 { ()??                     }
+ cdec1:
+    CLS ID LBRACE vdecl_list RBRACE ?
+    do we need to show how to access it?
+    
+ *)
 
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
