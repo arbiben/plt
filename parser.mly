@@ -80,8 +80,8 @@ formal_list:
 typ:
     INT   { Int   }
   | BOOL  { Bool  }
-  | CHAR { Char } (* added *)
-  | ARR { Arr } (* added *)
+  | CHAR  { Char } (* added *)
+  | ARR   { List } (* Is this Arr? or List? *)
 
 vdecl_list:
     /* nothing */    { [] }
@@ -103,6 +103,10 @@ stmt:
   | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
                                             { For($3, $5, $7, $9)   }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5)         }
+  (* Added these following, but I think that expr needs to be a file? *)
+  | OPEN LPAREN expr RPAREN SEMI            { Open($3)              } 
+  | CLOSE LPAREN expr RPAREN SEMI           { Close($3)             } 
+  | PRINT LPAREN expr RPAREN SEMI           { Print($3)             } 
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -111,6 +115,8 @@ expr_opt:
 expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
+  | CHAR             { CharLit($1)            } (* added this *)
+  | ARR              { ArrLit($1)             } (* added this too but looks wrong *)
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
@@ -127,6 +133,7 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3)         }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  }
   | LPAREN expr RPAREN { $2                   }
+  | ID INDEX         { Index($1, $2) }  (* Added this.. but maybe index needs to be like a declare*)
 
 args_opt:
     /* nothing */ { [] }
