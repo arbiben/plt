@@ -64,7 +64,8 @@ rule token = parse
 | "arr"    { ARR }
 | "T"      { BLIT(true)  }
 | "F"      { BLIT(false) }
-| "cls"    { CLS }
+| "sruct"  { STRUCT }
+| '.'      { DOT }
 | "print"  { PRINT }
 | "open"   { OPEN }
 | "close"  { CLOSE }
