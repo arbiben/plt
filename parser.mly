@@ -8,17 +8,20 @@
 The Microc parser, for reference:
 /* Ocamlyacc parser for MicroC */
      Our additions so far:
-       - CLS
-       - Arr
-       - Char
-       - INDEX
+       - STRUCT
+       - DOT
+       - ARR
+       - CHAR
+       - 
        - print/open/close
        
      Where do we put Class declarations?
      
      TODO:
+     - Add tokens/additions to our additions list for this file
      - add tokens to %tokenlist
      - if needed- add the tokens to the associativity
+     - sdecls
      - 
 *)
 
@@ -26,7 +29,7 @@ The Microc parser, for reference:
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE ASSIGN DOT
 %token NOT EQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL
 %token <int> LITERAL
@@ -34,7 +37,7 @@ open Ast
 %token <char> CHAR 
 %token <list> ARR
 %token STRING DIRECTORY FILE
-%token CLS
+%token STRUCT
 %token PRINT OPEN CLOSE
 %token EOF
 
@@ -64,9 +67,9 @@ decls:
  | decls vdecl { (($2 :: fst $1), snd $1) }
  | decls fdecl { (fst $1, ($2 :: snd $1)) }
  (* Right here do we need to declare classes? for example:
- | decls cdec1 { ()??                     }
- cdec1:
-    CLS ID LBRACE vdecl_list RBRACE ?
+ | decls sdecl { ()??                     }
+ sdecl:
+    STRUCT ID LBRACE vdecl_list RBRACE ?
     do we need to show how to access it?
     
  *)
@@ -99,7 +102,8 @@ vdecl_list:
 
 vdecl:
    typ ID SEMI { ($1, $2) }
-
+    (* is it an array dec? file dec? *) 
+    
 stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
