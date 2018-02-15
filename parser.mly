@@ -15,20 +15,25 @@ The Microc parser, for reference:
        - print/open/close
        
      Where do we put Class declarations?
+     
+     TODO:
+     - add tokens to %tokenlist
+     - if needed- add the tokens to the associativity
+     - 
 *)
 
 %{
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
+%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE ASSIGN
 %token NOT EQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL
 %token <int> LITERAL
 %token <bool> BLIT
 %token <char> CHAR 
 %token <list> ARR
-%token INDEX
+%token STRING DIRECTORY FILE
 %token CLS
 %token PRINT OPEN CLOSE
 %token EOF
