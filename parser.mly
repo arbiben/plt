@@ -12,7 +12,8 @@ The Microc parser, for reference:
        - DOT
        - ARR
        - CHAR
-       - 
+       - L and R brackets
+       - string/file/directory
        - print/open/close
        
      Where do we put Class declarations?
@@ -21,7 +22,7 @@ The Microc parser, for reference:
      - Add tokens/additions to our additions list for this file
      - add tokens to %tokenlist
      - if needed- add the tokens to the associativity
-     - sdecls
+     - sdecls: how to create a struct, how to operate on a struct (with a dot) ID DOT ID
      - 
 *)
 
