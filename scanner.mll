@@ -5,7 +5,8 @@ An Ocamllex input file
 Things we added to micro C:
     - CHAR
     - ARR
-    - CLASS
+    - STRUCT
+    - DOT
     - PRINT
     - OPEN
     - CLOSE
