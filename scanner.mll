@@ -4,19 +4,21 @@ An Ocamllex input file
     
 Things we added to micro C:
     - CHAR
-    - ARR- is this a type?
-    - INDEX
+    - ARR
     - CLASS
     - PRINT
     - OPEN
     - CLOSE
+    - file/dir/str type keywords
+    - r and l brackets
     
 Functions written? :
     int readlines ()
 Array declr?
     char arr x = ['4', '5', '6']
+bring back void?
  
-Do we need to implement a reserved keyword for important classes like file, directory, etc?
+Do we need to implement a reserved keyword for important classes like file, directory, etc? Yes
 
 *)
 { open Parser }
@@ -24,8 +26,8 @@ Do we need to implement a reserved keyword for important classes like file, dire
 let digit = ['0' - '9']
 let digits = digit+
 let ch = ["'"] [ (['\'] ['t' 'r' 'n']) _ ] ["'"] (* took care of escaped characters *)
-let arr = ['['] ([ _ ] [','] )* [ _ ] [']'] (* do we need to account for whitespaces? does the parse rule already know?*)
-let idx = ['['] digits [']'] (* needs to be differentiated from arr? *)
+(* arr ['['] ([ _ ] [','] )* [ _ ] [']'] (* do we need to account for whitespaces? does the parse rule already know?*)*)
+(*['['] digits [']'] (* needs to be differentiated from arr? *)*)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -34,6 +36,8 @@ rule token = parse
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
+| '['      { LBRACK }
+| ']'      { RBRACK }
 | '?'      { SEMI }
 | ','      { COMMA }
 | '+'      { PLUS }
@@ -64,11 +68,12 @@ rule token = parse
 | "print"  { PRINT }
 | "open"   { OPEN }
 | "close"  { CLOSE }
+| "file"   { FILE }
+| "dir"    { DIRECTORY }
+| "str"    { STRING }
 | digits as lxm { LITERAL(int_of_string lxm) }
 | ch as lxm { CHAR(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
-| arr as lxm { ARR(lxm) }
-| idx as lxm { INDEX(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
