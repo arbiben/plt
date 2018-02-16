@@ -19,11 +19,12 @@ The Microc parser, for reference:
      Where do we put Class declarations?
      
      TODO:
-     - Add tokens/additions to our additions list for this file
-     - add tokens to %tokenlist
-     - if needed- add the tokens to the associativity
-     - sdecls: how to create a struct, how to operate on a struct (with a dot) ID DOT ID
-     - 
+     - dot operator
+     - indexing operation
+     - array construction
+     - print/open/close operations
+     - send string/file/directory to struct
+
 *)
 
 %{
@@ -55,8 +56,7 @@ open Ast
 %left PLUS MINUS
 %left TIMES DIVIDE
 %right NOT NEG
-%right INDEX (*Added this- but is it right or left? *)
-
+%left DOT    
 
 %%
 
@@ -64,9 +64,18 @@ program:
   decls EOF { $1 }
 
 decls:
-   /* nothing */ { ([], [])               }
- | decls vdecl { (($2 :: fst $1), snd $1) }
- | decls fdecl { (fst $1, ($2 :: snd $1)) }
+    /* nothing */ { (([], []), []) } (* check if this change needs to be 
+reflected in ast *)
+ | decls vdecl { ((($2 :: fst (fst $1)), snd (fst $1)), snd $1) }
+ | decls fdecl { ((fst (fst $1), ($2 :: snd (fst $1))), snd $1)}
+ | decls sdecl { (fst $1, ($2 :: snd $1)) }(* check correctness*)
+ (*decls is a tuple
+  *sdecls/vdecls/fdecls are one element 
+  * inside the decls tuple:
+      * first is the list of variable declartaion
+      * second is the list of func declartions
+  *
+  * *)
  (* Right here do we need to declare classes? for example:
  | decls sdecl { ()??                     }
  sdecl:
@@ -74,6 +83,13 @@ decls:
     do we need to show how to access it?
     
  *)
+sdecl:
+  STRUCT ID LBRACE vdecl_list RBRACE
+     { 
+        sname = $2;
+        elements = $4;
+     }
+(*need to add this rule and structure to ast*)
 
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
