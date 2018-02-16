@@ -21,7 +21,7 @@ The Microc parser, for reference:
      TODO:
      - dot operator
      - indexing operation
-     - array construction
+     - array construction (attempted lines 172-175)
      - print/open/close operations
      - send string/file/directory to struct
 
@@ -89,6 +89,8 @@ sdecl:
         sname = $2;
         elements = $4;
      }
+     
+
 (*need to add this rule and structure to ast*)
 
 fdecl:
@@ -162,9 +164,15 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
-  | ID LPAREN args_opt RPAREN { Call($1, $3)  }
+  | ID LPAREN args_opt RPAREN { Call($1, $3)  } (*What is this*)
   | LPAREN expr RPAREN { $2                   }
   | ID INDEX         { Index($1, $2) }  (* Added this.. but maybe index needs to be like a declare*)
+  | LBRACK elem_list RBRACK { ArrBuild($2)    } (* Added array declaration *)
+  
+elem_list:
+    /* nothing */ { } (* allows for an empty array decl *)
+  | expr          { $1 }
+  | elem_list COMMA expr { $3 :: $1 } (*similar structure to args_list --> ought this be typ instead? *)
 
 args_opt:
     /* nothing */ { [] }
