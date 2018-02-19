@@ -1,4 +1,4 @@
-(*
+/*
     An OCamlyacc input file
     Defines:
     - the tokens in our language
@@ -23,7 +23,7 @@ The Microc parser, for reference:
      - print/open/close operations (140-143)
      - send string/file/directory to struct -> added to README for implementation next time
 
-*)
+*/
 
 %{
 open Ast
