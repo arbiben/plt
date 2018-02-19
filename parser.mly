@@ -16,23 +16,12 @@ The Microc parser, for reference:
        - string/file/directory
        - print/open/close
        
-<<<<<<< HEAD
-     Where do we put Class declarations?
-     
-     TODO:
-     - dot operato (169 - extract)
-     - indexing operation (170)
-     - array construction (attempted lines 172-175)
-     - print/open/close operations (140-143)
-     - send string/file/directory to struct
-=======
      partial changes shown:
      - dot operator (167)
      - indexing operation (170)
      - array construction (attempted lines 172-175)
      - print/open/close operations (140-143)
      - send string/file/directory to struct -> added to README for implementation next time
->>>>>>> f0dc30758682be4b52aa871a128eabcb609cc7dd
 
 *)
 
@@ -166,12 +155,7 @@ expr:
   | ID DOT ID        { Extract($1, $3)        } (* we added this *)
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
-<<<<<<< HEAD
-  | ID DOT ID        {Extract($1, $3)        }
-  | ID INDEX         { Index($1, $2) }  (* Added this.. but maybe index needs to be like a declare*)
-=======
   | ID LBRACK LITERAL RBRACK { Index($1, $3)  } (* we added this *)
->>>>>>> f0dc30758682be4b52aa871a128eabcb609cc7dd
   | LBRACK elem_list RBRACK { ArrBuild($2)    } (* Added array declaration *)
   
 elem_list:
