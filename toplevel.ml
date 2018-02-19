@@ -1,7 +1,7 @@
 (* Drives the scanner and parser on some input *)(* Top-level of the MicroC compiler: scan & parse the input,
    check the resulting AST and generate an SAST from it, generate LLVM IR,
    and dump the module *)
-
+(*
 type action = Ast | Sast | LLVM_IR | Compile
 
 let () =
@@ -224,3 +224,13 @@ let check (globals, functions) =
       in raise (Failure err)
     }
   in (globals', List.map check_function functions)
+
+*)
+
+let () =
+  let usage_msg = "usage: ./toplevel.native [file.fi]" in
+  let channel = ref stdin in
+  Arg.parse [] (fun file -> channel := open_in file) usage_msg;
+  let lexbuf = Lexing.from_channel !channel in
+  let ast = Parser.program Scanner.token lexbuf in
+  print_string (AST.string_of_program ast)
