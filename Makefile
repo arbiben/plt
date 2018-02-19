@@ -5,10 +5,10 @@
 # Easiest way to build: using ocamlbuild, which in turn uses ocamlfind
 
 .PHONY : all
-all : toplevel.native printbig.o
+all : toplevel.native
 
 .PHONY : toplevel.native
-microc.native :
+toplevel.native :
 	rm -f *.o
 	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4 \
 		toplevel.native
@@ -19,7 +19,6 @@ microc.native :
 clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff toplevel scanner.ml parser.ml parser.mli
-	rm -rf printbig
 	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
 
 # More detailed: build using ocamlc/ocamlopt + ocamlfind to locate LLVM

@@ -16,6 +16,7 @@ The Microc parser, for reference:
        - string/file/directory
        - print/open/close
        
+<<<<<<< HEAD
      Where do we put Class declarations?
      
      TODO:
@@ -24,6 +25,14 @@ The Microc parser, for reference:
      - array construction (attempted lines 172-175)
      - print/open/close operations (140-143)
      - send string/file/directory to struct
+=======
+     partial changes shown:
+     - dot operator (167)
+     - indexing operation (170)
+     - array construction (attempted lines 172-175)
+     - print/open/close operations (140-143)
+     - send string/file/directory to struct -> added to README for implementation next time
+>>>>>>> f0dc30758682be4b52aa871a128eabcb609cc7dd
 
 *)
 
@@ -76,21 +85,12 @@ reflected in ast *)
       * second is the list of func declartions
   *
   * *)
- (* Right here do we need to declare classes? for example:
- | decls sdecl { ()??                     }
- sdecl:
-    STRUCT ID LBRACE vdecl_list RBRACE ?
-    do we need to show how to access it?
-    
- *)
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE
      { 
         sname = $2;
-        elements = $4;
+        elements = List.rev $4;
      }
-     
-
 (*need to add this rule and structure to ast*)
 
 fdecl:
@@ -136,10 +136,10 @@ stmt:
   | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
                                             { For($3, $5, $7, $9)   }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5)         }
-  (* Added these following, but I think that expr needs to be a file? *)
   | OPEN LPAREN expr RPAREN SEMI            { Open($3)              } 
   | CLOSE LPAREN expr RPAREN SEMI           { Close($3)             } 
-  | PRINT LPAREN expr RPAREN SEMI           { Print($3)             } 
+  | PRINT LPAREN elem_list RPAREN SEMI      { Print($3)             }
+  (* expr and expr_list need to be specific types but it should be fine for now *) 
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -149,7 +149,6 @@ expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
   | CHAR             { CharLit($1)            } (* added this *)
-  | ARR              { ArrLit($1)             } (* added this too but looks wrong *)
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
@@ -164,14 +163,19 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
-  | ID LPAREN args_opt RPAREN { Call($1, $3)  } (*What is this*)
+  | ID DOT ID        { Extract($1, $3)        } (* we added this *)
+  | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
+<<<<<<< HEAD
   | ID DOT ID        {Extract($1, $3)        }
   | ID INDEX         { Index($1, $2) }  (* Added this.. but maybe index needs to be like a declare*)
+=======
+  | ID LBRACK LITERAL RBRACK { Index($1, $3)  } (* we added this *)
+>>>>>>> f0dc30758682be4b52aa871a128eabcb609cc7dd
   | LBRACK elem_list RBRACK { ArrBuild($2)    } (* Added array declaration *)
   
 elem_list:
-    /* nothing */ { } (* allows for an empty array decl *)
+    /* nothing */ { [] } (* allows for an empty array decl *)
   | expr          { $1 }
   | elem_list COMMA expr { $3 :: $1 } (*similar structure to args_list --> ought this be typ instead? *)
 
