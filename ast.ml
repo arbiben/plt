@@ -16,13 +16,14 @@ The MicroC ast for reference:
 (*Feb 17 -
 deleted flits and voids 
 added lines 38-40, 46-48, 85-87, 106-108, 110-111
-Still need to deal with structs and see if we can refer to files as expr*)
+Feb 18th: added structs, types, and fixed some errors
+Still need to deal explicitly with strings/files as expr*)
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or
 
 type uop = Neg | Not
 
-type typ = Int | Bool
+type typ = Int | Bool | Char | Arr (* added types *)
 
 type bind = typ * string
 
@@ -35,7 +36,7 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
-  | Extract of string * string (*added: should these be id? .. weird *)
+  | Extract of string * string (*added- these string behave as ID's apparently*)
   | Index of string * typ (*added *)
   | Arrbuild of expr list (*added *)
   | Noexpr
@@ -49,7 +50,7 @@ type stmt =
   | While of expr * stmt
   | Open of expr (*added *)
   | Close of expr(*added *)
-  | Print of expr (*added *)
+  | Print of expr list (*added *)
 
 type func_decl = {
     typ : typ;
@@ -59,7 +60,13 @@ type func_decl = {
     body : stmt list;
   }
 
-type program = bind list * func_decl list
+type struct_decl = { (* added this struct_decl like func_decl *)
+    sname : string;
+    elements : bind list;
+  }
+
+type program = bind list * func_decl list * struct_decl list
+(* this may be tricky. in the parser it's a tuple of lists, then another list This will definitely need to change*)
 
 (* Pretty-printing functions *)
 
@@ -92,10 +99,11 @@ let rec string_of_expr = function
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
-      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" (*why map?*)
-  | Extract(id, field) -> id ^ " . " ^ field (* added; do we need semicolons in any of these? *)
-  | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]"  
-  | Arrbuild(elems) -> "[" ^ elems ^ "]" (*added*)
+      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
+(*why map?- calling string_of_expr on each element in e1*)
+  | Extract(id, field) -> id ^ " . " ^ string_of_expr field (* added; do we need semicolons in any of these? *)
+  | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" (* do we need string_of int here?*)  
+  | Arrbuild(elems) -> "[" ^ (List.map string_of_expr elems) ^ "]" (*added*)
   | Noexpr -> ""
 
 let rec string_of_stmt = function
@@ -112,13 +120,13 @@ let rec string_of_stmt = function
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | Open(fi) -> "open(" ^ string_of_expr fi ^ ");" (*added; keep in mind this is referring to file as an expr as in parser*)
   | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"
-  | Print(e) -> "print(" ^ string_of_expr e ^ ");"
+  | Print(elems) -> "print(" ^ (List.map string_of_expr elems) ^ ");"
 
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
-  | Char -> "ch" (*added *)
-  | List-> "arr" (*added *)
+  | Char -> "char" (*added *)
+  | Arr-> "arr" (*added *)
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
@@ -129,6 +137,10 @@ let string_of_fdecl fdecl =
   String.concat "" (List.map string_of_vdecl fdecl.locals) ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
+
+let string_of_sdecl sdecl = (* added this too for printing *)
+  "struct " ^ sdecl.sname ^ " {\n" ^
+  String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
 
 let string_of_program (vars, funcs) =
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
