@@ -1,4 +1,4 @@
-(*
+/*
     An OCamlyacc input file
     Defines:
     - the tokens in our language
@@ -23,7 +23,7 @@ The Microc parser, for reference:
      - print/open/close operations (140-143)
      - send string/file/directory to struct -> added to README for implementation next time
 
-*)
+*/
 
 %{
 open Ast
@@ -62,25 +62,25 @@ program:
   decls EOF { $1 }
 
 decls:
-    /* nothing */ { (([], []), []) } (* check if this change needs to be 
-reflected in ast *)
+    /* nothing */ { (([], []), []) } /* check if this change needs to be 
+reflected in ast */
  | decls vdecl { ((($2 :: fst (fst $1)), snd (fst $1)), snd $1) }
  | decls fdecl { ((fst (fst $1), ($2 :: snd (fst $1))), snd $1)}
- | decls sdecl { (fst $1, ($2 :: snd $1)) }(* check correctness*)
- (*decls is a tuple
+ | decls sdecl { (fst $1, ($2 :: snd $1)) }/* check correctness*/
+ /*decls is a tuple
   *sdecls/vdecls/fdecls are one element 
   * inside the decls tuple:
       * first is the list of variable declartaion
       * second is the list of func declartions
   *
-  * *)
+  * */
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE
      { 
         sname = $2;
         elements = List.rev $4;
      }
-(*need to add this rule and structure to ast*)
+/*need to add this rule and structure to ast*/
 
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
@@ -101,8 +101,8 @@ formal_list:
 typ:
     INT   { Int   }
   | BOOL  { Bool  }
-  | CHAR  { Char } (* added *)
-  | ARR   { List } (* Is this Arr? or List? *)
+  | CHAR  { Char } /* added */
+  | ARR   { List } /* Is this Arr? or List? */
 
 vdecl_list:
     /* nothing */    { [] }
@@ -110,7 +110,7 @@ vdecl_list:
 
 vdecl:
    typ ID SEMI { ($1, $2) }
-    (* is it an array dec? file dec? *) 
+    /* is it an array dec? file dec? */ 
     
 stmt_list:
     /* nothing */  { [] }
@@ -128,7 +128,7 @@ stmt:
   | OPEN LPAREN expr RPAREN SEMI            { Open($3)              } 
   | CLOSE LPAREN expr RPAREN SEMI           { Close($3)             } 
   | PRINT LPAREN elem_list RPAREN SEMI      { Print($3)             }
-  (* expr and expr_list need to be specific types but it should be fine for now *) 
+  /* expr and expr_list need to be specific types but it should be fine for now */ 
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -137,7 +137,7 @@ expr_opt:
 expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
-  | CHAR             { CharLit($1)            } (* added this *)
+  | CHAR             { CharLit($1)            } /* added this */
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
@@ -152,16 +152,16 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
-  | ID DOT ID        { Extract($1, $3)        } (* we added this *)
+  | ID DOT ID        { Extract($1, $3)        } /* we added this */
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
-  | ID LBRACK LITERAL RBRACK { Index($1, $3)  } (* we added this *)
-  | LBRACK elem_list RBRACK { ArrBuild($2)    } (* Added array declaration *)
+  | ID LBRACK LITERAL RBRACK { Index($1, $3)  } /* we added this */
+  | LBRACK elem_list RBRACK { ArrBuild($2)    } /* Added array declaration */
   
 elem_list:
-    /* nothing */ { [] } (* allows for an empty array decl *)
+    /* nothing */ { [] } /* allows for an empty array decl */
   | expr          { $1 }
-  | elem_list COMMA expr { $3 :: $1 } (*similar structure to args_list --> ought this be typ instead? *)
+  | elem_list COMMA expr { $3 :: $1 } /*similar structure to args_list --> ought this be typ instead? */
 
 args_opt:
     /* nothing */ { [] }
