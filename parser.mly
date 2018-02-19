@@ -19,10 +19,10 @@ The Microc parser, for reference:
      Where do we put Class declarations?
      
      TODO:
-     - dot operator
-     - indexing operation
+     - dot operator (167)
+     - indexing operation (170)
      - array construction (attempted lines 172-175)
-     - print/open/close operations
+     - print/open/close operations (140-143)
      - send string/file/directory to struct
 
 *)
@@ -164,6 +164,7 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | ID DOT ID        {Extract($1, $3)         } 
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } (*What is this*)
   | LPAREN expr RPAREN { $2                   }
   | ID INDEX         { Index($1, $2) }  (* Added this.. but maybe index needs to be like a declare*)
