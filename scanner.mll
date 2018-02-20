@@ -78,6 +78,7 @@ rule token = parse
 | "file"   { FILE }
 | "dir"    { DIRECTORY }
 | "str"    { STRING }
+| "main"   { MAIN   }
 | digits as lxm { LITERAL(int_of_string lxm) }
 | ch as lxm { CHARLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
@@ -87,4 +88,4 @@ rule token = parse
 and comment = parse
   '$' { token lexbuf }
 | _    { comment lexbuf }
- 
+

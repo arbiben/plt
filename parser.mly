@@ -39,6 +39,7 @@ open Ast
 %token STRING DIRECTORY FILE
 %token STRUCT
 %token PRINT OPEN CLOSE
+%token MAIN
 %token EOF
 %token <string> ID
 
