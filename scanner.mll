@@ -27,7 +27,7 @@ Do we need to implement a reserved keyword for important classes like file, dire
 let digit = ['0' - '9']
 let digits = digit+
 let ch = ['a' - 'z' 'A' - 'Z']
-(*let ch = ["'"] [ (['\'] ['t' 'r' 'n']) '_' ] ["'"]*) (* took care of escaped characters *)
+(*let ch = ["'"] [ _ ] ["'"]*) (* took care of escaped characters *)
 (* arr ['['] ([ _ ] [','] )* [ _ ] [']'] (* do we need to account for whitespaces? does the parse rule already know?*)*)
 (*['['] digits [']'] (* needs to be differentiated from arr? *)*)
 

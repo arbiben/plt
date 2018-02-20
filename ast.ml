@@ -31,6 +31,7 @@ type expr =
     Literal of int
 
   | BoolLit of bool
+  | CharLit of char
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -93,7 +94,7 @@ let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
-  | CharLit(c) -> c
+  | CharLit(c) -> String.make 1 c
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
