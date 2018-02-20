@@ -6,7 +6,7 @@
     - How to parse these tokens into nodes of an AST
 
 The Microc parser, for reference:
-/* Ocamlyacc parser for MicroC */
+/* Ocamlyacc parser for MicroC 
      Our additions so far:
        - STRUCT
        - DOT
@@ -40,6 +40,7 @@ open Ast
 %token STRUCT
 %token PRINT OPEN CLOSE
 %token EOF
+%token <string> ID
 
 %start program
 %type <Ast.program> program
@@ -138,6 +139,7 @@ expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
   | CHAR             { CharLit($1)            } /* added this */
+  | ID               { Id($)             } 
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
@@ -155,8 +157,8 @@ expr:
   | ID DOT ID        { Extract($1, $3)        } /* we added this */
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
-  | ID LBRACK LITERAL RBRACK { Index($1, $3)  } /* we added this */
-  | LBRACK elem_list RBRACK { ArrBuild($2)    } /* Added array declaration */
+  | ID LBRACKET LITERAL RBRACKET { Index($1, $3)  } /* we added this */
+  | LBRACKET elem_list RBRACKET { ArrBuild($2)    } /* Added array declaration */
   
 elem_list:
     /* nothing */ { [] } /* allows for an empty array decl */
