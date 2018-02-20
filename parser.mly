@@ -141,6 +141,7 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
+  | typ ID ASSIGN expr { DeclareAssign($1, $2, $4) } /* added */
   | ID DOT ID        { Extract($1, $3)        } /* we added this */
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }

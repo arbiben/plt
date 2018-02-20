@@ -20,6 +20,7 @@ type expr =
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
+  | DeclareAssign of typ * string * expr
   | Call of string * expr list
   | Extract of string * string (*added*)
   | Index of string * int (*added *)
@@ -74,6 +75,12 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "not"
 
+let string_of_typ = function
+    Int -> "int"
+  | Bool -> "bool"
+  | Char -> "char" (*added *)
+  | Arr-> "arr" (*added *)
+
 (*added stuff to this printing function *)
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
@@ -85,6 +92,7 @@ let rec string_of_expr = function
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
+  | DeclareAssign(t, v, e) -> string_of_typ t ^ " " ^ v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
 (*why map?- calling string_of_expr on each element in e1*)
@@ -108,12 +116,6 @@ let rec string_of_stmt = function
   | Open(fi) -> "open(" ^ string_of_expr fi ^ ")?\n" (*added; keep in mind this is referring to file as an expr as in parser*)
   | Close(fi) -> "close(" ^ string_of_expr fi ^ ")?\n"
   | Print(elems) -> "print(" ^ String.concat ", " (List.map string_of_expr elems) ^ ")?\n" 
-
-let string_of_typ = function
-    Int -> "int"
-  | Bool -> "bool"
-  | Char -> "char" (*added *)
-  | Arr-> "arr" (*added *)
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ "?\n"
 

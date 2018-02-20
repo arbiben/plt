@@ -1,8 +1,8 @@
-$ tests indexing $
+$ tests indexing and dot operators$
 int x?
 
 char func(){
 new_array[0]? $this works$
-$int x = thing.take? does not work (regular assignment does work but not with a typ before it$
+int x = thing.take? $does not work (regular assignment does work but not with a typ before it$
 x = new_array[1]?
 }
