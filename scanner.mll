@@ -1,4 +1,4 @@
-(* 
+/* 
 An Ocamllex input file
     Specifies how to tokenize a stream of input characters
     
@@ -21,7 +21,7 @@ bring back void?
  
 Do we need to implement a reserved keyword for important classes like file, directory, etc? Yes
 
-*)
+*/
 { open Parser }
 
 let digit = ['0' - '9']

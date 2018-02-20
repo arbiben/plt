@@ -162,7 +162,7 @@ expr:
   
 elem_list:
     /* nothing */ { [] } /* allows for an empty array decl */
-  | expr          { $1 }
+  | expr          { [$1] }
   | elem_list COMMA expr { $3 :: $1 } /*similar structure to args_list --> ought this be typ instead? */
 
 args_opt:

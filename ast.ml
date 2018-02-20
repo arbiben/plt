@@ -37,8 +37,8 @@ type expr =
   | Assign of string * expr
   | Call of string * expr list
   | Extract of string * string (*added- these string behave as ID's apparently*)
-  | Index of string * typ (*added *)
-  | Arrbuild of expr list (*added *)
+  | Index of string * int (*added *)
+  | ArrBuild of expr list (*added *)
   | Noexpr
 
 type stmt =
@@ -101,9 +101,9 @@ let rec string_of_expr = function
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
 (*why map?- calling string_of_expr on each element in e1*)
-  | Extract(id, field) -> id ^ " . " ^ string_of_expr field (* added; do we need semicolons in any of these? *)
+  | Extract(id, field) -> id ^ " . " ^ field (* added; do we need semicolons in any of these? *)
   | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" (* do we need string_of int here?*)  
-  | Arrbuild(elems) -> "[" ^ (List.map string_of_expr elems) ^ "]" (*added*)
+  (*| ArrBuild(elems) -> "[" ^ (List.map string_of_expr elems) ^ "]" *)(*added*)
   | Noexpr -> ""
 
 let rec string_of_stmt = function
@@ -120,7 +120,7 @@ let rec string_of_stmt = function
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | Open(fi) -> "open(" ^ string_of_expr fi ^ ");" (*added; keep in mind this is referring to file as an expr as in parser*)
   | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"
-  | Print(elems) -> "print(" ^ (List.map string_of_expr elems) ^ ");"
+  | Print(elems) -> "print(" ^ (List.map (String.concat string_of_expr) elems) ^ ");"
 
 let string_of_typ = function
     Int -> "int"
