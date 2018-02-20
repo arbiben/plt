@@ -103,7 +103,7 @@ typ:
     INT   { Int   }
   | BOOL  { Bool  }
   | CHAR  { Char } /* added */
-  | ARR   { List } /* Is this Arr? or List? */
+  | ARR   { Arr } /* Is this Arr? or List? */
 
 vdecl_list:
     /* nothing */    { [] }
@@ -139,7 +139,7 @@ expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
   | CHARLIT          { CharLit($1)            } /* added this */
-  | ID               { Id($)                  } 
+  | ID               { Id($1)                 } 
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
