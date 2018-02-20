@@ -119,8 +119,8 @@ let rec string_of_stmt = function
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | Open(fi) -> "open(" ^ string_of_expr fi ^ ");" (*added; keep in mind this is referring to file as an expr as in parser*)
-  | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"
-  | Print(elems) -> "print(" ^ (List.map (String.concat string_of_expr) elems) ^ ");"
+  | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"(*
+  | Print(elems) -> "print(" ^ (List.map (String.concat string_of_expr) elems) ^ ");" *)
 
 let string_of_typ = function
     Int -> "int"
