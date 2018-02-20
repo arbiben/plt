@@ -34,7 +34,7 @@ open Ast
 %token RETURN IF ELSE FOR WHILE INT BOOL
 %token <int> LITERAL
 %token <bool> BLIT
-%token <char> CHAR 
+%token <char> CHARLIT
 %token ARR
 %token STRING DIRECTORY FILE
 %token STRUCT
@@ -138,8 +138,8 @@ expr_opt:
 expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
-  | CHAR             { CharLit($1)            } /* added this */
-  | ID               { Id($)             } 
+  | CHARLIT          { CharLit($1)            } /* added this */
+  | ID               { Id($)                  } 
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }

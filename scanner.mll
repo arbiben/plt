@@ -75,7 +75,7 @@ rule token = parse
 | "dir"    { DIRECTORY }
 | "str"    { STRING }
 | digits as lxm { LITERAL(int_of_string lxm) }
-| ch as lxm { CHAR(lxm) }
+| ch as lxm { CHARLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
