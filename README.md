@@ -11,7 +11,7 @@ Ben Arbib ba2490@columbia.edu
 This is our GitHub repo for the PLT project, Spring 2019
 
 TUESDAY TODO:
-- testing our new operations: extract, index, arraybuild, etc
+- testing our new operations:  arraybuild, etc (extract and dot work as expected)
 - How do we call a function on an array?
 - testing script and writing all the tests
 
@@ -24,4 +24,6 @@ TUESDAY TODO:
 	- Aliasing file/direc/string to be recognized as ID's of a certain struct type
 	- Casting from one type to another- we may need to create specific functions for that
 	- Not have required ordering to variables- functions - structs 
-	- Using structs as types: for example "bigint i?"
+	- Using structs as types: for example "bigint i?"	
+	- Declaraing and initializing variables outside of functions
+	- Declaring and initializing variables as a one liner including an operation (i.e. int x = new_arr[0]
