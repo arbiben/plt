@@ -29,3 +29,4 @@ TUESDAY TODO:
 	- Using structs as types: for example "bigint i?"	
 	- Declaraing and initializing variables outside of functions
 	- Declaring and initializing variables as a one liner including an operation (i.e. int x = new_arr[0]
+	- Including the empty character
