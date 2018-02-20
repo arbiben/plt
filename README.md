@@ -18,3 +18,4 @@ This is our GitHub repo for the PLT project, Spring 2019
 
 ### Here: Syntax still left to add to our language
 	- Aliasing file/direc/string to be recognized as ID's of a certain struct type
+	- Casting from one type to another- we may need to create specific functions for that
