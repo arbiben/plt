@@ -14,7 +14,6 @@ TUESDAY TODO:
 - testing our new operations: extract, index, arraybuild, etc
 - How do we call a function on an array?
 - testing script and writing all the tests
-- using structs as types?
 
 
 ### Here: how to compile and execute our compiler
@@ -24,4 +23,5 @@ TUESDAY TODO:
 ### Here: Syntax still left to add to our language
 	- Aliasing file/direc/string to be recognized as ID's of a certain struct type
 	- Casting from one type to another- we may need to create specific functions for that
-	- Not have required ordering to variables- functions - structs
+	- Not have required ordering to variables- functions - structs 
+	- Using structs as types: for example "bigint i?"
