@@ -103,7 +103,7 @@ let rec string_of_expr = function
 (*why map?- calling string_of_expr on each element in e1*)
   | Extract(id, field) -> id ^ " . " ^ field (* added; do we need semicolons in any of these? *)
   | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" (* do we need string_of int here?*)  
-  (*| ArrBuild(elems) -> "[" ^ (List.map string_of_expr elems) ^ "]" *)(*added*)
+  | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]" (*added*)
   | Noexpr -> ""
 
 let rec string_of_stmt = function
@@ -119,8 +119,8 @@ let rec string_of_stmt = function
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | Open(fi) -> "open(" ^ string_of_expr fi ^ ");" (*added; keep in mind this is referring to file as an expr as in parser*)
-  | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"(*
-  | Print(elems) -> "print(" ^ (List.map (String.concat string_of_expr) elems) ^ ");" *)
+  | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"
+  | Print(elems) -> "print(" ^ String.concat "" (List.map string_of_expr elems) ^ ");" 
 
 let string_of_typ = function
     Int -> "int"
