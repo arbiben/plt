@@ -26,10 +26,13 @@ Do we need to implement a reserved keyword for important classes like file, dire
 
 let digit = ['0' - '9']
 let digits = digit+
-let ch = ['a' - 'z' 'A' - 'Z']
-(*let ch = ["'"] [ _ ] ["'"]*) (* took care of escaped characters *)
-(* arr ['['] ([ _ ] [','] )* [ _ ] [']'] (* do we need to account for whitespaces? does the parse rule already know?*)*)
-(*['['] digits [']'] (* needs to be differentiated from arr? *)*)
+let legalchars = [ 'a' - 'z'  'A' - 'Z' '0' - '9'
+    ' ' '\t' '\r' '\n' '\b' '\\' '\"'  '\'' '~'
+    '!' '@' '#' '$' '%' '^' '&' '*' '`' '(' ')'
+    '_' '-' '+' '=' '|' ']' '[' '}' '{' ':' '<'
+    ';' '/' '>' ',' '.' '?']
+let ch = ['\''] legalchars ['\''] 
+(*Question: is there a better way to do this?  *)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)

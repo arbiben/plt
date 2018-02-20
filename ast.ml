@@ -31,7 +31,7 @@ type expr =
     Literal of int
 
   | BoolLit of bool
-  | CharLit of char
+  | CharLit of string 
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -94,7 +94,7 @@ let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
   | BoolLit(false) -> "F"
-  | CharLit(c) -> String.make 1 c
+  | CharLit(c) -> c
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
@@ -145,8 +145,8 @@ let string_of_sdecl sdecl = (* added this too for printing *)
   String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
 
 let string_of_program ((vars, funcs), structs) =
+  String.concat "\n" (List.map string_of_sdecl structs) ^ "\n" ^
   String.concat "" (List.map string_of_vdecl (List.rev vars)) ^ "\n" ^
-  String.concat "\n" (List.map string_of_fdecl funcs) ^ "\n" ^
-  String.concat "\n" (List.map string_of_sdecl structs)
+  String.concat "\n" (List.map string_of_fdecl funcs) ^ "\n"
 
 

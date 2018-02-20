@@ -34,7 +34,7 @@ open Ast
 %token RETURN IF ELSE FOR WHILE INT BOOL CHAR
 %token <int> LITERAL
 %token <bool> BLIT
-%token <char> CHARLIT
+%token <string> CHARLIT
 %token ARR
 %token STRING DIRECTORY FILE
 %token STRUCT
@@ -64,7 +64,7 @@ program:
 
 decls:
     /* nothing */ { (([], []), []) } /* check if this change needs to be 
-reflected in ast */
+reflected in ast; right now, tests can only receive declarations inside functions because of fdecl; i.e. arrays will not work because they're not included in var/func decls  */
  | decls vdecl { ((($2 :: fst (fst $1)), snd (fst $1)), snd $1) }
  | decls fdecl { ((fst (fst $1), ($2 :: snd (fst $1))), snd $1)}
  | decls sdecl { (fst $1, ($2 :: snd $1)) }/* check correctness*/

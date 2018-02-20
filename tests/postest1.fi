@@ -2,9 +2,11 @@
 int varia?
 arr new_array?
 char bestChar?
+int a?
 
 int func(){
 varia = 1?
+bestChar = 'y'?
 }
 
 
