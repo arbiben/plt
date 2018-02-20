@@ -103,7 +103,7 @@ let rec string_of_expr = function
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
 (*why map?- calling string_of_expr on each element in e1*)
-  | Extract(id, field) -> id ^ " . " ^ field (* added; do we need semicolons in any of these? *)
+  | Extract(id, field) -> id ^ "." ^ field (* added; do we need semicolons in any of these? *)
   | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" (* do we need string_of int here?*)  
   | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]" (*added*)
   | Noexpr -> ""
