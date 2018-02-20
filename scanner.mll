@@ -1,4 +1,4 @@
-/* 
+(* 
 An Ocamllex input file
     Specifies how to tokenize a stream of input characters
     
@@ -21,12 +21,13 @@ bring back void?
  
 Do we need to implement a reserved keyword for important classes like file, directory, etc? Yes
 
-*/
+*)
 { open Parser }
 
 let digit = ['0' - '9']
 let digits = digit+
-let ch = ["'"] [ (['\'] ['t' 'r' 'n']) _ ] ["'"] (* took care of escaped characters *)
+let ch = ['a' - 'z' 'A' - 'Z']
+(*let ch = ["'"] [ (['\'] ['t' 'r' 'n']) '_' ] ["'"]*) (* took care of escaped characters *)
 (* arr ['['] ([ _ ] [','] )* [ _ ] [']'] (* do we need to account for whitespaces? does the parse rule already know?*)*)
 (*['['] digits [']'] (* needs to be differentiated from arr? *)*)
 
@@ -37,8 +38,8 @@ rule token = parse
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
-| '['      { LBRACK }
-| ']'      { RBRACK }
+| '['      { LBRACKET }
+| ']'      { RBRACKET }
 | '?'      { SEMI }
 | ','      { COMMA }
 | '+'      { PLUS }

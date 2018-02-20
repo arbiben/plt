@@ -35,7 +35,7 @@ open Ast
 %token <int> LITERAL
 %token <bool> BLIT
 %token <char> CHAR 
-%token <list> ARR
+%token ARR
 %token STRING DIRECTORY FILE
 %token STRUCT
 %token PRINT OPEN CLOSE
