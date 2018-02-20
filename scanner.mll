@@ -1,26 +1,7 @@
 (* 
 An Ocamllex input file
     Specifies how to tokenize a stream of input characters
-    
-Things we added to micro C:
-    - CHAR
-    - ARR
-    - STRUCT
-    - DOT
-    - PRINT
-    - OPEN
-    - CLOSE
-    - file/dir/str type keywords
-    - r and l brackets
-    
-Functions written? :
-    int readlines ()
-Array declr?
-    char arr x = ['4', '5', '6']
-bring back void?
- 
-Do we need to implement a reserved keyword for important classes like file, directory, etc? Yes
-
+    References and is based off of some MicroC features 
 *)
 { open Parser }
 
@@ -30,7 +11,7 @@ let legalchars = [ 'a' - 'z'  'A' - 'Z' '0' - '9'
     ' ' '\t' '\r' '\n' '\b' '\\' '\"'  '\'' '~'
     '!' '@' '#' '$' '%' '^' '&' '*' '`' '(' ')'
     '_' '-' '+' '=' '|' ']' '[' '}' '{' ':' '<'
-    ';' '/' '>' ',' '.' '?']
+    ';' '/' '>' ',' '.' '?' ]
 let ch = ['\''] legalchars ['\''] 
 (*Question: is there a better way to do this?  *)
 

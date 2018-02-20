@@ -5,24 +5,7 @@
     - Precedence and associativity
     - How to parse these tokens into nodes of an AST
 
-The Microc parser, for reference:
-/* Ocamlyacc parser for MicroC 
-     Our additions so far:
-       - STRUCT
-       - DOT
-       - ARR
-       - CHAR
-       - L and R brackets
-       - string/file/directory
-       - print/open/close
-       
-     partial changes shown:
-     - dot operator (167)
-     - indexing operation (170)
-     - array construction (attempted lines 172-175)
-     - print/open/close operations (140-143)
-     - send string/file/directory to struct -> added to README for implementation next time
-
+    Based heavily off of the MicroC example
 */
 
 %{
@@ -69,20 +52,22 @@ reflected in ast; right now, tests can only receive declarations inside function
  | decls vdecl { ((($2 :: fst (fst $1)), snd (fst $1)), snd $1) }
  | decls fdecl { ((fst (fst $1), ($2 :: snd (fst $1))), snd $1)}
  | decls sdecl { (fst $1, ($2 :: snd $1)) }/* check correctness*/
- /*decls is a tuple
-  *sdecls/vdecls/fdecls are one element 
-  * inside the decls tuple:
+ /*
+  Explanation:
+  decls is a tuple of (tuple, list)
+  * sdecls/vdecls/fdecls in the decls expression is considered one  element 
+  * inside the decls first element, the tuple:
       * first is the list of variable declartaion
       * second is the list of func declartions
-  *
-  * */
+  * the second element of the main tuple is the list of struct declarations
+ */
+
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE
      { {
         sname = $2;
         elements = List.rev $4;
      } }
-/*need to add this rule and structure to ast*/
 
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
@@ -129,7 +114,7 @@ stmt:
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5)         }
   | OPEN LPAREN expr RPAREN SEMI            { Open($3)              } 
   | CLOSE LPAREN expr RPAREN SEMI           { Close($3)             } 
-  | PRINT LPAREN elem_list RPAREN SEMI      { Print($3)             }
+  | PRINT LPAREN elem_list RPAREN SEMI      { Print(List.rev $3)             }
   /* expr and expr_list need to be specific types but it should be fine for now */ 
 
 expr_opt:
@@ -160,7 +145,7 @@ expr:
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
   | ID LBRACKET LITERAL RBRACKET { Index($1, $3)  } /* we added this */
-  | LBRACKET elem_list RBRACKET { ArrBuild($2)    } /* Added array declaration */
+  | LBRACKET elem_list RBRACKET { ArrBuild(List.rev $2)    } /* Added array declaration */
   
 elem_list:
     /* nothing */ { [] } /* allows for an empty array decl */

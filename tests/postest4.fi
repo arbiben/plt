@@ -1,0 +1,23 @@
+int a?
+char c?
+bool b?
+arr ar?
+
+struct class {
+int size?
+arr people?
+}
+
+bool correct(arr people, int file1, arr sentence) {
+open(file1)? $ random comment here $
+close(file1)?
+print(sentence, file1, people)?
+ar = ['a', 'b', '?', 'b']?
+c = ar[3]?
+if (c <= 3) {b = T?} else {b = F?}
+}
+
+$
+checking comments work
+Yeah yep
+$
