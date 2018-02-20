@@ -18,7 +18,7 @@ deleted flits and voids
 added lines 38-40, 46-48, 85-87, 106-108, 110-111
 Feb 18th: added structs, types, and fixed some errors
 Still need to deal explicitly with strings/files as expr*)
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
+type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or
 
 type uop = Neg | Not
@@ -76,6 +76,7 @@ let string_of_op = function
   | Sub -> "-"
   | Mult -> "*"
   | Div -> "/"
+  | Mod -> "%"
   | Equal -> "=="
   | Neq -> "!="
   | Less -> "<"

@@ -49,6 +49,7 @@ rule token = parse
 | '-'      { MINUS }
 | '*'      { TIMES }
 | '/'      { DIVIDE }
+| '%'      { MODULO }
 | '='      { ASSIGN }
 | "is"     { EQ }
 | '<'      { LT }
