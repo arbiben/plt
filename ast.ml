@@ -82,18 +82,18 @@ let string_of_op = function
   | Leq -> "<="
   | Greater -> ">"
   | Geq -> ">="
-  | And -> "&&"
-  | Or -> "||"
+  | And -> "and"
+  | Or -> "or"
 
 let string_of_uop = function
     Neg -> "-"
-  | Not -> "!"
+  | Not -> "not"
 
 (*added stuff to this printing function *)
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
-  | BoolLit(true) -> "true"
-  | BoolLit(false) -> "false"
+  | BoolLit(true) -> "T"
+  | BoolLit(false) -> "F"
   | CharLit(c) -> String.make 1 c
   | Id(s) -> s
   | Binop(e1, o, e2) ->
@@ -111,18 +111,18 @@ let rec string_of_expr = function
 let rec string_of_stmt = function
     Block(stmts) ->
       "{\n" ^ String.concat "" (List.map string_of_stmt stmts) ^ "}\n"
-  | Expr(expr) -> string_of_expr expr ^ ";\n";
-  | Return(expr) -> "return " ^ string_of_expr expr ^ ";\n";
+  | Expr(expr) -> string_of_expr expr ^ "?\n";
+  | Return(expr) -> "return " ^ string_of_expr expr ^ "?\n";
   | If(e, s, Block([])) -> "if (" ^ string_of_expr e ^ ")\n" ^ string_of_stmt s
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | For(e1, e2, e3, s) ->
-      "for (" ^ string_of_expr e1  ^ " ; " ^ string_of_expr e2 ^ " ; " ^
+      "for (" ^ string_of_expr e1  ^ " ? " ^ string_of_expr e2 ^ " ? " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
-  | Open(fi) -> "open(" ^ string_of_expr fi ^ ");" (*added; keep in mind this is referring to file as an expr as in parser*)
-  | Close(fi) -> "close(" ^ string_of_expr fi ^ ");"
-  | Print(elems) -> "print(" ^ String.concat "" (List.map string_of_expr elems) ^ ");" 
+  | Open(fi) -> "open(" ^ string_of_expr fi ^ ")?" (*added; keep in mind this is referring to file as an expr as in parser*)
+  | Close(fi) -> "close(" ^ string_of_expr fi ^ ")?"
+  | Print(elems) -> "print(" ^ String.concat "" (List.map string_of_expr elems) ^ ")?" 
 
 let string_of_typ = function
     Int -> "int"
@@ -130,7 +130,7 @@ let string_of_typ = function
   | Char -> "char" (*added *)
   | Arr-> "arr" (*added *)
 
-let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
+let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ "?\n"
 
 let string_of_fdecl fdecl =
   string_of_typ fdecl.typ ^ " " ^
@@ -145,7 +145,7 @@ let string_of_sdecl sdecl = (* added this too for printing *)
   String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
 
 let string_of_program ((vars, funcs), structs) =
-  String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
+  String.concat "" (List.map string_of_vdecl (List.rev vars)) ^ "\n" ^
   String.concat "\n" (List.map string_of_fdecl funcs) ^ "\n" ^
   String.concat "\n" (List.map string_of_sdecl structs)
 
