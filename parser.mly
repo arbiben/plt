@@ -77,10 +77,10 @@ reflected in ast */
   * */
 sdecl:
   STRUCT ID LBRACE vdecl_list RBRACE
-     { 
+     { {
         sname = $2;
         elements = List.rev $4;
-     }
+     } }
 /*need to add this rule and structure to ast*/
 
 fdecl:

@@ -65,7 +65,7 @@ type struct_decl = { (* added this struct_decl like func_decl *)
     elements : bind list;
   }
 
-type program = bind list * func_decl list * struct_decl list
+type program = (bind list * func_decl list) * struct_decl list
 (* this may be tricky. in the parser it's a tuple of lists, then another list This will definitely need to change*)
 
 (* Pretty-printing functions *)
@@ -142,8 +142,9 @@ let string_of_sdecl sdecl = (* added this too for printing *)
   "struct " ^ sdecl.sname ^ " {\n" ^
   String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
 
-let string_of_program (vars, funcs) =
+let string_of_program ((vars, funcs), structs) =
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
-  String.concat "\n" (List.map string_of_fdecl funcs)
+  String.concat "\n" (List.map string_of_fdecl funcs) ^ "\n" ^
+  String.concat "\n" (List.map string_of_sdecl structs)
 
 
