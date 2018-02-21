@@ -13,11 +13,20 @@ This is our GitHub repo for the PLT project, Spring 2019
 ### How to compile and execute our compiler
 	- Go inside in the main directory (inside the Fi directory: /Fi/)
 	- Make sure you have all the ocaml packages installed: ocamlbuild in particular
-	- run the following command: ocamlbuild toplevel.native
-	- That should have compiled our compiler and created the executable toplevel.native
+        - and, for the testing script also Make sure you have python installed on your system
+	- You can either run each part of our code manually or run eveything together using the 
+          Makefile we have provided.
+        - Makefile commands:
+                - 'make' will build all of our language files and then run a python script
+                   The python script will run few programs written in fi to check our compiler.
+                - 'make toplevel.native' is equal to running 'ocamlbuild toplevel.native'. 
+                   This will build all of our language files without running the python script.
+                - 'make runprogram.py' can be used only AFTER running 'ocamlbuild toplevel.native' 
+                   (or alternativly just 'make toplevel.native'). This command will only run the aforementioned python script.
+                - you can also use make to build each of our language files sepeartly by typing the command 'make <FILENAME>'. It will use ocamllex for the scanner, ocamlyacc for the parser, and ocamlc -c for any file that is either an .ml or .mli file   
 	- To run the compiler on any program from that same directory, run: ./toplevel.native <yourfilehere>
 
-### How to run our test script
+### How to run our test script (if not using the Makefile)
 	- Go inside the same directory as the compiler instructions explain
 	- Make sure you have python installed on your system
 	- run the following command: python runprogram.py
