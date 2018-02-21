@@ -39,5 +39,6 @@ This is our GitHub repo for the PLT project, Spring 2019
 	- Using structs as types: for example "bigint i?"	
 	- Declaraing and initializing variables outside of functions
 	- Including the empty character in possible characters
+        - Modifying the char token so that it actually recognizes escaped characters
 	- Calling a function on an array implicitly with dot: specifically adding functionality of dtnamic arrays
 	- Calling the whole program with a main()
