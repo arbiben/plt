@@ -9,7 +9,7 @@ DIR = './tests'
 length = len([name for name in os.listdir(DIR) if name.endswith('.fi') and os.path.isfile(os.path.join(DIR, name))])
 
 #half of the files are positive tests
-for i in range(1,(length/2)+1):
+for i in range(1,int (length/2)+1):
 	command = "./toplevel.native ./tests/postest{}.fi > test{}.out".format(i,i)
 	os.system(command)
 	v = open('test{}.out'.format(i), 'rb').read() == open('./tests/postest{}.out'.format(i), 'rb').read()
@@ -18,7 +18,7 @@ for i in range(1,(length/2)+1):
 	os.system(command)
 
 #half of the files are negative tests
-for i in range(1,(length/2)+1):
+for i in range(1,int (length/2)+1):
 	command = "./toplevel.native ./tests/negtest{}.fi".format(i)
 	error = subprocess.Popen(command, stderr=subprocess.PIPE, stdout=subprocess.PIPE, shell=True)
 	out, error = error.communicate()

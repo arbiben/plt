@@ -27,9 +27,9 @@ This is our GitHub repo for the PLT project, Spring 2019
 	- To run the compiler on any program from that same directory, run: ./toplevel.native <yourfilehere>
 
 ### How to run our test script (if not using the Makefile)
+        - Make sure you have python 2.7 or 3.* installed. You can use both for our script
 	- Go inside the same directory as the compiler instructions explain
-	- Make sure you have python installed on your system
-	- run the following command: python runprogram.py
+	- run the following command: python runprogram.py (can also run python3 runprogram.py)
 	- The output compares each test output against a corresponding file "test#.out" and says if the expected result was correct or not
 
 ### Specific syntax still left to add to our language
