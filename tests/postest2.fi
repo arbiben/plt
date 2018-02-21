@@ -6,5 +6,5 @@ new_array[0]? $this works$
 int x = thing.take? $ declare and assign in the same line$
 x = new_array[1]?
 char y = 'a'?
-if (x is y) print(T)?
+if (x is not y) print(T)?
 }
