@@ -1,3 +1,5 @@
+$ fails due to calling expressions outside function $
+
 a = [1, 2, 3] = [1, 2, 3]
 a = [b, r]?
 int x = 2?

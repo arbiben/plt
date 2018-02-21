@@ -10,14 +10,6 @@ Ben Arbib ba2490@columbia.edu
 
 This is our GitHub repo for the PLT project, Spring 2019
 
-TUESDAY TODO:
-- testing our new operations: neg tests and anything we didn't do yet
-- How do we call a function on an array?
-- testing script and writing all the tests
-- Should we include comments in the pretty printing?
-- Should we include the type of variables inside the function params in printing? for example -> f(int a) now prints f(a). should we include int?
-
-
 ### Here: how to compile and execute our compiler
 
 ### Here: how to run our test script
@@ -28,4 +20,6 @@ TUESDAY TODO:
 	- Not have required ordering to variables- functions - structs 
 	- Using structs as types: for example "bigint i?"	
 	- Declaraing and initializing variables outside of functions
-	- Including the empty character
+	- Including the empty character in possible characters
+	- Calling a function on an array implicitly with dot
+	- Calling the whole program with a main()

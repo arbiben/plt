@@ -1,0 +1,5 @@
+$ fail on incorrect for loop: third expr is a statement instead of expr $
+
+int a () {
+for (a? b? c?){}
+}

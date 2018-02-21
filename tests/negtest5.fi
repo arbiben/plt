@@ -1,0 +1,5 @@
+$ fail on statment in struct $
+struct baby{
+int age?
+age = 5?
+}
