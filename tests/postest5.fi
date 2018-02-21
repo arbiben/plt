@@ -1,1 +1,24 @@
-$ include for loop and while loop here amongst other things $
+$ 
+  testing for loop and multiple functions/structs
+  tests and and or keywords
+$
+bool running () {
+	for ( int a = 0? a < 5 or F? a = a + 1) {
+		if (a>6){
+		print(errormessage, nameofuser)?
+		}}
+	for (int i=10? T? i = i-10){
+		if (i< 0 and i is i){
+		return i?
+		}
+	}
+}
+struct four {
+int fi?
+}
+
+struct three {
+int one?
+int two?
+char f?
+}

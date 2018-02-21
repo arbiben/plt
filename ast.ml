@@ -62,7 +62,7 @@ let string_of_op = function
   | Mult -> "*"
   | Div -> "/"
   | Mod -> "%"
-  | Equal -> "=="
+  | Equal -> "is"
   | Neq -> "!="
   | Less -> "<"
   | Leq -> "<="
@@ -110,7 +110,7 @@ let rec string_of_stmt = function
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | For(e1, e2, e3, s) ->
-      "for (" ^ string_of_expr e1  ^ " ? " ^ string_of_expr e2 ^ " ? " ^
+      "for (" ^ string_of_expr e1  ^ "? " ^ string_of_expr e2 ^ "? " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
   | Open(fi) -> "open(" ^ string_of_expr fi ^ ")?\n" (*added; keep in mind this is referring to file as an expr as in parser*)

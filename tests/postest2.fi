@@ -1,8 +1,10 @@
-$ tests indexing and dot operators$
+$ tests indexing, dot operator, declare/assign, equals operator$
 int x?
 
 char func(){
 new_array[0]? $this works$
-int x = thing.take? $does not work (regular assignment does work but not with a typ before it$
+int x = thing.take? $ declare and assign in the same line$
 x = new_array[1]?
+char y = 'a'?
+if (x is y) print(T)?
 }
