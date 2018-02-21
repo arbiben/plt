@@ -1,0 +1,13 @@
+
+int x?
+
+char func()
+{
+new_array[0]?
+int x = thing.take?
+x = new_array[1]?
+char y = 'a'?
+if (x is not y)
+print(T)?
+}
+

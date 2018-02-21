@@ -1,0 +1,27 @@
+struct class {
+int size?
+arr people?
+}
+
+int a?
+char c?
+bool b?
+arr ar?
+
+bool correct(people, file1, sentence)
+{
+open(file1)?
+close(file1)?
+print(sentence, file1, people)?
+ar = ar2 = ['a', 'b', '?', 'b']?
+c = ar[3]?
+if (c <= 3)
+{
+b = T?
+}
+else
+{
+b = F?
+}
+}
+

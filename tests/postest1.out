@@ -1,0 +1,18 @@
+struct baby {
+int age?
+bool annoying?
+}
+
+int varia?
+arr new_array?
+char bestChar?
+int a?
+int xi?
+
+int func()
+{
+varia = 1?
+bestChar = 'y'?
+bestChar = baby.age?
+}
+
