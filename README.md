@@ -37,8 +37,9 @@ This is our GitHub repo for the PLT project, Spring 2019
 	- Casting from one type to another- we may need to create specific functions for that
 	- Not have required ordering to variables- functions - structs - variables should run anywhere
 	- Using structs as types: for example "bigint i?"	
-	- Declaraing and initializing variables outside of functions
+	- Declaring and initializing variables outside of functions
 	- Including the empty character in possible characters
         - Modifying the char token so that it actually recognizes escaped characters
-	- Calling a function on an array implicitly with dot: specifically adding functionality of dtnamic arrays
+	- Calling a function on an array implicitly with dot operator and ()
+	- Adding functionality of dynamic arrays; adding arrays to each other
 	- Calling the whole program with a main()
