@@ -1,4 +1,7 @@
-$ fails due to calling expressions outside function$
+$ fails due to calling expressions outside function $
 int func(){
-int x = 2?
+int x? 
+print (x)?
 }
+
+func()?

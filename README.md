@@ -35,11 +35,12 @@ This is our GitHub repo for the PLT project, Spring 2019
 ### Specific syntax still left to add to our language
 	- Aliasing file/direc/string to be recognized as ID's of a certain struct type
 	- Casting from one type to another- we may need to create specific functions for that
-	- Not have required ordering to variables- functions - structs - variables should run anywhere
+	- Not have required ordering to variables- functions - structs - variables: it should be in any order
 	- Using structs as types: for example "bigint i?"	
-	- Declaring and initializing variables outside of functions
+	- Declaring and initializing variables outside of functions?
 	- Including the empty character in possible characters
         - Modifying the char token so that it actually recognizes escaped characters
-	- Calling a function on an array implicitly with dot operator and ()
-	- Adding functionality of dynamic arrays; adding arrays to each other
-	- Calling the whole program with a main()
+	- Calling a function on an array variable implicitly with dot operator and ()
+	- Adding functionality of dynamic arrays; adding arrays to each other. Not sure this is syntax but in case it turns out to require more
+	- Calling the whole program with a main()- again could be syntax and could be not
+        - Fixing ambiguity of DeclareAssign- where sometimes it gets recognized as a declare not a statement.
