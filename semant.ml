@@ -10,9 +10,12 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
+
+let check (g_f,structs) = 
+    (globals, functions) ;; 
+
+    
 (*
-let check (globals, functions) =
-    1
   (* Check if a certain kind of binding has void type or is a duplicate
      of another, previously checked binding *)
   let check_binds (kind : string) (to_check : bind list) = 
