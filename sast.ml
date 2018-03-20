@@ -4,14 +4,18 @@ open Ast
 
 type sexpr = typ * sx
 and sx =
-    SLiteral of int
-  | SFliteral of string
+    SLiteral of int 
   | SBoolLit of bool
+  | SCharLit of string
+  | SStrLit of string
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
   | SAssign of string * sexpr
   | SCall of string * sexpr list
+  | SExtract of string * string (* added *)
+  | SIndex of string * int  (* added *)
+  | SArrBuild of expr list (* added *)
   | SNoexpr
 
 type sstmt =
@@ -21,6 +25,9 @@ type sstmt =
   | SIf of sexpr * sstmt * sstmt
   | SFor of sexpr * sexpr * sexpr * sstmt
   | SWhile of sexpr * sstmt
+  | SOpen of expr (* added *)
+  | SClose of expr (* added *)
+  | SPrint of expr list (* added *)
 
 type sfunc_decl = {
     styp : typ;
@@ -30,16 +37,22 @@ type sfunc_decl = {
     sbody : sstmt list;
   }
 
-type sprogram = bind list * sfunc_decl list
+type sstruct_decl = { (* added *)
+    ssname: string;
+    selements: bind list;
+  }
+
+type sprogram = (bind list * sfunc_decl list) * struct_decl list
 
 (* Pretty-printing functions *)
 
 let rec string_of_sexpr (t, e) =
   "(" ^ string_of_typ t ^ " : " ^ (match e with
     SLiteral(l) -> string_of_int l
-  | SBoolLit(true) -> "true"
-  | SBoolLit(false) -> "false"
-  | SFliteral(l) -> l
+  | SBoolLit(true) -> "T"
+  | SBoolLit(false) -> "F"
+  | SCharLit(c) -> c
+  | SStrLit(s) -> s
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
@@ -47,6 +60,9 @@ let rec string_of_sexpr (t, e) =
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
+  | SExtract(id, field) -> id ^ "." ^ field (* added *)
+  | SIndex(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]"
+  | SArrBuild(elems) -> "[" ^ String.concat ", " (list.map string_of_sexpr elems)
   | SNoexpr -> ""
 				  ) ^ ")"				     
 
@@ -63,6 +79,9 @@ let rec string_of_sstmt = function
       "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
       string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
+  | SOpen(fi) -> "open(" ^ string_of_sexpr fi ^ ")?\n"
+  | SClose(fi) -> "close(" ^ string_of_sexpr fi ^ ")?\n"
+  | SPrint(elems) -> "print(" ^ String.concat ", " (List.map string_of_expr elems) ^ ")?\n"
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.styp ^ " " ^
@@ -72,6 +91,11 @@ let string_of_sfdecl fdecl =
   String.concat "" (List.map string_of_sstmt fdecl.sbody) ^
   "}\n"
 
-let string_of_sprogram (vars, funcs) =
+let string_of_ssdecl sdecl = 
+   "struct " ^ sdecl.sname ^ " {\n" ^ 
+   String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
+
+let string_of_sprogram ((vars, funcs), structs)  =
+  String.concat "\n" (List.map string_of_ssdecl structs) ^ "\n" ^ 
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_sfdecl funcs)
