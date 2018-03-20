@@ -10,8 +10,9 @@ module StringMap = Map.Make(String)
 
    Check each global variable, then check each function *)
 
+(*
 let check (globals, functions) =
-
+    1
   (* Check if a certain kind of binding has void type or is a duplicate
      of another, previously checked binding *)
   let check_binds (kind : string) (to_check : bind list) = 
@@ -192,3 +193,4 @@ let check (globals, functions) =
       in raise (Failure err)
     }
   in (globals', List.map check_function functions)
+*)
