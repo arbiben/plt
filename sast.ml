@@ -15,7 +15,7 @@ and sx =
   | SCall of string * sexpr list
   | SExtract of string * string (* added *)
   | SIndex of string * int  (* added *)
-  | SArrBuild of expr list (* added *)
+  | SArrBuild of sexpr list (* added *)
   | SNoexpr
 
 type sstmt =
@@ -81,7 +81,7 @@ let rec string_of_sstmt = function
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
   | SOpen(fi) -> "open(" ^ string_of_sexpr fi ^ ")?\n"
   | SClose(fi) -> "close(" ^ string_of_sexpr fi ^ ")?\n"
-  | SPrint(elems) -> "print(" ^ String.concat ", " (List.map string_of_expr elems) ^ ")?\n"
+  | SPrint(elems) -> "print(" ^ String.concat ", " (List.map string_of_sexpr elems) ^ ")?\n"
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.styp ^ " " ^
