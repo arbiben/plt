@@ -25,9 +25,9 @@ type sstmt =
   | SIf of sexpr * sstmt * sstmt
   | SFor of sexpr * sexpr * sexpr * sstmt
   | SWhile of sexpr * sstmt
-  | SOpen of expr (* added *)
-  | SClose of expr (* added *)
-  | SPrint of expr list (* added *)
+  | SOpen of sexpr (* added *)
+  | SClose of sexpr (* added *)
+  | SPrint of sexpr list (* added *)
 
 type sfunc_decl = {
     styp : typ;
