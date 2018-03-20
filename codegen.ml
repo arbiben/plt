@@ -29,8 +29,8 @@ let translate (_, functions) =
   and void_t     = L.void_type   context 
   (* Create an LLVM module -- this is a container into which we'll 
      generate actual code *)
-  and the_module = L.create_module context MicroC in
-
+  and the_module = L.create_module context Fi in
+(*
   (* Convert MicroC types to LLVM types *)
   let ltype_of_typ = function
       A.Int   -> i32_t
@@ -80,5 +80,6 @@ SBlock sl -> List.fold_left stmt builder sl
     in ignore(stmt builder (SBlock fdecl.sbody))
   (* Build each function (there should only be one for Hello World), 
      and return the final module *)
-  in List.iter build_function functions; the_module
+  in List.iter build_function functions;
+*) the_module
 
