@@ -62,7 +62,7 @@ let rec string_of_sexpr (t, e) =
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SExtract(id, field) -> id ^ "." ^ field (* added *)
   | SIndex(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]"
-  | SArrBuild(elems) -> "[" ^ String.concat ", " (list.map string_of_sexpr elems)
+  | SArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_sexpr elems)
   | SNoexpr -> ""
 				  ) ^ ")"				     
 
