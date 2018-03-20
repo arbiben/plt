@@ -1,6 +1,6 @@
 # best way to build is using ocamlbuild
 .PHONY : all
-all : toplevel.native runprogram.py
+all : toplevel.native #runprogram.py
 
 .PHONY : toplevel.native
 toplevel.native :
@@ -8,9 +8,9 @@ toplevel.native :
 
 
 #this can only be used after constructing toplevel.native w/ ocamlbuild
-.PHONY : runprogram.py
-runprogram.py :
-	python runprogram.py
+#.PHONY : runprogram.py
+#runprogram.py :
+#	python runprogram.py
 
 # "make clean" removes all generated files
 .PHONY : clean
