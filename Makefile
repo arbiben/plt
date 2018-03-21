@@ -4,7 +4,9 @@ all : toplevel.native #runprogram.py
 
 .PHONY : toplevel.native
 toplevel.native :
-	ocamlbuild toplevel.native
+	rm -f *.o
+	ocamlbuild -use-ocamlfind -pkgs llvm,llvm.analysis -cflags -w,+a-4 \
+	    toplevel.native
 
 
 #this can only be used after constructing toplevel.native w/ ocamlbuild
