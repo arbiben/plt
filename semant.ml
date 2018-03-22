@@ -147,6 +147,7 @@ let check (g_f, structs) =
           in 
           let args' = List.map2 check_call fd.formals args
           in (fd.typ, SCall(fname, args'))
+      | _ -> raise(Failure ("expression not yet semantically checked"))
     in
 
     let check_bool_expr e = 
@@ -178,7 +179,6 @@ let check (g_f, structs) =
             | s :: ss         -> check_stmt s :: check_stmt_list ss
             | []              -> []
           in SBlock(check_stmt_list sl)
-      | Print(elems) -> SPrint(List.map expr elems)
 
     in (* body of check_function *)
     { styp = func.typ;

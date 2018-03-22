@@ -71,7 +71,6 @@ SBlock sl -> List.fold_left stmt builder sl
                               A.Int -> L.build_ret (expr builder e) builder 
                             | _ -> to_imp (A.string_of_typ fdecl.styp)
                      in builder
-      | SPrint elems ->  L.build_call printf_func [| int_format_str ; ((expr builder) elems) |] "print" builder
       | s -> to_imp (string_of_sstmt s)
     (* Generate the instructions for the function's body, 
        which mutates the_module *)
