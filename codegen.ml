@@ -21,7 +21,7 @@ module StringMap = Map.Make(String)
 
 (* Code Generation from the SAST. Returns an LLVM module if successful,
    throws an exception if something is wrong. *)
-let translate (_, functions) =
+let translate ((_, functions), _) =
   let context    = L.global_context () in
   (* Add types to the context so we can use them in our LLVM code *)
   let i32_t      = L.i32_type    context
@@ -57,7 +57,7 @@ let translate (_, functions) =
     (* Generate LLVM code for a call to MicroC's print *)
     let rec expr builder ((_, e) : sexpr) = match e with
 SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
-      | SCall (print, [e]) -> (* Generate a call instruction *)
+      | SCall ("print", [e]) -> (* Generate a call instruction *)
   L.build_call printf_func [| int_format_str ; (expr builder e) |]
     "print" builder 
       (* Throw an error for any other expressions *)
@@ -71,6 +71,7 @@ SBlock sl -> List.fold_left stmt builder sl
                               A.Int -> L.build_ret (expr builder e) builder 
                             | _ -> to_imp (A.string_of_typ fdecl.styp)
                      in builder
+      | SPrint elems ->  L.build_call printf_func [| int_format_str ; ((expr builder) elems) |] "print" builder
       | s -> to_imp (string_of_sstmt s)
     (* Generate the instructions for the function's body, 
        which mutates the_module *)

@@ -178,6 +178,7 @@ let check (g_f, structs) =
             | s :: ss         -> check_stmt s :: check_stmt_list ss
             | []              -> []
           in SBlock(check_stmt_list sl)
+      | Print(elems) -> SPrint(List.map expr elems)
 
     in (* body of check_function *)
     { styp = func.typ;
