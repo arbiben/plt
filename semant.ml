@@ -42,11 +42,14 @@ let check (g_f, structs) =
       typ = Int; fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int)
+    in List.fold_left add_bind StringMap.empty [ ("print", Int);
+                                                 ("printstring", Str);
+                                                 ("open", Int);
+                                                 ("close", Int)    ]
 			                        (* 
                                                 ("printb", Bool);
 			                         ("printf", Float);
-			                         ("printbig", Int) *) ]
+			                         ("printbig", Int) *)
   in
 
   (* Add function name to symbol table *)
