@@ -13,9 +13,9 @@ and sx =
   | SUnop of uop * sexpr
   | SAssign of string * sexpr
   | SCall of string * sexpr list
-  | SExtract of string * string (* added *)
-  | SIndex of string * int  (* added *)
-  | SArrBuild of sexpr list (* added *)
+  | SExtract of string * string
+  | SIndex of string * int  
+  | SArrBuild of sexpr list
   | SNoexpr
 
 type sstmt =
@@ -34,7 +34,7 @@ type sfunc_decl = {
     sbody : sstmt list;
   }
 
-type sstruct_decl = { (* added *)
+type sstruct_decl = { 
     ssname: string;
     selements: bind list;
   }

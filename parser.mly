@@ -14,12 +14,12 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE MODULO ASSIGN DOT
 %token NOT EQ LT LEQ GT GEQ AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL CHAR
+%token RETURN IF ELSE FOR WHILE INT BOOL CHAR STRING 
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> CHARLIT STRLIT
 %token ARR
-%token STRING DIRECTORY FILE
+%token DIRECTORY FILE
 %token STRUCT
 %token EOF
 %token <string> ID
@@ -84,10 +84,11 @@ formal_list:
   | formal_list COMMA typ ID { ($3,$4) :: $1 }
 
 typ:
-    INT   { Int   }
-  | BOOL  { Bool  }
-  | CHAR  { Char } /* added */
-  | ARR   { Arr } /* Is this Arr? or List? */
+    INT    { Int   }
+  | BOOL   { Bool  }
+  | CHAR   { Char  }
+  | STRING { Str   }
+  | ARR    { Arr   } 
 
 vdecl_list:
     /* nothing */    { [] }

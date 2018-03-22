@@ -8,7 +8,7 @@ type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Ge
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Char | Arr (* added types *)
+type typ = Int | Bool | Char | Str | Arr
 
 type bind = typ * string
 
@@ -22,9 +22,9 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
-  | Extract of string * string (*added*)
-  | Index of string * int (*added *)
-  | ArrBuild of expr list (*added *)
+  | Extract of string * string
+  | Index of string * int
+  | ArrBuild of expr list
   | Noexpr
 
 type stmt =
@@ -43,13 +43,12 @@ type func_decl = {
     body : stmt list;
   }
 
-type struct_decl = { (* added this struct_decl like func_decl *)
+type struct_decl = { 
     sname : string;
     elements : bind list;
   }
 
 type program = (bind list * func_decl list) * struct_decl list
-(* this may be tricky. in the parser it's a tuple of lists, then another list This will definitely need to change*)
 
 (* Pretty-printing functions *)
 
@@ -75,10 +74,10 @@ let string_of_uop = function
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
-  | Char -> "char" (*added *)
-  | Arr-> "arr" (*added *)
+  | Char -> "char"
+  | Str -> "str"
+  | Arr-> "arr" 
 
-(*added stuff to this printing function *)
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
