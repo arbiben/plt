@@ -25,9 +25,6 @@ type sstmt =
   | SIf of sexpr * sstmt * sstmt
   | SFor of sexpr * sexpr * sexpr * sstmt
   | SWhile of sexpr * sstmt
-  | SOpen of sexpr (* added *)
-  | SClose of sexpr (* added *)
-  | SPrint of sexpr list (* added *)
 
 type sfunc_decl = {
     styp : typ;
@@ -79,9 +76,6 @@ let rec string_of_sstmt = function
       "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
       string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
-  | SOpen(fi) -> "open(" ^ string_of_sexpr fi ^ ")?\n"
-  | SClose(fi) -> "close(" ^ string_of_sexpr fi ^ ")?\n"
-  | SPrint(elems) -> "print(" ^ String.concat ", " (List.map string_of_sexpr elems) ^ ")?\n"
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.styp ^ " " ^

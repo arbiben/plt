@@ -34,9 +34,6 @@ type stmt =
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
   | While of expr * stmt
-  | Open of expr (*added *)
-  | Close of expr(*added *)
-  | Print of expr list (*added *)
 
 type func_decl = {
     typ : typ;
@@ -113,9 +110,6 @@ let rec string_of_stmt = function
       "for (" ^ string_of_expr e1  ^ "? " ^ string_of_expr e2 ^ "? " ^
       string_of_expr e3  ^ ") " ^ string_of_stmt s
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
-  | Open(fi) -> "open(" ^ string_of_expr fi ^ ")?\n" (*added; keep in mind this is referring to file as an expr as in parser*)
-  | Close(fi) -> "close(" ^ string_of_expr fi ^ ")?\n"
-  | Print(elems) -> "print(" ^ String.concat ", " (List.map string_of_expr elems) ^ ")?\n" 
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ "?\n"
 

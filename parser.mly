@@ -21,7 +21,6 @@ open Ast
 %token ARR
 %token STRING DIRECTORY FILE
 %token STRUCT
-%token PRINT OPEN CLOSE
 %token EOF
 %token <string> ID
 
@@ -46,11 +45,11 @@ program:
   decls EOF { $1 }
 
 decls:
-    /* nothing */ { (([], []), []) } /* check if this change needs to be 
-reflected in ast; right now, tests can only receive declarations inside functions because of fdecl; i.e. arrays will not work because they're not included in var/func decls  */
+    /* nothing */ { (([], []), []) } 
  | decls vdecl { ((($2 :: fst (fst $1)), snd (fst $1)), snd $1) }
  | decls fdecl { ((fst (fst $1), ($2 :: snd (fst $1))), snd $1)}
- | decls sdecl { (fst $1, ($2 :: snd $1)) }/* check correctness*/
+ | decls sdecl { (fst $1, ($2 :: snd $1)) }
+ 
  /*
   Explanation:
   decls is a tuple of (tuple, list)
@@ -111,10 +110,6 @@ stmt:
   | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
                                             { For($3, $5, $7, $9)   }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5)         }
-  | OPEN LPAREN expr RPAREN SEMI            { Open($3)              } 
-  | CLOSE LPAREN expr RPAREN SEMI           { Close($3)             } 
-  | PRINT LPAREN elem_list RPAREN SEMI      { Print(List.rev $3)             }
-  /* expr and expr_list need to be specific types but it should be fine for now */ 
 
 expr_opt:
     /* nothing */ { Noexpr }
