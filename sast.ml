@@ -42,7 +42,7 @@ type sstruct_decl = { (* added *)
     selements: bind list;
   }
 
-type sprogram = (bind list * sfunc_decl list) * sstruct_decl list
+type sprogram = (bind list * sfunc_decl list) * struct_decl list
 
 (* Pretty-printing functions *)
 
