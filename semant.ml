@@ -11,21 +11,17 @@ module StringMap = Map.Make(String)
    Check each global variable, then check each function *)
 
 
-let check (g_f,structs) = 
-    (globals, functions) ;; 
-
-    
-(*
+let check (g_f, structs) = 
+    let globals = fst g_f in 
+    let functions = snd g_f in 
   (* Check if a certain kind of binding has void type or is a duplicate
      of another, previously checked binding *)
   let check_binds (kind : string) (to_check : bind list) = 
     let check_it checked binding = 
-      let void_err = "illegal void " ^ kind ^ " " ^ snd binding
-      and dup_err = "duplicate " ^ kind ^ " " ^ snd binding
+        let dup_err = "duplicate " ^ kind ^ " " ^ snd binding
       in match binding with
         (* No void bindings *)
-        (Void, _) -> raise (Failure void_err)
-      | (_, n1) -> match checked with
+      (_, n1) -> match checked with
                     (* No duplicate bindings *)
                       ((_, n2) :: _) when n1 = n2 -> raise (Failure dup_err)
                     | _ -> binding :: checked
@@ -43,13 +39,14 @@ let check (g_f,structs) =
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
     let add_bind map (name, ty) = StringMap.add name {
-      typ = Void; fname = name; 
+      typ = Int; fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int);
-			                         ("printb", Bool);
+    in List.fold_left add_bind StringMap.empty [ ("print", Int)
+			                        (* 
+                                                ("printb", Bool);
 			                         ("printf", Float);
-			                         ("printbig", Int) ]
+			                         ("printbig", Int) *) ]
   in
 
   (* Add function name to symbol table *)
@@ -102,9 +99,7 @@ let check (g_f,structs) =
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
         Literal  l -> (Int, SLiteral l)
-      | Fliteral l -> (Float, SFliteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
-      | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
           let lt = type_of_identifier var
@@ -115,7 +110,7 @@ let check (g_f,structs) =
       | Unop(op, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with
-            Neg when t = Int || t = Float -> t
+            Neg when t = Int -> t
           | Not when t = Bool -> Bool
           | _ -> raise (Failure ("illegal unary operator " ^ 
                                  string_of_uop op ^ string_of_typ t ^
@@ -129,10 +124,9 @@ let check (g_f,structs) =
           (* Determine expression type based on operator and operand types *)
           let ty = match op with
             Add | Sub | Mult | Div when same && t1 = Int   -> Int
-          | Add | Sub | Mult | Div when same && t1 = Float -> Float
           | Equal | Neq            when same               -> Bool
           | Less | Leq | Greater | Geq
-                     when same && (t1 = Int || t1 = Float) -> Bool
+                     when same && (t1 = Int) -> Bool
           | And | Or when same && t1 = Bool -> Bool
           | _ -> raise (
 	      Failure ("illegal binary operator " ^
@@ -195,5 +189,5 @@ let check (g_f,structs) =
       | _ -> let err = "internal error: block didn't become a block?"
       in raise (Failure err)
     }
-  in (globals', List.map check_function functions)
-*)
+  in ((globals', List.map check_function functions), structs)
+

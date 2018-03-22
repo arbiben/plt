@@ -29,7 +29,7 @@ let translate (_, functions) =
   and void_t     = L.void_type   context 
   (* Create an LLVM module -- this is a container into which we'll 
      generate actual code *)
-  and the_module = L.create_module context Fi in
+  and the_module = L.create_module context "Fi" in
 (*
   (* Convert MicroC types to LLVM types *)
   let ltype_of_typ = function
