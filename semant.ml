@@ -104,6 +104,7 @@ let check (g_f, structs) =
         Literal  l -> (Int, SLiteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | Id s       -> (type_of_identifier s, SId s)
+      | StrLit s   -> (Str, SStrLit s)
       | Assign(var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
