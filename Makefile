@@ -1,6 +1,6 @@
 # best way to build is using ocamlbuild
 .PHONY : all
-all : toplevel.native helloworld.o
+all : toplevel.native 
 
 .PHONY : toplevel.native
 toplevel.native :
@@ -37,6 +37,3 @@ parser.ml parser.mli : parser.mly
 %.cmx : %.ml
 	ocamlfind ocamlopt -c -package llvm $<
 
-# Testing the "helloworld" example
-helloworld : helloworld.fi
-	cc -o helloworld -DBUILD_TEST helloworld.fi
