@@ -41,7 +41,7 @@ let translate ((_, functions), _) =
   let printf_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
-     L.declare_function "printstring" printf_t the_module in 
+     L.declare_function "printf" printf_t the_module in 
 
   let to_imp str = raise (Failure ("Not yet implemented: " ^ str)) in
 
@@ -60,11 +60,11 @@ let translate ((_, functions), _) =
     let rec expr builder ((_, e) : sexpr) = match e with
       SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
       | SStrLit i -> L.build_global_stringptr i "tmp" builder (* generate a pointer *)
-      | SCall ("printstring", [e]) -> (* Generate a call instruction *)
+      | SCall ("print", [e]) -> (* Generate a call instruction *)
   L.build_call printf_func [| int_format_str ; (expr builder e) |]
-    "printstring" builder 
+    "printf" builder 
       | SCall ("printstring", [e]) ->  
-  L.build_call printf_func [| str_format_str ; (expr builder e) |] "printstring" builder
+  L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
       (* Throw an error for any other expressions *)
       | _ -> to_imp (string_of_sexpr (A.Int,e))  
     in
