@@ -1,4 +1,4 @@
-# Runs our top level program against all ./tests 
+# Runs our top level program against the relevant tests 
 # Needs to be written in Python or Bash
 # Validates results against the expected output from our program.
 import os
