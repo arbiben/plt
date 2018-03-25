@@ -39,11 +39,12 @@ os.system(command)
 command = "diff -b helloworld.out ref > diff.out"
 os.system(command)
 
-""" 
-	v = open('test{}.out'.format(i), 'rb').read() == open('./tests/postest{}.out'.format(i), 'rb').read()
-	print("postest{} validated: {}".format(i,v))
-	command = "rm ./test{}.out".format(i)
-	os.system(command)
-    
-   
-"""
+	
+ref = open('ref', 'r').read()
+out = open('helloworld.out', 'r').read()
+if ref == out:
+    print("success")
+else:
+    print(v)
+    print("failure")
+
