@@ -1,4 +1,7 @@
-(* Semantically-checked Abstract Syntax Tree and functions for printing it *)
+(* 
+Semantically-checked Abstract Syntax Tree and functions for printing it 
+Built Heavily off of the Micro-C Sast
+*)
 
 open Ast
 
@@ -57,7 +60,7 @@ let rec string_of_sexpr (t, e) =
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
-  | SExtract(id, field) -> id ^ "." ^ field (* added *)
+  | SExtract(id, field) -> id ^ "." ^ field 
   | SIndex(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]"
   | SArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_sexpr elems)
   | SNoexpr -> ""

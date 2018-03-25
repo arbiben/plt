@@ -2,7 +2,8 @@
 An Ocamllex input file
     Specifies how to tokenize a stream of input characters
     References and is based off of some MicroC features 
-*)
+Built off of the MicroC Scanner
+    *)
 { open Parser }
 
 let digit = ['0' - '9']
@@ -13,7 +14,6 @@ let legalchars = [ 'a' - 'z'  'A' - 'Z' '0' - '9'
     '_' '-' '+' '=' '|' ']' '[' '}' '{' ':' '<'
     ';' '/' '>' ',' '.' '?' ]
 let ch = ['\''] legalchars ['\''] 
-(*Question: is there a better way to do this?  *)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)

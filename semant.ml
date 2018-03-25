@@ -1,4 +1,7 @@
-(* Semantic checking for the MicroC compiler *)
+(* 
+ Semantic checking for the Fi compiler
+ Built heavily off of the MicroC semant
+*)
 
 open Ast
 open Sast

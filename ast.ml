@@ -91,10 +91,9 @@ let rec string_of_expr = function
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
-(*why map?- calling string_of_expr on each element in e1*)
-  | Extract(id, field) -> id ^ "." ^ field (* added; do we need semicolons in any of these? *)
-  | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" (* do we need string_of int here?*)  
-  | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]" (*added*)
+  | Extract(id, field) -> id ^ "." ^ field 
+  | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" 
+  | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]" 
   | Noexpr -> ""
 
 let rec string_of_stmt = function
@@ -120,7 +119,7 @@ let string_of_fdecl fdecl =
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"
 
-let string_of_sdecl sdecl = (* added this too for printing *)
+let string_of_sdecl sdecl = 
   "struct " ^ sdecl.sname ^ " {\n" ^
   String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
 

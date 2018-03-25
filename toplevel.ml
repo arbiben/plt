@@ -1,18 +1,7 @@
 (* Top-level of Fi compiler: scan & parse the input,
    check the resulting AST and generate an SAST from it, generate LLVM IR,
    and dump the module.
-   Heavily based on the Micro-C toplevel file *)
-(*
-old code with semantic checker added
-let () =
-  let usage_msg = "usage: ./toplevel.native [file.fi]" in
-  let channel = ref stdin in
-  Arg.parse [] (fun file -> channel := open_in file) usage_msg;
-  let lexbuf = Lexing.from_channel !channel in
-  let ast = Parser.program Scanner.token lexbuf in
-  -- added semantic checker here:
-  let sast = Semant.check ast in 
-  print_string (Sast.string_of_program sast)
+   Heavily based on the Micro-C toplevel file 
 *)
 
 type action = Ast | Sast | LLVM_IR | Compile
