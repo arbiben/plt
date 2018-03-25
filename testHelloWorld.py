@@ -36,7 +36,7 @@ os.system(command)
 
 
 #compare output of hello world to ref output
-command = "diff -b helloworld.out ref.out > diff.out"
+command = "diff -b helloworld.out ref > diff.out"
 os.system(command)
 
 """ 
