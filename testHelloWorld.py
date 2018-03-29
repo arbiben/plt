@@ -45,6 +45,5 @@ out = open('helloworld.out', 'r').read()
 if ref == out:
     print("success")
 else:
-    print(v)
     print("failure")
 
