@@ -14,10 +14,10 @@ open Ast
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE MODULO ASSIGN DOT
 %token NOT EQ LT LEQ GT GEQ AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL CHAR STRING 
+%token RETURN IF ELSE FOR WHILE INT BOOL STRING 
 %token <int> LITERAL
 %token <bool> BLIT
-%token <string> CHARLIT STRLIT
+%token <string> STRLIT
 %token ARR
 %token DIRECTORY FILE
 %token STRUCT
@@ -86,7 +86,6 @@ formal_list:
 typ:
     INT    { Int   }
   | BOOL   { Bool  }
-  | CHAR   { Char  }
   | STRING { Str   }
   | ARR    { Arr   } 
 
@@ -119,7 +118,6 @@ expr_opt:
 expr:
     LITERAL          { Literal($1)            }
   | BLIT             { BoolLit($1)            }
-  | CHARLIT          { CharLit($1)            }
   | STRLIT           { StrLit($1)             }
   | ID               { Id($1)                 } 
   | expr PLUS   expr { Binop($1, Add,   $3)   }

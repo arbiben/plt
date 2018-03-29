@@ -18,6 +18,7 @@ let translate ((_, functions), _) =
   (* Add types to the context so we can use them in our LLVM code *)
   let i32_t      = L.i32_type                context
   and i8_t       = L.i8_type                 context
+  and i1_t       = L.i1_type                 context
   and ptr        = L.pointer_type (L.i8_type (context))  
   (* Create an LLVM module -- this is a container into which we'll 
      generate actual code *)
@@ -26,6 +27,7 @@ let translate ((_, functions), _) =
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Str   -> ptr
+    | A.Bool  -> i1_t 
     | t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))
   in
 
@@ -51,6 +53,7 @@ let translate ((_, functions), _) =
     (* Generate LLVM code for a call to print *)
     let rec expr builder ((_, e) : sexpr) = match e with
       SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
+      | SBoolLit b -> L.const_int i1_t (if b then 1 else 0) 
       | SStrLit i -> L.build_global_stringptr i "tmp" builder (* generate a pointer *)
       | SCall ("print", [e]) -> (* Generate a call instruction *)
   L.build_call printf_func [| int_format_str ; (expr builder e) |]

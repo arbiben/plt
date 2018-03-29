@@ -8,12 +8,6 @@ Built off of the MicroC Scanner
 
 let digit = ['0' - '9']
 let digits = digit+
-let legalchars = [ 'a' - 'z'  'A' - 'Z' '0' - '9'
-    ' ' '\t' '\r' '\n' '\b' '\\' '\"'  '\'' '~'
-    '!' '@' '#' '$' '%' '^' '&' '*' '`' '(' ')'
-    '_' '-' '+' '=' '|' ']' '[' '}' '{' ':' '<'
-    ';' '/' '>' ',' '.' '?' ]
-let ch = ['\''] legalchars ['\''] 
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
@@ -47,7 +41,6 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "bool"   { BOOL }
-| "char"   { CHAR }
 | "str"    { STRING }
 | "arr"    { ARR }
 | "T"      { BLIT(true)  }
@@ -57,7 +50,6 @@ rule token = parse
 | "file"   { FILE }
 | "dir"    { DIRECTORY }
 | digits as lxm { LITERAL(int_of_string lxm) }
-| ch as lxm { CHARLIT(lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
 | ['\"'] [^'\"']* ['\"']  as lxm	{ STRLIT(lxm) }
 | eof { EOF }

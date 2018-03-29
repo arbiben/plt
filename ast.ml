@@ -8,14 +8,13 @@ type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Ge
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Char | Str | Arr
+type typ = Int | Bool | Str | Arr
 
 type bind = typ * string
 
 type expr =
     Literal of int
   | BoolLit of bool
-  | CharLit of string 
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr
@@ -74,7 +73,6 @@ let string_of_uop = function
 let string_of_typ = function
     Int -> "int"
   | Bool -> "bool"
-  | Char -> "char"
   | Str -> "str"
   | Arr-> "arr" 
 
@@ -82,7 +80,6 @@ let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
   | BoolLit(false) -> "F"
-  | CharLit(c) -> c
   | StrLit(s) -> s
   | Id(s) -> s
   | Binop(e1, o, e2) ->
