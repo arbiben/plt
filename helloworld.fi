@@ -1,6 +1,8 @@
 $ This is the hello-world testing file that will print out "hello world"
 The print will include the actual "" for now $
 
+int x?
+
 int main(){
 
 printstring("hello world")?
