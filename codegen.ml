@@ -206,8 +206,9 @@ let translate ((globals, functions), _) =
 
        let builder = stmt builder (SBlock fdecl.sbody) in
        (* Add a return if the last block falls off the end *)
-        add_terminal builder fdecl.styp =  
-              build_ret (L.const_int (ltype_of_typ fdecl.styp) 0)
+        add_terminal builder (match fdecl.styp with   
+              t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
+  in
         
           
   
@@ -216,6 +217,6 @@ let translate ((globals, functions), _) =
    (* in ignore(stmt builder (SBlock fdecl.sbody))*)
   (* Build each function (there should only be one for Hello World), 
      and return the final module *)
-  in List.iter build_function_body functions;
+ List.iter build_function_body functions;
  the_module
 
