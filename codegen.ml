@@ -96,8 +96,7 @@ let translate ((globals, functions), _) =
       | SNoexpr -> L.const_int i32_t 0
       | SId s -> L.build_load (lookup s) s builder
       | SBinop (e1, op, e2) ->
-              let (t, _) = e1
-              and e1' = expr builder e1
+              let  e1' = expr builder e1
               and e2' = expr builder e2 in
               (match op with
                 A.Add     -> L.build_add
@@ -115,7 +114,7 @@ let translate ((globals, functions), _) =
               | A.Geq     -> L.build_icmp L.Icmp.Sge
               ) e1' e2' "tmp" builder
       | SUnop(op, e) -> 
-              let (t, _) = e and e' = expr builder e in
+              let e' = expr builder e in  
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
@@ -128,7 +127,7 @@ let translate ((globals, functions), _) =
   L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
       (* Throw an error for any other expressions *)
       | SCall (f, act) -> 
-              let (fdef, fdecl) = StringMap.find f function_decls in
+              let (fdef, _) = StringMap.find f function_decls in   (* (fdef, fdecl) --> (fdef, _) *)
               let actuals = List.rev (List.map (expr builder) (List.rev act)) in
               let result = f ^ "_result" in
               L.build_call fdef (Array.of_list actuals) result builder in
