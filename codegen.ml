@@ -7,13 +7,14 @@ Heavily based off of the MicroC's helloworld codegen example
 
 module L = Llvm
 module A = Ast
+module HT = Hashtbl
 open Sast 
 
 module StringMap = Map.Make(String)
 
 (* Code Generation from the SAST. Returns an LLVM module if successful,
    throws an exception if something is wrong. *)
-let translate ((globals, functions), _) =
+let translate ((globals, functions), structures) =
   let context    = L.global_context () in
   (* Add types to the context so we can use them in our LLVM code *)
   let i32_t      = L.i32_type                context
@@ -25,11 +26,26 @@ let translate ((globals, functions), _) =
   and the_module = L.create_module context "Fi" in
   (* Convert Fi types to LLVM types *)
   let ltype_of_typ = function
-      A.Int   -> i32_t
-    | A.Str   -> ptr
-    | A.Bool  -> i1_t 
-   (* | t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
+      A.Int    -> i32_t
+    | A.Str    -> ptr
+    | A.Bool   -> i1_t 
+    | A.Struct ->  maybe put it here get_struct_name ssname
+    (* | t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
+
+  let struct_map = StringMap.empty in
+  let structure_decls struct_decl = 
+      let struct_name = L.named_struct_type context struct_decl.sname in
+      let struct_map = StringMap.add struct_decl.sname struct_name struct_map  in 
+      let () = List.iter structure_decls structures in
+
+  let structure_bods struct_decl = 
+      let st_type tup = ltype_of_typ (fst tup) in
+      let elements = Array.of_list (List.map st_typ struct_decl.elements) in
+      L.struct_set_body (List.find struct_decl.sname struct_map) elements
+
+
+
 
   let global_vars = 
       let global_var m (t, n) =

@@ -84,10 +84,11 @@ formal_list:
   | formal_list COMMA typ ID { ($3,$4) :: $1 }
 
 typ:
-    INT    { Int   }
-  | BOOL   { Bool  }
-  | STRING { Str   }
-  | ARR    { Arr   } 
+    INT    { Int    }
+  | BOOL   { Bool   }
+  | STRING { Str    }
+  | ARR    { Arr    } 
+  | STRUCT { Struct }
 
 vdecl_list:
     /* nothing */    { [] }

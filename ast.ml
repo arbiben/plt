@@ -8,7 +8,7 @@ type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Ge
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Str | Arr
+type typ = Int | Bool | Str | Arr | Struct
 
 type bind = typ * string
 
