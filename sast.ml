@@ -42,7 +42,7 @@ type sstruct_decl = {
     selements: bind list;
   }
 
-type sprogram = (bind list * sfunc_decl list) * struct_decl list
+type sprogram = (bind list * sfunc_decl list) * sstruct_decl list
 
 (* Pretty-printing functions *)
 
@@ -89,10 +89,10 @@ let string_of_sfdecl fdecl =
   "}\n"
 
 let string_of_ssdecl sdecl = 
-   "struct " ^ sdecl.sname ^ " {\n" ^ 
-   String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
+   "struct " ^ sdecl.ssname ^ " {\n" ^ 
+   String.concat "" (List.map string_of_vdecl sdecl.selements) ^ "}\n"
 
 let string_of_sprogram ((vars, funcs), structs)  =
-  String.concat "\n" (List.map string_of_sdecl structs) ^ "\n" ^ 
+  String.concat "\n" (List.map string_of_ssdecl structs) ^ "\n" ^ 
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_sfdecl funcs)

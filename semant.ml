@@ -20,14 +20,6 @@ let check (g_f, structs) =
     let globals = fst g_f in 
     let functions = snd g_f in 
   
-  (*let rec check_structs s structs_checked =
-      let check_dup st = 
-          if Set.mem st structs_checked then raise (Failure ("dup struct " ^ st) else
-              check_structs (
-
-  let _ = List.map (check_structs structs
-*)
-
   (* Check if a certain kind of binding has void type or is a duplicate
      of another, previously checked binding *)
   let check_binds (kind : string) (to_check : bind list) = 
@@ -42,6 +34,35 @@ let check (g_f, structs) =
     in let _ = List.fold_left check_it [] (List.sort compare to_check) 
        in to_check
   in 
+
+  (* Add struct name to symbol table *)
+  let add_struct map sd = 
+    let dup_err = "duplicate function " ^ sd.sname
+    and make_err er = raise (Failure er)
+    and n = sd.sname (* Name of the struct *)
+    in match sd with (* No duplicate structs *)
+       _ when StringMap.mem n map -> make_err dup_err  
+       | _ ->  StringMap.add n sd map 
+  in
+
+  (* Collect all other struct names into one symbol table *)
+  let struct_decls = List.fold_left add_struct StringMap.empty structs
+  in
+  
+  (* Return a struct from our symbol table *)
+  let find_struct s = 
+    try StringMap.find s struct_decls
+    with Not_found -> raise (Failure ("unrecognized struct " ^ s))
+  in
+
+  let check_struct structure =
+    (* Make sure no formals or locals are void or duplicates *)
+    let elements' = check_binds "elements" structure.elements in
+
+    (* body of check_function *)
+    { ssname = structure.sname;
+      selements = structure.elements
+    } in
 
   (**** Checking Global Variables ****)
 
@@ -208,5 +229,5 @@ let check (g_f, structs) =
       | _ -> let err = "internal error: block didn't become a block?"
       in raise (Failure err)
     }
-  in ((globals', List.map check_function functions), structs)
+  in ((globals', List.map check_function functions), List.map check_struct structs)
 
