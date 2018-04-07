@@ -30,8 +30,8 @@ let translate ((globals, functions), structures) =
    * *)
   let struct_map = StringMap.empty in
   let structure_decls struct_decl = 
-      let struct_name = L.named_struct_type context struct_decl.sname in
-      StringMap.add struct_decl.sname struct_name struct_map  in 
+      let struct_name = L.named_struct_type context struct_decl.ssname in
+      StringMap.add struct_decl.ssname struct_name struct_map  in 
       let _ = List.map structure_decls structures in
 
   
@@ -47,8 +47,8 @@ let translate ((globals, functions), structures) =
   
   let structure_bods struct_decl = 
       let st_type tup = ltype_of_typ (fst tup) in
-      let elements = Array.of_list (List.map st_type struct_decl.elements) in
-      L.struct_set_body (StringMap.find struct_decl.sname struct_map) elements true in
+      let elements = Array.of_list (List.map st_type struct_decl.selements) in
+      L.struct_set_body (StringMap.find struct_decl.ssname struct_map) elements true in
       ignore(List.map structure_bods structures);
 
   let global_vars = 
