@@ -46,22 +46,16 @@ let check (g_f, structs) =
   in
 
   (* Collect all other struct names into one symbol table *)
-  let struct_decls = List.fold_left add_struct StringMap.empty structs
+  let _ = List.fold_left add_struct StringMap.empty structs
   in
   
-  (* Return a struct from our symbol table *)
-  let find_struct s = 
-    try StringMap.find s struct_decls
-    with Not_found -> raise (Failure ("unrecognized struct " ^ s))
-  in
-
   let check_struct structure =
     (* Make sure no formals or locals are void or duplicates *)
     let elements' = check_binds "elements" structure.elements in
 
     (* body of check_function *)
     { ssname = structure.sname;
-      selements = structure.elements
+      selements = elements'
     } in
 
   (**** Checking Global Variables ****)

@@ -40,8 +40,8 @@ let translate ((globals, functions), structures) =
       A.Int            -> i32_t
     | A.Str            -> ptr
     | A.Bool           -> i1_t 
-    | A.Struct(ssname) -> i32_t (*StringMap.find ssname struct_map
-    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)*)
+    | A.Struct(ssname) -> StringMap.find ssname struct_map
+    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
 
   
