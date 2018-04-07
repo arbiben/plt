@@ -7,6 +7,8 @@ open Ast
 open Sast
 
 module StringMap = Map.Make(String)
+module Set = Set.Make(String)
+
 
 (* Semantic checking of the AST. Returns an SAST if successful,
    throws an exception if something is wrong.
@@ -17,6 +19,15 @@ module StringMap = Map.Make(String)
 let check (g_f, structs) = 
     let globals = fst g_f in 
     let functions = snd g_f in 
+  
+  (*let rec check_structs s structs_checked =
+      let check_dup st = 
+          if Set.mem st structs_checked then raise (Failure ("dup struct " ^ st) else
+              check_structs (
+
+  let _ = List.map (check_structs structs
+*)
+
   (* Check if a certain kind of binding has void type or is a duplicate
      of another, previously checked binding *)
   let check_binds (kind : string) (to_check : bind list) = 

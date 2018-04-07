@@ -88,7 +88,7 @@ typ:
   | BOOL   { Bool   }
   | STRING { Str    }
   | ARR    { Arr    } 
-  | STRUCT { Struct }
+  | STRUCT ID { Struct ($2)  }
 
 vdecl_list:
     /* nothing */    { [] }

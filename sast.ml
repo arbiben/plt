@@ -10,6 +10,7 @@ and sx =
     SLiteral of int 
   | SBoolLit of bool
   | SStrLit of string
+  | SStructLit of string
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
@@ -41,7 +42,7 @@ type sstruct_decl = {
     selements: bind list;
   }
 
-type sprogram = (bind list * sfunc_decl list) * sstruct_decl list
+type sprogram = (bind list * sfunc_decl list) * struct_decl list
 
 (* Pretty-printing functions *)
 
@@ -51,6 +52,7 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(true) -> "T"
   | SBoolLit(false) -> "F"
   | SStrLit(s) -> s
+  | SStructLit(s) -> "struct " ^ s
   | SId(s) -> s
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
@@ -91,6 +93,6 @@ let string_of_ssdecl sdecl =
    String.concat "" (List.map string_of_vdecl sdecl.elements) ^ "}\n"
 
 let string_of_sprogram ((vars, funcs), structs)  =
-  String.concat "\n" (List.map string_of_ssdecl structs) ^ "\n" ^ 
+  String.concat "\n" (List.map string_of_sdecl structs) ^ "\n" ^ 
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_sfdecl funcs)

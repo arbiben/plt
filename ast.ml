@@ -8,7 +8,7 @@ type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Ge
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Str | Arr | Struct
+type typ = Int | Bool | Str | Arr | Struct of string
 
 type bind = typ * string
 
@@ -16,6 +16,7 @@ type expr =
     Literal of int
   | BoolLit of bool
   | StrLit of string
+  | StructLit of string
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -71,16 +72,18 @@ let string_of_uop = function
   | Not -> "not"
 
 let string_of_typ = function
-    Int -> "int"
-  | Bool -> "bool"
-  | Str -> "str"
-  | Arr-> "arr" 
+    Int       -> "int"
+  | Bool      -> "bool"
+  | Str       -> "str"
+  | Arr       -> "arr" 
+  | Struct(s) -> "struct " ^ s
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
   | BoolLit(false) -> "F"
   | StrLit(s) -> s
+  | StructLit(s) -> "struct " ^ s
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2

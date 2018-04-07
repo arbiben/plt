@@ -7,7 +7,6 @@ Heavily based off of the MicroC's helloworld codegen example
 
 module L = Llvm
 module A = Ast
-module HT = Hashtbl
 open Sast 
 
 module StringMap = Map.Make(String)
@@ -24,28 +23,33 @@ let translate ((globals, functions), structures) =
   (* Create an LLVM module -- this is a container into which we'll 
      generate actual code *)
   and the_module = L.create_module context "Fi" in
-  (* Convert Fi types to LLVM types *)
-  let ltype_of_typ = function
-      A.Int    -> i32_t
-    | A.Str    -> ptr
-    | A.Bool   -> i1_t 
-    | A.Struct ->  maybe put it here get_struct_name ssname
-    (* | t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
-  in
-
+  
+  (* Beginning struct declarations buildup. need to do this before types because 
+   * types will use the stringmap to find a user defined type
+   * First, declare the struct names (like function decls)
+   * *)
   let struct_map = StringMap.empty in
   let structure_decls struct_decl = 
       let struct_name = L.named_struct_type context struct_decl.sname in
-      let struct_map = StringMap.add struct_decl.sname struct_name struct_map  in 
-      let () = List.iter structure_decls structures in
+      StringMap.add struct_decl.sname struct_name struct_map  in 
+      let _ = List.map structure_decls structures in
 
+  
+  (* Convert Fi types to LLVM types *)
+  let ltype_of_typ = function
+      A.Int            -> i32_t
+    | A.Str            -> ptr
+    | A.Bool           -> i1_t 
+    | A.Struct(ssname) -> i32_t (*StringMap.find ssname struct_map
+    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)*)
+  in
+
+  
   let structure_bods struct_decl = 
       let st_type tup = ltype_of_typ (fst tup) in
-      let elements = Array.of_list (List.map st_typ struct_decl.elements) in
-      L.struct_set_body (List.find struct_decl.sname struct_map) elements
-
-
-
+      let elements = Array.of_list (List.map st_type struct_decl.elements) in
+      L.struct_set_body (StringMap.find struct_decl.sname struct_map) elements true in
+      ignore(List.map structure_bods structures);
 
   let global_vars = 
       let global_var m (t, n) =
@@ -70,11 +74,6 @@ let translate ((globals, functions), structures) =
   (* Generate the instructions for a trivial main function *)
   let build_function_body fdecl =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
-    (* Make the LLVM module aware of the main function *)
-    (* CAN ERASEEEEE
-    let main_ty = L.function_type (ltype_of_typ fdecl.styp) [||] in
-    let the_function = L.define_function "main" main_ty the_module in
-    *)
     (* Create an Instruction Builder, which points into a basic block
       and determines where the next instruction should be placed *)
     let builder = L.builder_at_end context (L.entry_block the_function) in
@@ -109,6 +108,7 @@ let translate ((globals, functions), structures) =
         SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
       | SBoolLit b -> L.const_int i1_t (if b then 1 else 0) 
       | SStrLit i -> L.build_global_stringptr i "tmp" builder (* generate a pointer *)
+      | SStructLit s -> lookup s
       | SNoexpr -> L.const_int i32_t 0
       | SId s -> L.build_load (lookup s) s builder
       | SBinop (e1, op, e2) ->
@@ -147,9 +147,6 @@ let translate ((globals, functions), structures) =
               let actuals = List.rev (List.map (expr builder) (List.rev act)) in
               let result = f ^ "_result" in
               L.build_call fdef (Array.of_list actuals) result builder in
-
-              
-   
 
    (* Each basic block in a program ends with a "terminator" instruction i.e.
     *     one that ends the basic block. By definition, these instructions must
