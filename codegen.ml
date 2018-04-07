@@ -28,11 +28,10 @@ let translate ((globals, functions), structures) =
    * types will use the stringmap to find a user defined type
    * First, declare the struct names (like function decls)
    * *)
-  let struct_map = StringMap.empty in
-  let structure_decls struct_decl = 
+  let structure_decls map struct_decl = 
       let struct_name = L.named_struct_type context struct_decl.ssname in
-      StringMap.add struct_decl.ssname struct_name struct_map  in 
-      let _ = List.map structure_decls structures in
+      StringMap.add struct_decl.ssname struct_name map  in 
+      let struct_map = List.fold_left structure_decls StringMap.empty structures in
 
   
   (* Convert Fi types to LLVM types *)
@@ -49,7 +48,7 @@ let translate ((globals, functions), structures) =
       let st_type tup = ltype_of_typ (fst tup) in
       let elements = Array.of_list (List.map st_type struct_decl.selements) in
       L.struct_set_body (StringMap.find struct_decl.ssname struct_map) elements true in
-      ignore(List.map structure_bods structures);
+      List.map structure_bods structures;
 
   let global_vars = 
       let global_var m (t, n) =
