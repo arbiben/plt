@@ -135,11 +135,12 @@ let check (g_f, structs) =
       | Id s       -> (type_of_identifier s, SId s)
       | StrLit s   -> (Str, SStrLit s)
       | Assign(var, e) as ex -> 
-          let lt = type_of_identifier var
-          and (rt, e') = expr e in
-          let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
+          let lt = expr var
+          and rr = expr e in let
+          rt = fst rr in let  e' = snd rr in  
+          let err = "illegal assignment " ^ string_of_typ (fst lt) ^ " = " ^ 
             string_of_typ rt ^ " in " ^ string_of_expr ex
-          in (check_assign lt rt err, SAssign(var, (rt, e')))
+          in (check_assign (fst lt) rt err, SAssign(lt, (rt, e')))
       | Unop(op, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with
