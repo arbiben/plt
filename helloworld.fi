@@ -2,9 +2,9 @@ $ This is the hello-world testing file that will print out "hello world"
 The print will include the actual "" for now $
 
 struct baby {
-$int age?
-bool annoying?
-$}
+int age?
+str annoying?
+}
 
 int x?
 
@@ -13,10 +13,11 @@ int main(){
   int s?
   struct baby geffen?
 
+
   s = 1?
-  p = "hi"?
+$  p = "hi"?
   x = 1?
-  $geffen.age = 5?$
+ $ $geffen.age = 5?$
   printstring("hello world")?
 
   return 0?
