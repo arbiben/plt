@@ -9,9 +9,15 @@ bool annoying?
 int x?
 
 int main(){
+  str p?
+  int s?
 
-printstring("hello world")?
-return 0?
+  s = 1?
+  p = "hi"?
+  x = 1?
+  printstring("hello world")?
+
+  return 0?
 }
 
 
