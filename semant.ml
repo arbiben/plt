@@ -118,7 +118,8 @@ let check (g_f, structs) =
 
     let check_extract struct_val member = 
         let struct_equals st = st.sname = struct_val in
-        let struct_found = List.find struct_equals structs in
+        let struct_found = try List.find struct_equals structs 
+            with Not_found -> raise(Failure("No such struct " ^ struct_val ^ " found")) in
         let member_equals st = snd st = member in
         try fst (List.find member_equals struct_found.elements)
         with Not_found -> raise (Failure("no such member in struct type")) in
