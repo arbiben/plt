@@ -3,19 +3,22 @@ The print will include the actual "" for now $
 
 struct baby {
 int age?
-bool annoying?
+str annoying?
 }
 
 int x?
+struct baby geffen?
 
 int main(){
   str p?
   int s?
 
+
   s = 1?
-  p = "hi"?
+  p = "hello world"?
   x = 1?
-  printstring("hello world")?
+  $geffen.age = 5?$
+  printstring(p)?
 
   return 0?
 }

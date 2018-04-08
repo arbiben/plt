@@ -32,23 +32,29 @@ let translate ((globals, functions), structures) =
       let struct_name = L.named_struct_type context struct_decl.ssname in
       StringMap.add struct_decl.ssname struct_name map  in 
       let struct_map = List.fold_left structure_decls StringMap.empty structures in
-
   
   (* Convert Fi types to LLVM types *)
   let ltype_of_typ = function
       A.Int            -> i32_t
     | A.Str            -> ptr
     | A.Bool           -> i1_t 
-    | A.Struct(ssname) -> StringMap.find ssname struct_map
-    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
+    | A.Struct(ssname) -> StringMap.find ssname struct_map 
+   (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
-
   
   let structure_bods struct_decl = 
       let st_type tup = ltype_of_typ (fst tup) in
       let elements = Array.of_list (List.map st_type struct_decl.selements) in
       L.struct_set_body (StringMap.find struct_decl.ssname struct_map) elements true in
-      List.map structure_bods structures;
+      ignore(List.map structure_bods structures);
+
+  let store_struct_vars elems_map st =  
+      let var tup = snd tup in 
+      let vars = List.map var st.selements in
+      let make_map pair v = ((StringMap.add v ((snd pair) + 1) (fst pair)), (snd pair) + 1) in  
+      let vars_map = List.fold_left make_map (StringMap.empty, -1) vars in
+      StringMap.add st.ssname (fst vars_map) elems_map in
+      let struct_vars = List.fold_left store_struct_vars StringMap.empty structures in
 
   let global_vars = 
       let global_var m (t, n) =
@@ -99,7 +105,7 @@ let translate ((globals, functions), structures) =
         List.fold_left add_local formals fdecl.slocals
     in 
     let lookup n = try StringMap.find n local_vars with Not_found ->
-                        StringMap.find n global_vars
+                        StringMap.find n global_vars 
     in 
 
     (* Generate LLVM code for a call to print *)
@@ -133,8 +139,24 @@ let translate ((globals, functions), structures) =
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
-      | SAssign (s, e)    -> let e' = expr builder e in
-                             let _  = L.build_store e' (lookup s) builder in e' 
+      | SExtract (s, v)   -> let ptr_val = (
+                             let s' = lookup s in
+                             let typ_of_i = fst (List.find (fun a -> snd(a)=s) fdecl.slocals ) in
+                             match typ_of_i with A.Struct st -> 
+                                 let positions = StringMap.find st struct_vars in
+                                 let v_pos = StringMap.find v positions in
+                                 let var_final = L.build_struct_gep s' v_pos "tmp" builder in var_final
+                             (*  | _ -> raise (Failure("no such struct variable"))*)
+                           | _ -> raise (Failure("couldn't find struct type"))) in
+                     let struct_name = L.struct_name(L.type_of (lookup s)) in
+                     let no_option = match struct_name with None -> "" | Some a -> a in
+                     let final_pos = StringMap.find v (StringMap.find no_option struct_vars ) in
+                     let final_val = L.build_struct_gep ptr_val final_pos "tmp" builder in 
+                     L.build_load final_val "tmp" builder
+      | SAssign (s, e)    -> let sf = (match snd s with SId s'-> lookup s' 
+                                | _ -> raise(Failure("assign failed"))) in
+                             let e' = expr builder e in
+                             let _  = L.build_store e' sf builder in e' 
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 
