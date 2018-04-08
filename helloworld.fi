@@ -17,6 +17,7 @@ int main(){
   s = 1?
   p = "hello world"?
   x = 1?
+
   geffen.age = 5?
   printstring(p)?
 

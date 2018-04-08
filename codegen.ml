@@ -141,15 +141,17 @@ let translate ((globals, functions), structures) =
               | A.Not     -> L.build_not) e' "tmp" builder
       | SExtract (s, v)   -> let ptr_val = (
                              let s' = lookup s in
-                             let typ_of_i = fst (List.find (fun a -> snd(a)=s) fdecl.slocals ) in
+                             let typ_of_i = fst (List.find (fun a -> snd(a)=s) fdecl.slocals) in
                              match typ_of_i with A.Struct st -> 
                                  let positions = StringMap.find st struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  let var_final = L.build_struct_gep s' v_pos "tmp" builder in var_final
                            | _ -> raise (Failure("couldn't find struct type"))) in
-                     let struct_name = L.struct_name(L.type_of (lookup s)) in
+                     let struct_name = L.struct_name(L.type_of(lookup s)) in
                      let no_option = match struct_name with None -> "" | Some a -> a in
-                     let final_pos = StringMap.find v (StringMap.find no_option struct_vars ) in
+                     let final_pos = StringMap.find v (
+                         try StringMap.find no_option struct_vars with Not_found -> 
+                         raise(Failure("not able to locate this struct " ^ no_option))) in
                      let final_val = L.build_struct_gep ptr_val final_pos "tmp" builder in 
                      L.build_load final_val "tmp" builder
       | SAssign (s, e)    -> let sf = (
