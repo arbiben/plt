@@ -76,14 +76,14 @@ let string_of_typ = function
   | Bool      -> "bool"
   | Str       -> "str"
   | Arr       -> "arr" 
-  | Struct(s) -> "struct " ^ s
+  | Struct(s) -> s
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
   | BoolLit(false) -> "F"
   | StrLit(s) -> s
-  | StructLit(s) -> "struct " ^ s
+  | StructLit(s) -> s
   | Id(s) -> s
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2

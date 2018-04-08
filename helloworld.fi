@@ -7,17 +7,17 @@ str annoying?
 }
 
 int x?
-struct baby geffen?
 
 int main(){
   str p?
   int s?
+  struct baby geffen?
 
 
   s = 1?
   p = "hello world"?
   x = 1?
-  $geffen.age = 5?$
+  geffen.age = 5?
   printstring(p)?
 
   return 0?

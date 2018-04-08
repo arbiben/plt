@@ -116,13 +116,6 @@ let check (g_f, structs) =
        if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in   
 
-    let check_extract struct_val member = 
-        let struct_equals st = st.sname = struct_val in
-        let struct_found = try List.find struct_equals structs 
-            with Not_found -> raise(Failure("No such struct " ^ struct_val ^ " found")) in
-        let member_equals st = snd st = member in
-        try fst (List.find member_equals struct_found.elements)
-        with Not_found -> raise (Failure("no such member in struct type")) in
 
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
@@ -135,6 +128,15 @@ let check (g_f, structs) =
       with Not_found -> raise (Failure ("undeclared identifier " ^ s))
     in
 
+    let check_extract struct_val member = 
+        let struct_equals st = st.sname = 
+            (string_of_typ(type_of_identifier struct_val)) in
+        let struct_found = try List.find struct_equals structs 
+            with Not_found -> raise(Failure("No such struct " ^
+  (string_of_typ(type_of_identifier struct_val)) ^ " found")) in
+        let member_equals st = snd st = member in
+        try fst (List.find member_equals struct_found.elements)
+        with Not_found -> raise (Failure("no such member in struct type")) in
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
@@ -142,7 +144,8 @@ let check (g_f, structs) =
       | BoolLit l  -> (Bool, SBoolLit l)
       | Id s       -> (type_of_identifier s, SId s)
       | StrLit s   -> (Str, SStrLit s)
-      | Extract(el, er) -> (check_extract el er, SExtract(el, er))
+      | StructLit s -> (Struct s, SStructLit s)
+      | Extract(el, er) -> (check_extract ( el) er, SExtract(el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var
           and rr = expr e in let
