@@ -116,6 +116,13 @@ let check (g_f, structs) =
        if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in   
 
+    let check_extract struct_val member = 
+        let struct_equals st = st.sname = struct_val in
+        let struct_found = List.find struct_equals structs in
+        let member_equals st = snd st = member in
+        try fst (List.find member_equals struct_found.elements)
+        with Not_found -> raise (Failure("no such member in struct type")) in
+
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
 	                StringMap.empty (globals' @ formals' @ locals' )
@@ -134,6 +141,7 @@ let check (g_f, structs) =
       | BoolLit l  -> (Bool, SBoolLit l)
       | Id s       -> (type_of_identifier s, SId s)
       | StrLit s   -> (Str, SStrLit s)
+      | Extract(el, er) -> (check_extract el er, SExtract(el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var
           and rr = expr e in let

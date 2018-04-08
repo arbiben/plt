@@ -38,8 +38,8 @@ let translate ((globals, functions), structures) =
       A.Int            -> i32_t
     | A.Str            -> ptr
     | A.Bool           -> i1_t 
-    | A.Struct(ssname) -> StringMap.find ssname struct_map
-    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
+    | A.Struct(ssname) -> StringMap.find ssname struct_map 
+   (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
   
   let structure_bods struct_decl = 
@@ -105,7 +105,7 @@ let translate ((globals, functions), structures) =
         List.fold_left add_local formals fdecl.slocals
     in 
     let lookup n = try StringMap.find n local_vars with Not_found ->
-                        StringMap.find n global_vars
+                        StringMap.find n global_vars 
     in 
 
     (* Generate LLVM code for a call to print *)
@@ -141,7 +141,7 @@ let translate ((globals, functions), structures) =
               | A.Not     -> L.build_not) e' "tmp" builder
       | SExtract (s, v)   -> let ptr_val = (
                              let s' = lookup s in
-                             let typ_of_i = fst (List.find (fun a -> snd(a)=s) fdecl.slocals) in
+                             let typ_of_i = fst (List.find (fun a -> snd(a)=s) fdecl.slocals ) in
                              match typ_of_i with A.Struct st -> 
                                  let positions = StringMap.find st struct_vars in
                                  let v_pos = StringMap.find v positions in
@@ -150,7 +150,7 @@ let translate ((globals, functions), structures) =
                            | _ -> raise (Failure("couldn't find struct type"))) in
                      let struct_name = L.struct_name(L.type_of (lookup s)) in
                      let no_option = match struct_name with None -> "" | Some a -> a in
-                     let final_pos = StringMap.find v (StringMap.find no_option struct_vars) in
+                     let final_pos = StringMap.find v (StringMap.find no_option struct_vars ) in
                      let final_val = L.build_struct_gep ptr_val final_pos "tmp" builder in 
                      L.build_load final_val "tmp" builder
       | SAssign (s, e)    -> let sf = (match snd s with SId s'-> lookup s' 
