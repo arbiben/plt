@@ -15,9 +15,9 @@ int main(){
 
 
   s = 1?
-$  p = "hi"?
+  p = "hi"?
   x = 1?
- $ $geffen.age = 5?$
+  geffen.age = 5?
   printstring("hello world")?
 
   return 0?

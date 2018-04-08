@@ -153,9 +153,10 @@ let translate ((globals, functions), structures) =
                      let final_pos = StringMap.find v (StringMap.find no_option struct_vars) in
                      let final_val = L.build_struct_gep ptr_val final_pos "tmp" builder in 
                      L.build_load final_val "tmp" builder
-      | SAssign (s, e)    -> 
+      | SAssign (s, e)    -> let sf = (match snd s with SId s'-> lookup s' 
+                                | _ -> raise(Failure("assign failed"))) in
                              let e' = expr builder e in
-                             let _  = L.build_store e' (expr builder s) builder in e' 
+                             let _  = L.build_store e' sf builder in e' 
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 
