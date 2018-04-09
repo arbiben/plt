@@ -111,6 +111,11 @@ let translate ((globals, functions), structures) =
                         StringMap.find n global_vars 
     in 
 
+    let build_arr l =  let init_size = L.const_int i32_t (List.length l) in
+                          let built_elems = List.map (fun elem -> expr builder elem) l in
+                            let malloced = L.build_array_malloc (L.type_of (List.hd built_elems)) init_size "tmpArr" builder in
+                              let 
+
     (* Generate LLVM code for a call to print *)
     let rec expr builder ((_, e) : sexpr) = match e with
         SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
@@ -142,10 +147,8 @@ let translate ((globals, functions), structures) =
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
-      | SArrBuild(l) -> let init_size = L.const_int i32_t (List.length l) in
-                          let built_elems = List.map (fun elem -> expr builder elem) l in
-                          let
-      | SExtract (s, v)   -> 
+      | SArrBuild(l)      -> build_arr l  
+               | SExtract (s, v)   -> 
             let sf = (match snd s with 
                   SId s'-> lookup s'
                 | SExtract (s, v) -> 
