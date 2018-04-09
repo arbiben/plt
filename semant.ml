@@ -130,10 +130,10 @@ let check (g_f, structs) =
 
     let check_extract struct_val member = 
         let struct_equals st = st.sname = 
-            (string_of_typ(type_of_identifier struct_val)) in
+            (string_of_typ(struct_val)) in
         let struct_found = try List.find struct_equals structs 
             with Not_found -> raise(Failure("No such struct " ^
-  (string_of_typ(type_of_identifier struct_val)) ^ " found")) in
+  (string_of_typ(struct_val)) ^ " found")) in
         let member_equals st = snd st = member in
         try fst (List.find member_equals struct_found.elements)
         with Not_found -> raise (Failure("no such member in struct type")) in
@@ -145,7 +145,7 @@ let check (g_f, structs) =
       | Id s       -> (type_of_identifier s, SId s)
       | StrLit s   -> (Str, SStrLit s)
       | StructLit s -> (Struct s, SStructLit s)
-      | Extract(el, er) -> (check_extract ( el) er, SExtract(el, er))
+      | Extract(el, er) -> (check_extract (fst(expr el)) er, SExtract(expr el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var
           and rr = expr e in let

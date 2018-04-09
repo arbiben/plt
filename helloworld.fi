@@ -19,6 +19,7 @@ int main(){
   x = 1?
 
   geffen.age = 5?
+  x = geffen.age?
   printstring(p)?
 
   return 0?

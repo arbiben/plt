@@ -16,7 +16,7 @@ and sx =
   | SUnop of uop * sexpr
   | SAssign of sexpr * sexpr
   | SCall of string * sexpr list
-  | SExtract of string * string
+  | SExtract of sexpr * string
   | SIndex of string * int  
   | SArrBuild of sexpr list
   | SNoexpr
@@ -60,7 +60,7 @@ let rec string_of_sexpr (t, e) =
   | SAssign(v, e) -> string_of_sexpr v ^ " = " ^ string_of_sexpr e
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
-  | SExtract(id, field) -> id ^ "." ^ field 
+  | SExtract(id, field) -> string_of_sexpr id ^ "." ^ field 
   | SIndex(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]"
   | SArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_sexpr elems)
   | SNoexpr -> ""

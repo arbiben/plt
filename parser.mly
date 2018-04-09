@@ -136,7 +136,7 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | expr ASSIGN expr   { Assign($1, $3)         }
-  | ID DOT ID        { Extract($1, $3)        }
+  | expr DOT ID        { Extract($1, $3)        }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
   | ID LBRACKET LITERAL RBRACKET { Index($1, $3)  }
