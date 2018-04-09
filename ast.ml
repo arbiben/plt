@@ -8,7 +8,11 @@ type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Ge
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Str | Arr | Struct of string
+type atyp = Int | Bool | Str | Struct of string
+
+type typ = 
+    Atype of atyp 
+  | Arr of atyp * int
 
 type bind = typ * string
 
@@ -71,12 +75,15 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "not"
 
-let string_of_typ = function
+let string_of_atyp = function
     Int       -> "int"
   | Bool      -> "bool"
   | Str       -> "str"
-  | Arr       -> "arr" 
   | Struct(s) -> s
+
+let string_of_typ = function
+  | Atype(a) -> string_of_atyp a
+  | Arr(t, _) -> string_of_atyp t ^ " arr"
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l

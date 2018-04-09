@@ -83,12 +83,14 @@ formal_list:
     typ ID                   { [($1,$2)]     }
   | formal_list COMMA typ ID { ($3,$4) :: $1 }
 
+atyp:
+    INT       { Int          }
+  | BOOL      { Bool         }
+  | STRING    { Str          }
+  | STRUCT ID { Struct($2)   }
 typ:
-    INT    { Int    }
-  | BOOL   { Bool   }
-  | STRING { Str    }
-  | ARR    { Arr    } 
-  | STRUCT ID { Struct ($2)  }
+    atyp       { Atype($1)      }
+  | ARR atyp ID { Arr($2, $3)    }
 
 vdecl_list:
     /* nothing */    { [] }
