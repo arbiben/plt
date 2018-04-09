@@ -38,7 +38,8 @@ let translate ((globals, functions), structures) =
       A.Int            -> i32_t
     | A.Str            -> ptr
     | A.Bool           -> i1_t 
-    | A.Struct(ssname) -> StringMap.find ssname struct_map 
+    | A.Struct(ssname) -> StringMap.find ssname struct_map
+    (* | A.Arr(t, _) -> *) 
    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
   
@@ -136,12 +137,15 @@ let translate ((globals, functions), structures) =
               | A.Leq     -> L.build_icmp L.Icmp.Sle
               | A.Greater -> L.build_icmp L.Icmp.Sgt
               | A.Geq     -> L.build_icmp L.Icmp.Sge
-              ) e1' e2' "tmp" builder
+              ) e1' e2' "tmp" builder 
       | SUnop(op, e) -> 
               let e' = expr builder e in  
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
+      | SArrBuild(l) -> let init_size = L.const_int i32_t (List.length l) in 
+                          let built_elems = List.map (fun elem -> expr builder elem) l in
+                             let 
       | SExtract (s, v)   -> 
             let sf = (match snd s with 
                   SId s'-> lookup s'
