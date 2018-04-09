@@ -142,6 +142,9 @@ let translate ((globals, functions), structures) =
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
+      | SArrBuild(l) -> let init_size = L.const_int i32_t (List.length l) in
+                          let built_elems = List.map (fun elem -> expr builder elem) l in
+                          let
       | SExtract (s, v)   -> 
             let sf = (match snd s with 
                   SId s'-> lookup s'
