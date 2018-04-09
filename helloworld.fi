@@ -15,12 +15,14 @@ int main(){
 
 
   s = 1?
-  p = "hello world"?
+  p = "world"?
   x = 1?
 
   geffen.age = 5?
   x = geffen.age?
-  printstring(p)?
+  if (x is geffen.age){
+    printstring("hello world")?
+  }
 
   return 0?
 }
