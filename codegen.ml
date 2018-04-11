@@ -114,9 +114,19 @@ let translate ((globals, functions), structures) =
 
     let build_arr l =  let init_size = L.const_int i32_t (List.length l) in
                           let built_elems = List.map (fun elem -> expr builder elem) l in
-                            let malloced = L.build_array_malloc (L.type_of (List.hd built_elems)) init_size "tmpArr" builder in
-                              let 
-
+                          let malloced = L.build_array_malloc (L.type_of (List.hd built_elems)) init_size "tmpArr" builder in
+                            List.iter (fun f ->
+                              let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
+                              let inter = List.nth built_elems List.nth f in ignore (L.build_store inter next builder)) (int_range (List.length l));
+                          let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type (L.type_of (List.hd all)) |] in
+                          let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+                          let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+                          let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+                          let _ = L.build_store init_size fstore builder in
+                          let _ = L.build_store malloced sstore builder in
+                          let actual_literal = L.build_load new_lit "al" builder in
+                              actual_literal
+    in
     (* Generate LLVM code for a call to print *)
     let rec expr builder ((_, e) : sexpr) = match e with
         SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
