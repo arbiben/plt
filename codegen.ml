@@ -35,11 +35,11 @@ let translate ((globals, functions), structures) =
   
   (* Convert Fi types to LLVM types *)
   let ltype_of_typ = function
-      A.Int            -> i32_t
-    | A.Str            -> ptr
-    | A.Bool           -> i1_t 
-    | A.Struct(ssname) -> StringMap.find ssname struct_map
-    (* | A.Arr(t, _) -> *) 
+      A.AType(Int)            -> i32_t
+    | A.Atype(Str)            -> ptr
+    | A.Atype(Bool)           -> i1_t 
+    | A.Atype(Struct(ssname)) -> StringMap.find ssname struct_map
+ (* | A.Arr(t, _) -> *) 
    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
   
@@ -149,10 +149,10 @@ let translate ((globals, functions), structures) =
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
  
-=======
+
       | SArrBuild(l)      -> build_arr l  
                | SExtract (s, v)   -> 
->>>>>>> f416aeea94b17223276466d9c75e0490ae35c5c9
+
             let sf = (match snd s with 
                   SId s'-> lookup s'
                 | SExtract (s, v) -> 
