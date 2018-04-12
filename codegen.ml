@@ -166,14 +166,14 @@ let translate ((globals, functions), structures) =
 
                | SExtract (s, v)   -> 
 
-            let sf = (match snd s with 
+           let sf = (match snd s with 
                   SId s'-> lookup s'
                 | SExtract (s, v) -> 
                      (match snd s with SId i -> let s' = lookup i in 
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Struct st -> 
-                                 let positions = StringMap.find st struct_vars in
+                              (match typ_of_i with A.Atype(A.Struct(ssname)) -> 
+                                 let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder
                               | _ -> raise (Failure("couldn't find struct type")))
@@ -193,8 +193,8 @@ let translate ((globals, functions), structures) =
                      (match snd s with SId i -> let s' = lookup i in
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Struct st -> 
-                                 let positions = StringMap.find st struct_vars in
+                              (match typ_of_i with A.Atype(A.Struct(ssname)) -> 
+                                 let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder
                               | _ -> raise (Failure("couldn't find struct type")))
