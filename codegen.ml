@@ -32,14 +32,14 @@ let translate ((globals, functions), structures) =
       let struct_name = L.named_struct_type context struct_decl.ssname in
       let new_map = StringMap.add struct_decl.ssname struct_name map in new_map in
   let struct_map = List.fold_left structure_decls StringMap.empty structures in
-  
-  (* Convert Fi types to LLVM types *)
-  let ltype_of_typ = function
-      A.AType(Int)            -> i32_t
-    | A.Atype(Str)            -> ptr
-    | A.Atype(Bool)           -> i1_t 
-    | A.Atype(Struct(ssname)) -> StringMap.find ssname struct_map
- (* | A.Arr(t, _) -> *) 
+    (* Convert Fi types to LLVM types *)
+  let rec ltype_of_typ = function
+      A.Atype(A.Int)            -> i32_t
+    | A.Atype(A.Str)            -> ptr
+    | A.Atype(A.Bool)           -> i1_t 
+    | A.Atype(A.Struct(ssname)) -> StringMap.find ssname struct_map
+    | A.Arr(t, _) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atype(t))) |] 
+
    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
   
@@ -60,6 +60,10 @@ let translate ((globals, functions), structures) =
       let new_map = StringMap.add st.ssname (fst vars_map) elems_map in new_map in
       let struct_vars = List.fold_left store_struct_vars StringMap.empty structures in
 
+  let rec ranges = function
+      0 -> []
+    | 1 -> [ 0 ]
+    | n -> ranges (n-1) @ [ n - 1 ] in
   let global_vars = 
       let global_var m (t, n) =
           let init = L.const_int (ltype_of_typ t) 0
@@ -112,22 +116,7 @@ let translate ((globals, functions), structures) =
                         StringMap.find n global_vars 
     in 
 
-    let build_arr l =  let init_size = L.const_int i32_t (List.length l) in
-                          let built_elems = List.map (fun elem -> expr builder elem) l in
-                          let malloced = L.build_array_malloc (L.type_of (List.hd built_elems)) init_size "tmpArr" builder in
-                            List.iter (fun f ->
-                              let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
-                              let inter = List.nth built_elems List.nth f in ignore (L.build_store inter next builder)) (int_range (List.length l));
-                          let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type (L.type_of (List.hd all)) |] in
-                          let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
-                          let fstore = L.build_struct_gep new_lit 0 "fs" builder in
-                          let sstore = L.build_struct_gep new_lit 1 "ss" builder in
-                          let _ = L.build_store init_size fstore builder in
-                          let _ = L.build_store malloced sstore builder in
-                          let actual_literal = L.build_load new_lit "al" builder in
-                              actual_literal
-    in
-    (* Generate LLVM code for a call to print *)
+       (* Generate LLVM code for a call to print *)
     let rec expr builder ((_, e) : sexpr) = match e with
         SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
       | SBoolLit b -> L.const_int i1_t (if b then 1 else 0) 
@@ -160,7 +149,21 @@ let translate ((globals, functions), structures) =
               | A.Not     -> L.build_not) e' "tmp" builder
  
 
-      | SArrBuild(l)      -> build_arr l  
+      | SArrBuild(l)      ->   let init_size = L.const_int i32_t (List.length l) in
+                                 let built_elems = List.map (fun elem -> expr builder elem) l in
+                                  let malloced = L.build_array_malloc (L.type_of (List.hd built_elems)) init_size "tmpArr" builder in
+                            List.iter (fun f ->
+                                   let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
+                                   let inter = List.nth built_elems f in ignore (L.build_store inter next builder)) (ranges (List.length l));
+                                   let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type (L.type_of (List.hd built_elems)) |] in
+                                   let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+                                   let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+                                   let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+                                   let _ = L.build_store init_size fstore builder in
+                                   let _ = L.build_store malloced sstore builder in
+                                   let actual_literal = L.build_load new_lit "al" builder in
+                              actual_literal
+
                | SExtract (s, v)   -> 
 
             let sf = (match snd s with 
