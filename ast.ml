@@ -11,8 +11,8 @@ type uop = Neg | Not
 type atyp = Int | Bool | Str | Struct of string
 
 type typ = 
-    Atype of atyp 
-  | Arr of atyp * int
+    Atyp of atyp 
+  | Arr of atyp 
 
 type bind = typ * string
 
@@ -82,8 +82,8 @@ let string_of_atyp = function
   | Struct(s) -> s
 
 let string_of_typ = function
-  | Atype(a) -> string_of_atyp a
-  | Arr(t, _) -> string_of_atyp t ^ " arr"
+  | Atyp(a) -> string_of_atyp a
+  | Arr(t)  -> "arr " ^ string_of_atyp t
 
 let rec string_of_expr = function
     Literal(l) -> string_of_int l

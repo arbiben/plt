@@ -89,8 +89,8 @@ atyp:
   | STRING    { Str          }
   | STRUCT ID { Struct($2)   }
 typ:
-    atyp       { Atype($1)      }
-  | ARR atyp ID { Arr($2, $3)    }
+    atyp       { Atyp($1)      }
+  | ARR atyp { Arr($2)    }
 
 vdecl_list:
     /* nothing */    { [] }

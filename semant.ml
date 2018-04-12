@@ -70,13 +70,13 @@ let check (g_f, structs) =
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
     let add_bind map (name, ty) = StringMap.add name {
-      typ = A.Atype(A.Int); fname = name; 
+      typ = Atyp(Int); fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", A.Atype(A.Int));
-                                                 ("printstring", A.Atype(A.Str));
-                                                 ("open", A.Atype(A.Int));
-                                                 ("close", A.Atype(A.Int))    ]
+    in List.fold_left add_bind StringMap.empty [ ("print", Atyp(Int));
+                                                 ("printstring", Atyp(Str));
+                                                 ("open", Atyp(Int));
+                                                 ("close", Atyp(Int))    ]
 			                        (* 
                                                 ("printb", Bool);
 			                         ("printf", Float);
@@ -142,11 +142,11 @@ let check (g_f, structs) =
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
-        Literal  l -> (Int, SLiteral l)
-      | BoolLit l  -> (Bool, SBoolLit l)
+        Literal  l -> (Atyp(Int), SLiteral l)
+      | BoolLit l  -> (Atyp(Bool), SBoolLit l)
       | Id s       -> (type_of_identifier s, SId s)
-      | StrLit s   -> (Str, SStrLit s)
-      | StructLit s -> (Struct s, SStructLit s)
+      | StrLit s   -> (Atyp(Str), SStrLit s)
+      | StructLit s -> (Atyp(Struct s), SStructLit s)
       | Extract(el, er) -> (check_extract (fst(expr el)) er, SExtract(expr el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var
@@ -158,8 +158,8 @@ let check (g_f, structs) =
       | Unop(op, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with
-            Neg when t = Int -> t
-          | Not when t = Bool -> Bool
+            Neg when t = Atyp(Int) -> t
+          | Not when t = Atyp(Bool) -> Atyp(Bool)
           | _ -> raise (Failure ("illegal unary operator " ^ 
                                  string_of_uop op ^ string_of_typ t ^
                                  " in " ^ string_of_expr ex))
@@ -171,11 +171,11 @@ let check (g_f, structs) =
           let same = t1 = t2 in
           (* Determine expression type based on operator and operand types *)
           let ty = match op with
-            Add | Sub | Mult | Div when same && t1 = Int   -> Int
-          | Equal | Neq            when same               -> Bool
+            Add | Sub | Mult | Div when same && t1 = Atyp(Int)   -> Atyp(Int)
+          | Equal | Neq            when same               -> Atyp(Bool)
           | Less | Leq | Greater | Geq
-                     when same && (t1 = Int) -> Bool
-          | And | Or when same && t1 = Bool -> Bool
+                     when same && (t1 = Atyp(Int)) -> Atyp(Bool)
+          | And | Or when same && t1 = Atyp(Bool) -> Atyp(Bool)
           | _ -> raise (
 	      Failure ("illegal binary operator " ^
                        string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
@@ -201,7 +201,7 @@ let check (g_f, structs) =
     let check_bool_expr e = 
       let (t', e') = expr e
       and err = "expected Boolean expression in " ^ string_of_expr e
-      in if t' != Bool then raise (Failure err) else (t', e') 
+      in if t' != Atyp(Bool) then raise (Failure err) else (t', e') 
     in
 
     (* Return a semantically-checked statement i.e. containing sexprs *)

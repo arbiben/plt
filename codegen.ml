@@ -34,11 +34,11 @@ let translate ((globals, functions), structures) =
   let struct_map = List.fold_left structure_decls StringMap.empty structures in
     (* Convert Fi types to LLVM types *)
   let rec ltype_of_typ = function
-      A.Atype(A.Int)            -> i32_t
-    | A.Atype(A.Str)            -> ptr
-    | A.Atype(A.Bool)           -> i1_t 
-    | A.Atype(A.Struct(ssname)) -> StringMap.find ssname struct_map
-    | A.Arr(t, _) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atype(t))) |] 
+      A.Atyp(A.Int)            -> i32_t
+    | A.Atyp(A.Str)            -> ptr
+    | A.Atyp(A.Bool)           -> i1_t 
+    | A.Atyp(A.Struct(ssname)) -> StringMap.find ssname struct_map
+    | A.Arr(t) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
 
    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
@@ -172,7 +172,7 @@ let translate ((globals, functions), structures) =
                      (match snd s with SId i -> let s' = lookup i in 
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Atype(A.Struct(ssname)) -> 
+                              (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
                                  let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder
@@ -193,7 +193,7 @@ let translate ((globals, functions), structures) =
                      (match snd s with SId i -> let s' = lookup i in
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Atype(A.Struct(ssname)) -> 
+                              (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
                                  let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder

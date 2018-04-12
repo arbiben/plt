@@ -12,7 +12,8 @@ int main(){
   str p?
   int s?
   struct baby geffen?
-
+  arr int a?
+  a = [1,2,3]?
 
   s = 1?
   p = "world"?
