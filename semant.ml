@@ -6,6 +6,8 @@
 open Ast
 open Sast
 
+module A = Ast
+module S = Sast
 module StringMap = Map.Make(String)
 module Set = Set.Make(String)
 
@@ -68,13 +70,13 @@ let check (g_f, structs) =
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
     let add_bind map (name, ty) = StringMap.add name {
-      typ = Int; fname = name; 
+      typ = A.Atype(A.Int); fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int);
-                                                 ("printstring", Str);
-                                                 ("open", Int);
-                                                 ("close", Int)    ]
+    in List.fold_left add_bind StringMap.empty [ ("print", A.Atype(A.Int));
+                                                 ("printstring", A.Atype(A.Str));
+                                                 ("open", A.Atype(A.Int));
+                                                 ("close", A.Atype(A.Int))    ]
 			                        (* 
                                                 ("printb", Bool);
 			                         ("printf", Float);
