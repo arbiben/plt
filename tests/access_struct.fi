@@ -1,0 +1,19 @@
+$ this test file tests that after assigning to a struct, that value can be accessed $
+$ Does not exist in MicroC $
+$ Expects a print of 1 $
+
+struct boss {
+    int age?
+    bool interesting?
+    string description?
+}
+
+int main() {
+    struct boss Richard?
+
+    Richard.interesting = F?
+    if (Richard.interesting is F}(
+        print(1)?
+    )
+    return 0?
+}

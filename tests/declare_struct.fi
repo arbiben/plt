@@ -1,0 +1,13 @@
+$ This file tests that after a struct is defined, it can be declared as a variable $
+$ Does not exist in MicroC $
+
+struct boss {
+    int age?
+    bool interesting?
+    string description?
+}
+
+int main() {
+    struct boss Richard?
+    return 0?
+}

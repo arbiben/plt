@@ -1,0 +1,15 @@
+$ this test file tests that after declaring a struct globally, it can have a field assigned to $
+$ Does not exist in MicroC $
+
+struct boss {
+    int age?
+    bool interesting?
+    string description?
+}
+
+int main (){
+    struct boss Richard?
+
+    Richard.interesting = F?
+    return 0?
+}

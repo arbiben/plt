@@ -1,0 +1,9 @@
+$ This file tests the correct error comes up when a variable is tried to be accessed
+when it has not yet been declared $
+$ raises a semantic error $
+
+int main() {
+    int y?
+
+    z = 5?
+}
