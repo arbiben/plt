@@ -147,6 +147,14 @@ let check (g_f, structs) =
       | Id s       -> (type_of_identifier s, SId s)
       | StrLit s   -> (Atyp(Str), SStrLit s)
       | StructLit s -> (Atyp(Struct s), SStructLit s)
+      | ArrBuild l -> let arr_typ = expr (List.hd l) in 
+                        let _ = List.iter (fun typ -> if string_of_typ (fst arr_typ) == string_of_typ (fst (expr typ)) then () 
+       else raise (Failure( " ' " ^ string_of_expr typ ^ " ' " ^ "Does not match the types in the array"))) l in 
+      (Arr(
+       (match fst arr_typ with 
+          Atyp(typ) -> typ
+        | _ -> raise(Failure("arrays can contain ints, bools, strings, or structs"))),
+            ((List.hd l))), SArrBuild (List.map expr l))
       | Extract(el, er) -> (check_extract (fst(expr el)) er, SExtract(expr el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var

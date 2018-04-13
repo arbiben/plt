@@ -38,7 +38,7 @@ let translate ((globals, functions), structures) =
     | A.Atyp(A.Str)            -> ptr
     | A.Atyp(A.Bool)           -> i1_t 
     | A.Atyp(A.Struct(ssname)) -> StringMap.find ssname struct_map
-    | A.Arr(t) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
+    | A.Arr(t,_) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
 
    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
@@ -164,7 +164,7 @@ let translate ((globals, functions), structures) =
                                    let actual_literal = L.build_load new_lit "al" builder in
                               actual_literal
 
-               | SExtract (s, v)   -> 
+           | SExtract (s, v)   -> 
 
            let sf = (match snd s with 
                   SId s'-> lookup s'

@@ -10,12 +10,6 @@ type uop = Neg | Not
 
 type atyp = Int | Bool | Str | Struct of string
 
-type typ = 
-    Atyp of atyp 
-  | Arr of atyp 
-
-type bind = typ * string
-
 type expr =
     Literal of int
   | BoolLit of bool
@@ -30,6 +24,13 @@ type expr =
   | Index of string * int
   | ArrBuild of expr list
   | Noexpr
+
+type typ = 
+    Atyp of atyp 
+  | Arr of atyp * expr
+
+type bind = typ * string
+
 
 type stmt =
     Block of stmt list
@@ -56,6 +57,7 @@ type program = (bind list * func_decl list) * struct_decl list
 
 (* Pretty-printing functions *)
 
+
 let string_of_op = function
     Add -> "+"
   | Sub -> "-"
@@ -75,16 +77,6 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "not"
 
-let string_of_atyp = function
-    Int       -> "int"
-  | Bool      -> "bool"
-  | Str       -> "str"
-  | Struct(s) -> s
-
-let string_of_typ = function
-  | Atyp(a) -> string_of_atyp a
-  | Arr(t)  -> "arr " ^ string_of_atyp t
-
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
@@ -102,6 +94,16 @@ let rec string_of_expr = function
   | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" 
   | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]" 
   | Noexpr -> ""
+
+let string_of_atyp = function
+    Int       -> "int"
+  | Bool      -> "bool"
+  | Str       -> "str"
+  | Struct(s) -> s
+
+let string_of_typ = function
+  | Atyp(a) -> string_of_atyp a
+  | Arr(t,s)  -> "arr " ^ string_of_expr s  ^ " " ^ string_of_atyp t
 
 let rec string_of_stmt = function
     Block(stmts) ->
