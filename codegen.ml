@@ -39,7 +39,7 @@ let translate ((globals, functions), structures) =
     | A.Str            -> ptr
     | A.Bool           -> i1_t 
     | A.Struct(ssname) -> StringMap.find ssname struct_map 
-   (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
+    | t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))
   in
   
   let structure_bods struct_decl = 
@@ -188,7 +188,11 @@ let translate ((globals, functions), structures) =
               let (fdef, _) = StringMap.find f function_decls in   (* (fdef, fdecl) --> (fdef, _) *)
               let actuals = List.rev (List.map (expr builder) (List.rev act)) in
               let result = f ^ "_result" in
-              L.build_call fdef (Array.of_list actuals) result builder in
+              L.build_call fdef (Array.of_list actuals) result builder 
+      | _ -> raise(Failure("not yet implemented expr in codegen"))        
+              
+      
+      in
 
    (* Each basic block in a program ends with a "terminator" instruction i.e.
     *     one that ends the basic block. By definition, these instructions must
