@@ -201,6 +201,12 @@ let translate ((globals, functions), structures) =
                      | _ -> raise (Failure("couldn't find id")))
                 | _ -> raise(Failure("assign failed" ^ string_of_sexpr s))) in
             let result = expr builder e in let _  = L.build_store result sf builder in result
+      | SArrAssign (v, e, l) -> let l' = expr builder l in
+                                   let e' = expr builder e in
+                                   let v' = L.build_load (lookup v) v builder in
+                                       let extract_array = L.build_extractvalue v' 1 "extract_ptr" builder in
+                                       let extract_value = L.build_gep extract_array [| e' |] "extract_value" builder in 
+                                       ignore (L.build_store l' extract_value builder); l'
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 
