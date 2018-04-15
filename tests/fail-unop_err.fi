@@ -1,0 +1,9 @@
+$ this file tests that the correct error comes up when a 
+wrong unary operator comes up $
+$ produces semantic error $
+
+int main() {
+    bool x?
+    
+    x = not "hi"?
+}
