@@ -5,15 +5,16 @@ $ Expects a print of 1 $
 struct boss {
     int age?
     bool interesting?
-    string description?
+    str description?
 }
 
 int main() {
     struct boss Richard?
 
     Richard.interesting = F?
-    if (Richard.interesting is F}(
+    if (Richard.interesting is F)
+    {
         print(1)?
-    )
+    }
     return 0?
 }
