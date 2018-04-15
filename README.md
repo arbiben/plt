@@ -15,24 +15,27 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
 	- Go inside in the main directory (inside the Fi directory: /Fi/)
 	- Make sure you have all the ocaml packages installed: ocamlbuild in particular
         - Make sure you have llvm.3.8 installed (that's version 3.8 of llvm)
-        - Make sure you have python installed on your system (either 2.7 or 3 should work but 3 is preferred)
+        - Make sure you can run Bash scripts on your shell
+        - If you want to execute the compiler on one specific file, make sure to have python installed on your system.
 
 ### Automatically Compiling our compiler and executing the compiler using a script
-        - To run the compiler automatically on all of our tests, run 'python testAll.py' or 'python3 testAll.py'
-                - This will run 'make', which compiles the compiler, and produces a .native file
-                - For each file in our tests folder, this script then:
+        - To run the compiler automatically on all of our tests:
+                1. Run 'make', which compiles the compiler, and produces a .native file
+                2. Run './testall.sh', and you should see the validation for each test by seeing an 'ok'
+                   What this does: For each file in our tests folder, this script then:
                         - runs an automatic process which produces an ll file, links the code, and executes the executable
                         - validates the output against a gold standard and confirms the results are the same
         - To run the compiler automatically against one specific test, run 'python testAll.py <filename>'
                 - This does all of the above, just only on one specific file and does not validate the output
+                - However, it will show the compilation steps and the output of your program
 
 ### Compiling the compiler separately from running the script, using the makefile
         - running 'make' will build all of our language files, effectively compiling our compiler.
         - running 'make toplevel.native' is equal to running 'ocamlbuild toplevel.native'. 
         - The result of compiling the compiler is a toplevel.native file.
-                - When run against an argument, which needs to be a .fi file, toplevel.native outputs the llvm associated with that file
+        - When run against an argument, which needs to be a .fi file, toplevel.native outputs the llvm associated with that file
 
-### Manually executing our compiler on a specific file 
+### Steps to manually execute our compiler on a specific file 
         * To execute the compiler manually on your own fi program, enter the following commands in the following order:
         1) 'make' (this will compile the compiler)
         2) './toplevel.native <yourfilename>.fi > <yourfilename>.ll' (this will create an llvm .ll file) 
