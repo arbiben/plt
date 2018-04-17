@@ -12,7 +12,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE MODULO ASSIGN DOT
+%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE MODULO ASSIGN DOT AT
 %token NOT EQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL STRING 
 %token <int> LITERAL
@@ -37,7 +37,8 @@ open Ast
 %left PLUS MINUS
 %left TIMES DIVIDE MODULO
 %right NOT NEG
-%left DOT    
+%left AT
+%left DOT 
 
 %%
 
@@ -142,7 +143,7 @@ expr:
   | expr DOT ID        { Extract($1, $3)        }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
-/*  | ID LBRACKET expr RBRACKET { Index($1, $3)  } */
+  | expr AT expr { Index($1, $3)  }
   | LBRACKET elem_list RBRACKET { ArrBuild(List.rev $2)    }
   
 elem_list:

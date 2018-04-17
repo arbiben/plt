@@ -149,21 +149,24 @@ let translate ((globals, functions), structures) =
               | A.Not     -> L.build_not) e' "tmp" builder
  
 
-      | SArrBuild(l)      ->   let init_size = L.const_int i32_t (List.length l) in
-                                 let built_elems = List.map (fun elem -> expr builder elem) l in
-                                  let malloced = L.build_array_malloc (L.type_of (List.hd built_elems)) init_size "tmpArr" builder in
-                            List.iter (fun f ->
-                                   let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
-                                   let inter = List.nth built_elems f in ignore (L.build_store inter next builder)) (ranges (List.length l));
-                                   let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type (L.type_of (List.hd built_elems)) |] in
-                                   let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
-                                   let fstore = L.build_struct_gep new_lit 0 "fs" builder in
-                                   let sstore = L.build_struct_gep new_lit 1 "ss" builder in
-                                   let _ = L.build_store init_size fstore builder in
-                                   let _ = L.build_store malloced sstore builder in
-                                   let actual_literal = L.build_load new_lit "al" builder in
-                              actual_literal
-
+      | SArrBuild(l)      ->
+               let length = List.length l in
+               let init_size = L.const_int i32_t length in
+               let build_on_fly ex = expr builder ex in
+               let built_elems = List.map build_on_fly l in
+               let list_type = L.type_of (List.hd built_elems) in
+               let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+               List.iter (fun f ->
+               let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
+               let inter = List.nth built_elems f in ignore (L.build_store inter next builder)) (ranges length);
+               let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
+               let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+               let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+               let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+               let _ = L.build_store init_size fstore builder in
+               let _ = L.build_store malloced sstore builder in
+               L.build_load new_lit "al" builder
+      
            | SExtract (s, v)   -> 
 
            let sf = (match snd s with 
@@ -201,12 +204,21 @@ let translate ((globals, functions), structures) =
                      | _ -> raise (Failure("couldn't find id")))
                 | _ -> raise(Failure("assign failed" ^ string_of_sexpr s))) in
             let result = expr builder e in let _  = L.build_store result sf builder in result
-      | SArrAssign (v, e, l) -> let l' = expr builder l in
-                                   let e' = expr builder e in
-                                   let v' = L.build_load (lookup v) v builder in
-                                       let extract_array = L.build_extractvalue v' 1 "extract_ptr" builder in
-                                       let extract_value = L.build_gep extract_array [| e' |] "extract_value" builder in 
-                                       ignore (L.build_store l' extract_value builder); l'
+      | SArrAssign (arr_name, index, new_val) -> 
+               let index' = expr builder index in
+               let new_val' = expr builder new_val in
+               let arr_name' = L.build_load (lookup arr_name) arr_name builder in
+                   let eptr = L.build_extractvalue arr_name' 1 "eptr" builder in
+                   let ev  = L.build_gep eptr [| new_val' |] "ev" builder in 
+                   let a = L.build_store index' ev builder in ignore(a); index'
+      | SIndex(id, index) ->             
+                   let index' = expr builder index in
+               let id' = expr builder id in
+               let eptr = L.build_extractvalue id' 1 "eptr" builder in
+               let ev  = L.build_gep eptr [| index' |] "ev" builder in 
+               (* Insert here other types of arrays: string and struct *)
+               L.build_load ev "val" builder
+
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 

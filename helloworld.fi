@@ -10,13 +10,17 @@ int x?
 
 int main(){
   str p?
-  int s? 
+  int s?
   struct baby geffen?
-  arr int 6 a?
-  $a[s] = 1?$
+  arr int 1 a?
+  arr int 1 b?
   p = "world"?
-  x = 0?
-  a[x] = 1?
+ 
+  a = [1,2,3,4]?
+  a[0] = 54?
+
+
+  print(a @ 0)?
 
   geffen.age = 5?
   x = geffen.age?

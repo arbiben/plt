@@ -175,7 +175,17 @@ let check (g_f, structs) =
             let err = "illegal assignment of "  ^ (string_of_typ type_of_arr) ^ " = " ^ (string_of_typ value_type) in let _ =   
                 check_assign type_of_arr value_type err in 
            (arr_type, SArrAssign (arr_name, expr index, expr value)))                                        
-      | Unop(op, e) as ex -> 
+      
+       | Index(name, index) -> 
+            let arr_type = (fst (expr name)) in 
+            let type_of_arr = (
+                if string_of_typ (fst (expr index)) != string_of_typ (Atyp(Int))
+                    then raise (Failure ("Array index (" ^ string_of_expr index ^ " ) should be an int" ))
+                else match arr_type with
+                       Arr(t, _) -> Atyp(t)
+                       | _ -> raise (Failure ("should only be able to index arrays, not type" ^ string_of_typ arr_type))) in
+            (type_of_arr, SIndex(expr name, expr index))
+       | Unop(op, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with
             Neg when t = Atyp(Int) -> t
