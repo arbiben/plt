@@ -1,6 +1,0 @@
-arr func(){
-new_array[0]? $this works$
-x = thing.take? $ declare and assign in the same line$
-x = new_array[1]?
-if (x is not y) print(T)?
-}
