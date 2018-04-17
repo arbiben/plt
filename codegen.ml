@@ -32,14 +32,16 @@ let translate ((globals, functions), structures) =
       let struct_name = L.named_struct_type context struct_decl.ssname in
       let new_map = StringMap.add struct_decl.ssname struct_name map in new_map in
   let struct_map = List.fold_left structure_decls StringMap.empty structures in
-  
-  (* Convert Fi types to LLVM types *)
-  let ltype_of_typ = function
-      A.Int            -> i32_t
-    | A.Str            -> ptr
-    | A.Bool           -> i1_t 
-    | A.Struct(ssname) -> StringMap.find ssname struct_map 
-    | t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))
+
+
+    (* Convert Fi types to LLVM types *)
+  let rec ltype_of_typ = function
+      A.Atyp(A.Int)            -> i32_t
+    | A.Atyp(A.Str)            -> ptr
+    | A.Atyp(A.Bool)           -> i1_t 
+    | A.Atyp(A.Struct(ssname)) -> StringMap.find ssname struct_map
+    | A.Arr(t) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
+
   in
   
   let structure_bods struct_decl = 
@@ -59,6 +61,10 @@ let translate ((globals, functions), structures) =
       let new_map = StringMap.add st.ssname (fst vars_map) elems_map in new_map in
       let struct_vars = List.fold_left store_struct_vars StringMap.empty structures in
 
+  let rec ranges = function
+      0 -> []
+    | 1 -> [ 0 ]
+    | n -> ranges (n-1) @ [ n - 1 ] in
   let global_vars = 
       let global_var m (t, n) =
           let init = L.const_int (ltype_of_typ t) 0
@@ -111,7 +117,7 @@ let translate ((globals, functions), structures) =
                         StringMap.find n global_vars 
     in 
 
-    (* Generate LLVM code for a call to print *)
+       (* Generate LLVM code for a call to print *)
     let rec expr builder ((_, e) : sexpr) = match e with
         SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
       | SBoolLit b -> L.const_int i1_t (if b then 1 else 0) 
@@ -136,21 +142,42 @@ let translate ((globals, functions), structures) =
               | A.Leq     -> L.build_icmp L.Icmp.Sle
               | A.Greater -> L.build_icmp L.Icmp.Sgt
               | A.Geq     -> L.build_icmp L.Icmp.Sge
-              ) e1' e2' "tmp" builder
+              ) e1' e2' "tmp" builder 
       | SUnop(op, e) -> 
               let e' = expr builder e in  
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
-      | SExtract (s, v)   -> 
-            let sf = (match snd s with 
+ 
+
+      | SArrBuild(l)      ->
+               let length = List.length l in
+               let init_size = L.const_int i32_t length in
+               let build_on_fly ex = expr builder ex in
+               let built_elems = List.map build_on_fly l in
+               let list_type = L.type_of (List.hd built_elems) in
+               let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+               List.iter (fun f ->
+               let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
+               let inter = List.nth built_elems f in ignore (L.build_store inter next builder)) (ranges length);
+               let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
+               let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+               let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+               let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+               let _ = L.build_store init_size fstore builder in
+               let _ = L.build_store malloced sstore builder in
+               L.build_load new_lit "al" builder
+      
+           | SExtract (s, v)   -> 
+
+           let sf = (match snd s with 
                   SId s'-> lookup s'
                 | SExtract (s, v) -> 
                      (match snd s with SId i -> let s' = lookup i in 
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Struct st -> 
-                                 let positions = StringMap.find st struct_vars in
+                              (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
+                                 let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder
                               | _ -> raise (Failure("couldn't find struct type")))
@@ -170,14 +197,29 @@ let translate ((globals, functions), structures) =
                      (match snd s with SId i -> let s' = lookup i in
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Struct st -> 
-                                 let positions = StringMap.find st struct_vars in
+                              (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
+                                 let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder
                               | _ -> raise (Failure("couldn't find struct type")))
                      | _ -> raise (Failure("couldn't find id")))
                 | _ -> raise(Failure("assign failed" ^ string_of_sexpr s))) in
             let result = expr builder e in let _  = L.build_store result sf builder in result
+      | SArrAssign (arr_name, index, new_val) -> 
+               let index' = expr builder index in
+               let new_val' = expr builder new_val in
+               let arr_name' = expr builder arr_name in
+                   let eptr = L.build_extractvalue arr_name' 1 "eptr" builder in
+                   let ev  = L.build_gep eptr [| index' |] "ev" builder in 
+                   let a = L.build_store new_val' ev builder in ignore(a); index'
+      | SIndex(id, index) ->             
+                   let index' = expr builder index in
+               let id' = expr builder id in
+               let eptr = L.build_extractvalue id' 1 "eptr" builder in
+               let ev  = L.build_gep eptr [| index' |] "ev" builder in 
+               (* Insert here other types of arrays: string and struct *)
+               L.build_load ev "val" builder
+
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 

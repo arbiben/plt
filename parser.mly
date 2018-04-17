@@ -12,7 +12,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE MODULO ASSIGN DOT
+%token SEMI LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET COMMA PLUS MINUS TIMES DIVIDE MODULO ASSIGN DOT AT
 %token NOT EQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL STRING 
 %token <int> LITERAL
@@ -37,7 +37,9 @@ open Ast
 %left PLUS MINUS
 %left TIMES DIVIDE MODULO
 %right NOT NEG
-%left DOT    
+%left LBRACKET RBRACKET
+%left DOT AT 
+
 
 %%
 
@@ -83,12 +85,14 @@ formal_list:
     typ ID                   { [($1,$2)]     }
   | formal_list COMMA typ ID { ($3,$4) :: $1 }
 
+atyp:
+    INT       { Int          }
+  | BOOL      { Bool         }
+  | STRING    { Str          }
+  | STRUCT ID { Struct($2)   }
 typ:
-    INT    { Int    }
-  | BOOL   { Bool   }
-  | STRING { Str    }
-  | ARR    { Arr    } 
-  | STRUCT ID { Struct ($2)  }
+    atyp         { Atyp($1)      }
+  | ARR atyp  { Arr($2)    }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -136,10 +140,11 @@ expr:
   | MINUS expr %prec NEG { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | expr ASSIGN expr   { Assign($1, $3)         }
+  | expr LBRACKET expr RBRACKET ASSIGN expr { ArrAssign($1, $3, $6) }
   | expr DOT ID        { Extract($1, $3)        }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
-  | ID LBRACKET LITERAL RBRACKET { Index($1, $3)  }
+  | expr AT expr { Index($1, $3)  }
   | LBRACKET elem_list RBRACKET { ArrBuild(List.rev $2)    }
   
 elem_list:

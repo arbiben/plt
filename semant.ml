@@ -6,6 +6,8 @@
 open Ast
 open Sast
 
+module A = Ast
+module S = Sast
 module StringMap = Map.Make(String)
 module Set = Set.Make(String)
 
@@ -68,13 +70,13 @@ let check (g_f, structs) =
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
     let add_bind map (name, ty) = StringMap.add name {
-      typ = Int; fname = name; 
+      typ = Atyp(Int); fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int);
-                                                 ("printstring", Str);
-                                                 ("open", Int);
-                                                 ("close", Int)    ]
+    in List.fold_left add_bind StringMap.empty [ ("print", Atyp(Int));
+                                                 ("printstring", Atyp(Str));
+                                                 ("open", Atyp(Int));
+                                                 ("close", Atyp(Int))    ]
 			                        (* 
                                                 ("printb", Bool);
 			                         ("printf", Float);
@@ -140,11 +142,20 @@ let check (g_f, structs) =
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
-        Literal  l -> (Int, SLiteral l)
-      | BoolLit l  -> (Bool, SBoolLit l)
+        Literal  l -> (Atyp(Int), SLiteral l)
+      | BoolLit l  -> (Atyp(Bool), SBoolLit l)
       | Id s       -> (type_of_identifier s, SId s)
-      | StrLit s   -> (Str, SStrLit s)
-      | StructLit s -> (Struct s, SStructLit s)
+      | StrLit s   -> (Atyp(Str), SStrLit s)
+      | StructLit s -> (Atyp(Struct s), SStructLit s)
+      | ArrBuild l -> let arr_typ = expr (List.hd l) in 
+                        let _ = List.iter (fun typ -> if string_of_typ (fst arr_typ) = string_of_typ (fst (expr typ)) then () 
+       else raise (Failure( " ' " ^ string_of_typ (fst (expr typ))
+           ^ " ' " ^ "Does not match the types in the array: " ^ string_of_typ (fst arr_typ)))) l in 
+      (Arr(
+       (match fst arr_typ with 
+          Atyp(typ) -> typ
+        | _ -> raise(Failure("arrays can contain ints, bools, strings, or structs")))
+            ), SArrBuild (List.map expr l))
       | Extract(el, er) -> (check_extract (fst(expr el)) er, SExtract(expr el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var
@@ -153,11 +164,33 @@ let check (g_f, structs) =
           let err = "illegal assignment " ^ string_of_typ (fst lt) ^ " = " ^ 
             string_of_typ rt ^ " in " ^ string_of_expr ex
           in (check_assign (fst lt) rt err, SAssign(lt, (rt, e')))
-      | Unop(op, e) as ex -> 
+      | ArrAssign(arr_name, index, value) -> ( 
+            let arr_type = fst (expr arr_name) in 
+            let type_of_arr = (
+                if string_of_typ (fst (expr index)) != string_of_typ (Atyp(Int))
+                    then raise (Failure ("Array index (" ^ string_of_expr index ^ " ) should be an int" ))
+                else match arr_type with
+                       Arr(t) -> Atyp(t)
+                       | _ -> raise (Failure ("should only be able to index arrays, not type" ^ string_of_typ arr_type))) in
+            let value_type = fst(expr value) in
+            let err = "illegal assignment of "  ^ (string_of_typ type_of_arr) ^ " = " ^ (string_of_typ value_type) in let _ =   
+                check_assign type_of_arr value_type err in 
+           (arr_type, SArrAssign (expr arr_name, expr index, expr value)))                                        
+      
+       | Index(name, index) -> 
+            let arr_type = (fst (expr name)) in 
+            let type_of_arr = (
+                if string_of_typ (fst (expr index)) != string_of_typ (Atyp(Int))
+                    then raise (Failure ("Array index (" ^ string_of_expr index ^ " ) should be an int" ))
+                else match arr_type with
+                       Arr(t) -> Atyp(t)
+                       | _ -> raise (Failure ("should only be able to index arrays, not type" ^ string_of_typ arr_type))) in
+            (type_of_arr, SIndex(expr name, expr index))
+       | Unop(op, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with
-            Neg when t = Int -> t
-          | Not when t = Bool -> Bool
+            Neg when t = Atyp(Int) -> t
+          | Not when t = Atyp(Bool) -> Atyp(Bool)
           | _ -> raise (Failure ("illegal unary operator " ^ 
                                  string_of_uop op ^ string_of_typ t ^
                                  " in " ^ string_of_expr ex))
@@ -169,11 +202,11 @@ let check (g_f, structs) =
           let same = t1 = t2 in
           (* Determine expression type based on operator and operand types *)
           let ty = match op with
-            Add | Sub | Mult | Div when same && t1 = Int   -> Int
-          | Equal | Neq            when same               -> Bool
+            Add | Sub | Mult | Div when same && t1 = Atyp(Int)   -> Atyp(Int)
+          | Equal | Neq            when same               -> Atyp(Bool)
           | Less | Leq | Greater | Geq
-                     when same && (t1 = Int) -> Bool
-          | And | Or when same && t1 = Bool -> Bool
+                     when same && (t1 = Atyp(Int)) -> Atyp(Bool)
+          | And | Or when same && t1 = Atyp(Bool) -> Atyp(Bool)
           | _ -> raise (
 	      Failure ("illegal binary operator " ^
                        string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
@@ -199,7 +232,7 @@ let check (g_f, structs) =
     let check_bool_expr e = 
       let (t', e') = expr e
       and err = "expected Boolean expression in " ^ string_of_expr e
-      in if t' != Bool then raise (Failure err) else (t', e') 
+      in if t' != Atyp(Bool) then raise (Failure err) else (t', e') 
     in
 
     (* Return a semantically-checked statement i.e. containing sexprs *)

@@ -4,22 +4,33 @@ The print will include the actual "" for now $
 struct baby {
 int age?
 str annoying?
+arr int a?
 }
 
 int x?
 
 int main(){
-  str p?
   int s?
   struct baby geffen?
+  struct baby ben?
+  arr struct baby d?
+  struct baby amir?
+  
+  d = [geffen, ben, amir]?
 
+  geffen.age = 5?  
+  x=5?
+  geffen.a = [0]?
+  
+  ben = d@0?
+  ben.age = 1?
+  d[0] = ben?
+  amir = d@0?
+  print(amir.age)?
+  
+  geffen.a[0] = 5?
+  print(geffen.a@0)?
 
-  s = 1?
-  p = "world"?
-  x = 1?
-
-  geffen.age = 5?
-  x = geffen.age?
   if (x is geffen.age){
     printstring("hello world")?
   }
@@ -27,8 +38,16 @@ int main(){
   return 0?
 }
 
+int doesnt_work(){
+   $int arr a?
+   a[0] = 1?
+   This fails because arr not initialized
+   
+   b = [geffen]?
+   b@0.age = 1?
+   print(b@0.age)?
+   doesnt work!
+   $
 
-
-
-
-
+ 
+}

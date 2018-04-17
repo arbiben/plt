@@ -8,9 +8,7 @@ type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Ge
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Str | Arr | Struct of string
-
-type bind = typ * string
+type atyp = Int | Bool | Str | Struct of string
 
 type expr =
     Literal of int
@@ -23,9 +21,17 @@ type expr =
   | Assign of expr * expr
   | Call of string * expr list
   | Extract of expr * string
-  | Index of string * int
+  | Index of expr * expr
   | ArrBuild of expr list
+  | ArrAssign of expr * expr * expr
   | Noexpr
+
+type typ = 
+    Atyp of atyp 
+  | Arr of atyp
+
+type bind = typ * string
+
 
 type stmt =
     Block of stmt list
@@ -52,6 +58,7 @@ type program = (bind list * func_decl list) * struct_decl list
 
 (* Pretty-printing functions *)
 
+
 let string_of_op = function
     Add -> "+"
   | Sub -> "-"
@@ -71,13 +78,6 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "not"
 
-let string_of_typ = function
-    Int       -> "int"
-  | Bool      -> "bool"
-  | Str       -> "str"
-  | Arr       -> "arr" 
-  | Struct(s) -> s
-
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | BoolLit(true) -> "T"
@@ -92,9 +92,20 @@ let rec string_of_expr = function
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
   | Extract(id, field) -> string_of_expr id ^ "." ^ field 
-  | Index(id, idx) -> id ^ "[" ^ (string_of_int idx) ^ "]" 
-  | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]" 
+  | Index(id, idx) -> string_of_expr id ^ " @ " ^ (string_of_expr idx) 
+  | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]"
+  | ArrAssign(name, idx, x) -> string_of_expr name ^ "[" ^ string_of_expr idx ^ "]" ^ " = " ^ string_of_expr x 
   | Noexpr -> ""
+
+let string_of_atyp = function
+    Int       -> "int"
+  | Bool      -> "bool"
+  | Str       -> "str"
+  | Struct(s) -> s
+
+let string_of_typ = function
+  | Atyp(a) -> string_of_atyp a
+  | Arr(t)  -> "arr " ^ string_of_atyp t
 
 let rec string_of_stmt = function
     Block(stmts) ->
