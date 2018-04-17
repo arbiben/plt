@@ -38,7 +38,7 @@ let translate ((globals, functions), structures) =
     | A.Atyp(A.Str)            -> ptr
     | A.Atyp(A.Bool)           -> i1_t 
     | A.Atyp(A.Struct(ssname)) -> StringMap.find ssname struct_map
-    | A.Arr(t,_) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
+    | A.Arr(t) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
 
    (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
@@ -209,8 +209,8 @@ let translate ((globals, functions), structures) =
                let new_val' = expr builder new_val in
                let arr_name' = L.build_load (lookup arr_name) arr_name builder in
                    let eptr = L.build_extractvalue arr_name' 1 "eptr" builder in
-                   let ev  = L.build_gep eptr [| new_val' |] "ev" builder in 
-                   let a = L.build_store index' ev builder in ignore(a); index'
+                   let ev  = L.build_gep eptr [| index' |] "ev" builder in 
+                   let a = L.build_store new_val' ev builder in ignore(a); index'
       | SIndex(id, index) ->             
                    let index' = expr builder index in
                let id' = expr builder id in

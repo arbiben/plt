@@ -9,21 +9,18 @@ str annoying?
 int x?
 
 int main(){
-  str p?
   int s?
   struct baby geffen?
-  arr int 1 a?
-  arr int 1 b?
-  p = "world"?
- 
-  a = [1,2,3,4]?
-  a[0] = 54?
+  struct baby ben?
+  arr struct baby d?
+  
+  d = [geffen, ben]?
 
+  geffen.age = 5?  
+  x=5?
+  
 
-  print(a @ 0)?
-
-  geffen.age = 5?
-  x = geffen.age?
+  print(ben.age)? 
   if (x is geffen.age){
     printstring("hello world")?
   }

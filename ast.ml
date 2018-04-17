@@ -28,7 +28,7 @@ type expr =
 
 type typ = 
     Atyp of atyp 
-  | Arr of atyp * expr
+  | Arr of atyp
 
 type bind = typ * string
 
@@ -105,7 +105,7 @@ let string_of_atyp = function
 
 let string_of_typ = function
   | Atyp(a) -> string_of_atyp a
-  | Arr(t,s)  -> "arr " ^ string_of_expr s  ^ " " ^ string_of_atyp t
+  | Arr(t)  -> "arr " ^ string_of_atyp t
 
 let rec string_of_stmt = function
     Block(stmts) ->
