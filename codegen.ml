@@ -231,7 +231,6 @@ let translate ((globals, functions), structures) =
               let actuals = List.rev (List.map (expr builder) (List.rev act)) in
               let result = f ^ "_result" in
               L.build_call fdef (Array.of_list actuals) result builder 
-      | _ -> raise(Failure("not yet implemented expr in codegen"))        
               
       
       in
