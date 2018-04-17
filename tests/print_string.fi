@@ -1,0 +1,8 @@
+$ this file tests the printstring function, which prints a string_value $
+$ Not in MicroC $
+$ Expects output of: hello world $
+
+int main() {
+    printstring("hello world")?
+    return 0?
+}

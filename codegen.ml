@@ -32,6 +32,8 @@ let translate ((globals, functions), structures) =
       let struct_name = L.named_struct_type context struct_decl.ssname in
       let new_map = StringMap.add struct_decl.ssname struct_name map in new_map in
   let struct_map = List.fold_left structure_decls StringMap.empty structures in
+
+
     (* Convert Fi types to LLVM types *)
   let rec ltype_of_typ = function
       A.Atyp(A.Int)            -> i32_t
@@ -40,7 +42,6 @@ let translate ((globals, functions), structures) =
     | A.Atyp(A.Struct(ssname)) -> StringMap.find ssname struct_map
     | A.Arr(t) -> L.struct_type context [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |] 
 
-   (*| t -> raise (Failure (A.string_of_typ t ^ "not implemented yet"))*)
   in
   
   let structure_bods struct_decl = 
@@ -229,7 +230,11 @@ let translate ((globals, functions), structures) =
               let (fdef, _) = StringMap.find f function_decls in   (* (fdef, fdecl) --> (fdef, _) *)
               let actuals = List.rev (List.map (expr builder) (List.rev act)) in
               let result = f ^ "_result" in
-              L.build_call fdef (Array.of_list actuals) result builder in
+              L.build_call fdef (Array.of_list actuals) result builder 
+      | _ -> raise(Failure("not yet implemented expr in codegen"))        
+              
+      
+      in
 
    (* Each basic block in a program ends with a "terminator" instruction i.e.
     *     one that ends the basic block. By definition, these instructions must

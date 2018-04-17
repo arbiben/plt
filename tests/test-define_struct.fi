@@ -1,0 +1,12 @@
+$ this test file tests that defining a struct globally works $
+$ Does not exist in MicroC $
+
+struct boss {
+    int age?
+    bool interesting?
+    str description?
+}
+
+int main() {
+    return 0?
+}
