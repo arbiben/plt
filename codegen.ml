@@ -207,7 +207,7 @@ let translate ((globals, functions), structures) =
       | SArrAssign (arr_name, index, new_val) -> 
                let index' = expr builder index in
                let new_val' = expr builder new_val in
-               let arr_name' = L.build_load (lookup arr_name) arr_name builder in
+               let arr_name' = expr builder arr_name in
                    let eptr = L.build_extractvalue arr_name' 1 "eptr" builder in
                    let ev  = L.build_gep eptr [| index' |] "ev" builder in 
                    let a = L.build_store new_val' ev builder in ignore(a); index'
