@@ -160,9 +160,9 @@ let translate ((globals, functions), structures) =
 
       | SCall ("read", [e]) -> let temp = expr builder e in
                 L.build_call read_func [| temp |] "read" builder                                              
-      | SCall ("write", [e1 ; e2]) -> let temp1 = expr builder e1 in                                                           
-                                       let temp2 = expr builder e2 in                                      
-                                       L.build_call write_func [| temp1 ; temp2 |] "write" builder
+      | SCall ("write", [e1 ; e2]) -> let temp1 = expr builder e1 in                                                  
+                                      let temp2 = expr builder e2 in                                      
+                                      L.build_call write_func [| temp1 ; temp2 |] "write" builder
       | SArrBuild(l)      ->
                let length = List.length l in
                let init_size = L.const_int i32_t length in

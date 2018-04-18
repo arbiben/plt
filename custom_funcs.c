@@ -1,17 +1,6 @@
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
-int write(char * file_name, char * out_content) {
-  FILE *fp;
-  fp = fopen(file_name, "wb");
-  if(fp == NULL) {
-    perror("failed to open file");
-    return 0;
-  }
-  int num_out = fwrite(out_content, 1, strlen(file_name), fp);
-  fclose(fp);
-  return num_out;
-}
 
 char* read(char * in_file_name) {
   FILE *fp;
@@ -35,6 +24,18 @@ char* read(char * in_file_name) {
   return buffer;
 }
 
+
+int write(char * file_name, char * out_content) {
+  FILE *fp;
+  fp = fopen(file_name, "wb");
+  if(fp == NULL) {
+    perror("failed to open file");
+    return 0;
+  }
+  int num_out = fwrite(out_content, 1, strlen(file_name), fp);
+  fclose(fp);
+  return num_out;
+}
 
 
 

@@ -12,6 +12,8 @@ int x?
 
 int main(){
   str readFile?
+  str writeFile?
+
   int s?
   struct baby geffen?
   struct baby ben?
@@ -21,6 +23,9 @@ int main(){
   readFile = read("textfile.txt")?
   printstring(readFile)?
 
+
+  writeFile = "Ha! I completly changed what this file is saying"?
+  write(writeFile, "textfile.txt")?
   d = [geffen, ben, amir]?
 
   geffen.age = 5?  
