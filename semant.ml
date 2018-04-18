@@ -72,16 +72,21 @@ let check (g_f, structs) =
       typ = Atyp(Int); fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map in
-    let add_bind_strs map (name, ty) = StringMap.add name {
+    let add_bind_read map (name, ty) = StringMap.add name {
       typ = Atyp(Str); fname = name; 
-      formals = [(ty, "x")];
+      formals = [(ty, "file")];
+      locals = []; body = [] } map in
+    let add_bind_write map (name, ty1, ty2) = StringMap.add name {
+      typ = Atyp(Str); fname = name; 
+      formals = [(ty1, "new_content"); (ty2, "file_name")];
       locals = []; body = [] } map in
     let built_in_decls = 
     List.fold_left add_bind_ints StringMap.empty [ ("print", Atyp(Int));
                                                  ("printstring", Atyp(Str)) ] in
-    let built_in_decls = List.fold_left add_bind_strs built_in_decls [ 
-                                                 ("read", Atyp(Str));
-                                                 ("write", (Atyp(Int)))] in
+    let built_in_decls = List.fold_left add_bind_read built_in_decls 
+        [("read", Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_write built_in_decls 
+        [("write", (Atyp(Str)), Atyp(Str))] in
 
   (* Add function name to symbol table *)
   let add_func map fd = 
