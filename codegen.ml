@@ -85,6 +85,9 @@ let translate ((globals, functions), structures) =
                StringMap.add name (L.define_function name ftype the_module, fdecl) m in
              List.fold_left function_decl StringMap.empty functions in
 
+  let str_typ = ltype_of_typ (A.Atyp(A.Str)) in
+
+
   (*Hanldle reading and writing from/to files*)
   let read_t = L.function_type (ltype_of_typ (A.Atyp(A.Str))) [| ltype_of_typ (A.Atyp(A.Str)) |] in
   let read_func = L.declare_function "readFile" read_t the_module in
@@ -92,7 +95,11 @@ let translate ((globals, functions), structures) =
   let write_t = L.function_type i32_t [| ltype_of_typ (A.Atyp(A.Str)) ; ltype_of_typ (A.Atyp(A.Str)) |] in 
   let write_func = L.declare_function "writeFile" write_t the_module in
 
- (* Generate the instructions for a trivial main function *)
+  (*Handle string concatenation*)
+  let concat_t = L.function_type (ltype_of_typ (A.Atyp(A.Str)))  [| ltype_of_typ (A.Atyp(A.Str)); (str_typ) |] in 
+  let concat_func = L.declare_function "concat" concat_t the_module in
+
+  (* Generate the instructions for a trivial main function *)
   let build_function_body fdecl =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     (* Create an Instruction Builder, which points into a basic block
@@ -157,12 +164,16 @@ let translate ((globals, functions), structures) =
               | A.Not     -> L.build_not) e' "tmp" builder
 
       (*call for file functions*)
-
       | SCall ("readFile", [e]) -> let temp = expr builder e in
                 L.build_call read_func [| temp |] "read" builder                                              
-      | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in                                                  
-                                      let temp2 = expr builder e2 in                                      
-                                      L.build_call write_func [| temp1 ; temp2 |] "write" builder
+      | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
+               let temp2 = expr builder e2 in                                       
+               L.build_call write_func [| temp1 ; temp2 |] "write" builder
+      (*call for string concatenation*)
+      | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
+               let temp2 = expr builder e2 in                                       
+               L.build_call concat_func [| temp1 ; temp2 |] "concat" builder
+      (*Call for array building function*)
       | SArrBuild(l)      ->
                let length = List.length l in
                let init_size = L.const_int i32_t length in
