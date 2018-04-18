@@ -32,7 +32,7 @@ int write(char * file_name, char * out_content) {
     perror("failed to open file");
     return 0;
   }
-  int num_out = fwrite(out_content, 1, strlen(file_name), fp);
+  int num_out = fwrite(out_content, 1, strlen(out_content), fp);
   fclose(fp);
   return num_out;
 }

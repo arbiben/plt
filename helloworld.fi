@@ -25,7 +25,7 @@ int main(){
 
 
   writeFile = "Ha! I completly changed what this file is saying"?
-  write(writeFile, "textfile.txt")?
+  write("textfile.txt", writeFile)?
   d = [geffen, ben, amir]?
 
   geffen.age = 5?  
