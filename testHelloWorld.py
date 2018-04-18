@@ -22,7 +22,7 @@ os.system(command)
 #print("llc helloworld.ll > helloworld.s")
 
 #create exe file:
-command = "gcc -o helloworld.exe helloworld.s ~/plt/externalcalls.o -lm"
+command = "gcc -o helloworld.exe helloworld.s ~/plt/custom_funcs.o -lm"
 os.system(command)
 #print("cc -o helloworld.ext helloworld.s")
 
