@@ -1,7 +1,0 @@
-$ fails due to calling expressions outside function $
-int func(){
-int x? 
-print (x)?
-}
-
-func()?

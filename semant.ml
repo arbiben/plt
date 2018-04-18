@@ -68,20 +68,25 @@ let check (g_f, structs) =
 
 
   (* Collect function declarations for built-in functions: no bodies *)
-  let built_in_decls = 
-    let add_bind map (name, ty) = StringMap.add name {
+    let add_bind_ints map (name, ty) = StringMap.add name {
       typ = Atyp(Int); fname = name; 
       formals = [(ty, "x")];
-      locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Atyp(Int));
-                                                 ("printstring", Atyp(Str));
-                                                 ("open", Atyp(Int));
-                                                 ("close", Atyp(Int))    ]
-			                        (* 
-                                                ("printb", Bool);
-			                         ("printf", Float);
-			                         ("printbig", Int) *)
-  in
+      locals = []; body = [] } map in
+    let add_bind_read map (name, ty) = StringMap.add name {
+      typ = Atyp(Str); fname = name; 
+      formals = [(ty, "file")];
+      locals = []; body = [] } map in
+    let add_bind_write map (name, ty1, ty2) = StringMap.add name {
+      typ = Atyp(Str); fname = name; 
+      formals = [(ty1, "file_name"); (ty2, "new_content")];
+      locals = []; body = [] } map in
+    let built_in_decls = 
+    List.fold_left add_bind_ints StringMap.empty [ ("print", Atyp(Int));
+                                                 ("printstring", Atyp(Str)) ] in
+    let built_in_decls = List.fold_left add_bind_read built_in_decls 
+        [("readFile", Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_write built_in_decls 
+        [("writeFile", (Atyp(Str)), Atyp(Str))] in
 
   (* Add function name to symbol table *)
   let add_func map fd = 

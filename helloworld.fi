@@ -9,13 +9,22 @@ arr int a?
 
 int x?
 
+
 int main(){
+  str readF?
+  str writeF?
+
   int s?
   struct baby geffen?
   struct baby ben?
   arr struct baby d?
   struct baby amir?
-  
+
+  readF= readFile("textfile.txt")?
+
+  writeF = "Ha! I completly changed what this file is saying"?
+  writeFile("copyOftextfile.txt", readF)?
+  writeFile("newTextFile.txt", writeF)?
   d = [geffen, ben, amir]?
 
   geffen.age = 5?  

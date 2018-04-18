@@ -1,2 +1,0 @@
-$ fail on mismatched brackets/parens $
-char func(]{}

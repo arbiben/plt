@@ -22,7 +22,7 @@ os.system(command)
 #print("llc helloworld.ll > helloworld.s")
 
 #create exe file:
-command = "cc -o helloworld.exe helloworld.s"
+command = "gcc -o helloworld.exe helloworld.s ~/plt/custom_funcs.o -lm"
 os.system(command)
 #print("cc -o helloworld.ext helloworld.s")
 
@@ -34,16 +34,17 @@ os.system(command)
 command = "cat helloworld.out"
 os.system(command)
 
-
+"""
 #compare output of hello world to ref output
 command = "diff -b helloworld.out ref > diff.out"
 os.system(command)
+"""
 
-	
+"""
 ref = open('ref', 'r').read()
 out = open('helloworld.out', 'r').read()
 if ref == out:
     print("success")
 else:
     print("failure")
-
+"""
