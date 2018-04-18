@@ -1,6 +1,6 @@
 # best way to build is using ocamlbuild
 .PHONY : all
-all : toplevel.native 
+all : toplevel.native externalcalls.o
 
 .PHONY : toplevel.native
 toplevel.native :
@@ -19,6 +19,7 @@ toplevel.native :
 clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff toplevel scanner.ml parser.ml parser.mli
+	rm -rf externalcalls.o
 	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
 
 #build manually (not with ocamlbuild)
@@ -37,3 +38,5 @@ parser.ml parser.mli : parser.mly
 %.cmx : %.ml
 	ocamlfind ocamlopt -c -package llvm $<
 
+externalcalls.o: externalcalls.c
+	cc -c -o externalcalls.o externalcalls.c

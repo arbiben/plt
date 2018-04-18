@@ -9,13 +9,25 @@ arr int a?
 
 int x?
 
+
 int main(){
+  int readFile?
+ $ Str readFile = read("textfile.txt")? $
+  $ print (readFile)? $
+
+
   int s?
   struct baby geffen?
   struct baby ben?
   arr struct baby d?
   struct baby amir?
   
+
+
+
+  readFile = read("./textfile.txt")?
+
+
   d = [geffen, ben, amir]?
 
   geffen.age = 5?  

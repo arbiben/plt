@@ -75,8 +75,8 @@ let check (g_f, structs) =
       locals = []; body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("print", Atyp(Int));
                                                  ("printstring", Atyp(Str));
-                                                 ("open", Atyp(Int));
-                                                 ("close", Atyp(Int))    ]
+                                                 ("read", Atyp(Str));
+                                                 ("write", Atyp(Str))    ]
 			                        (* 
                                                 ("printb", Bool);
 			                         ("printf", Float);
