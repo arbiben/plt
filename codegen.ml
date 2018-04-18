@@ -218,7 +218,7 @@ let translate ((globals, functions), structures) =
                      | _ -> raise (Failure("couldn't find id")))
                 | _ -> raise(Failure("assign failed" ^ string_of_sexpr s))) in
             let result = expr builder e in let _  = L.build_store result sf builder in result
-      | SArrAssign (arr_name, index, new_val) -> 
+      | SAssignAtIndex (arr_name, index, new_val) -> 
                let index' = expr builder index in
                let new_val' = expr builder new_val in
                let arr_name' = expr builder arr_name in
