@@ -87,10 +87,10 @@ let translate ((globals, functions), structures) =
 
   (*Hanldle reading and writing from/to files*)
   let read_t = L.function_type (ltype_of_typ (A.Atyp(A.Str))) [| ltype_of_typ (A.Atyp(A.Str)) |] in
-  let read_func = L.declare_function "read" read_t the_module in
+  let read_func = L.declare_function "readFile" read_t the_module in
 
   let write_t = L.function_type i32_t [| ltype_of_typ (A.Atyp(A.Str)) ; ltype_of_typ (A.Atyp(A.Str)) |] in 
-  let write_func = L.declare_function "write" write_t the_module in
+  let write_func = L.declare_function "writeFile" write_t the_module in
 
  (* Generate the instructions for a trivial main function *)
   let build_function_body fdecl =
@@ -158,9 +158,9 @@ let translate ((globals, functions), structures) =
 
       (*call for file functions*)
 
-      | SCall ("read", [e]) -> let temp = expr builder e in
+      | SCall ("readFile", [e]) -> let temp = expr builder e in
                 L.build_call read_func [| temp |] "read" builder                                              
-      | SCall ("write", [e1 ; e2]) -> let temp1 = expr builder e1 in                                                  
+      | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in                                                  
                                       let temp2 = expr builder e2 in                                      
                                       L.build_call write_func [| temp1 ; temp2 |] "write" builder
       | SArrBuild(l)      ->

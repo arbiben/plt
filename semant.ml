@@ -78,15 +78,15 @@ let check (g_f, structs) =
       locals = []; body = [] } map in
     let add_bind_write map (name, ty1, ty2) = StringMap.add name {
       typ = Atyp(Str); fname = name; 
-      formals = [(ty1, "new_content"); (ty2, "file_name")];
+      formals = [(ty1, "file_name"); (ty2, "new_content")];
       locals = []; body = [] } map in
     let built_in_decls = 
     List.fold_left add_bind_ints StringMap.empty [ ("print", Atyp(Int));
                                                  ("printstring", Atyp(Str)) ] in
     let built_in_decls = List.fold_left add_bind_read built_in_decls 
-        [("read", Atyp(Str))] in
+        [("readFile", Atyp(Str))] in
     let built_in_decls = List.fold_left add_bind_write built_in_decls 
-        [("write", (Atyp(Str)), Atyp(Str))] in
+        [("writeFile", (Atyp(Str)), Atyp(Str))] in
 
   (* Add function name to symbol table *)
   let add_func map fd = 

@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-char* read(char * in_file_name) {
+char* readFile(char * in_file_name) {
   FILE *fp;
   int len;
   char *buffer;
@@ -25,7 +25,7 @@ char* read(char * in_file_name) {
 }
 
 
-int write(char * file_name, char * out_content) {
+int writeFile(char * file_name, char * out_content){
   FILE *fp;
   fp = fopen(file_name, "wb");
   if(fp == NULL) {
