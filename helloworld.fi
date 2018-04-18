@@ -11,6 +11,7 @@ int x?
 
 
 int main(){
+  str readFile?
   int s?
   struct baby geffen?
   struct baby ben?

@@ -81,7 +81,7 @@ let check (g_f, structs) =
                                                  ("printstring", Atyp(Str)) ] in
     let built_in_decls = List.fold_left add_bind_strs built_in_decls [ 
                                                  ("read", Atyp(Str));
-                                                 ("write", Atyp(Str))    ] in
+                                                 ("write", Atyp(Int))    ] in
 
   (* Add function name to symbol table *)
   let add_func map fd = 
