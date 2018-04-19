@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <memory.h>
+#include <string.h>
+#include <stdio.h>
 
 char* readFile(char * in_file_name) {
   FILE *fp;

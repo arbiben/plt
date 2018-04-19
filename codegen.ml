@@ -94,6 +94,17 @@ let translate ((globals, functions), structures) =
   let concat_t = L.function_type str_typ  [| str_typ ; str_typ |] in 
   let concat_func = L.declare_function "concat" concat_t the_module in
 
+  (*Handle string length*)
+  let strlen_t = L.function_type i32_t [| str_typ |] in
+  let strlen_func = L.declare_function "strlen" strlen_t the_module in
+
+  (*Handle stringtolower, and string to upper*)
+  let to_lower_t = L.function_type i8_t [| i8_t |] in
+  let to_lower_func = L.declare_function "getLow" to_lower_t the_module in
+
+  let to_upper_t = L.function_type i8_t [| i8_t |] in
+  let to_upper_func = L.declare_function "getUp" to_upper_t the_module in
+
   (* Generate the instructions for a trivial main function *)
   let build_function_body fdecl =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
@@ -260,6 +271,21 @@ let translate ((globals, functions), structures) =
       | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
                L.build_call concat_func [| temp1 ; temp2 |] "concat" builder
+
+      (*Call for string length*)
+      | SCall ("strlen", [e]) -> let temp = expr builder e in
+               L.build_call strlen_func [| temp |] "strlen" builder
+
+      (*Call for str to lower case*)
+      | SCall ("tolower", [e]) -> let temp = expr builder e in
+               L.build_call to_lower_func [| temp |] "getLow" builder
+
+      (*call for string to upper case*)
+      | SCall ("toupper", [e]) -> let temp = expr builder e in
+               L.build_call to_upper_func [| temp |] "getUp" builder
+
+
+
       (* Throw an error for any other expressions *)
       | SCall (f, act) -> 
               let (fdef, _) = StringMap.find f function_decls in   (* (fdef, fdecl) --> (fdef, _) *)

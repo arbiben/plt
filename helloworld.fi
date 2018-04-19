@@ -10,7 +10,11 @@ int main(){
   str con?
   str final?
   str cat?
-  
+  str alongString?
+  str lowString?
+  str upString?
+  int len?
+
   arr struct baby babies?
   struct baby geffen?
   struct baby ben?
@@ -21,6 +25,11 @@ int main(){
   babies = [geffen, ben]?
   babies@1.a[0] = 2?
   babies@1.age = babies@1.a@0?
+  
+  alongString = "my length is 15"?
+  len = strlen(alongString)?
+  print(len)? 
+
 
   con = "hello "?
   cat = "world"?
