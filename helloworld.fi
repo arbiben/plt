@@ -28,8 +28,12 @@ int main(){
   
   alongString = "my length is 15"?
   len = strlen(alongString)?
-  print(len)? 
 
+  printstring("String len is: ")?
+  print(len)?
+  printstring("")?
+
+  lowString = getLow(alongString)?
 
   con = "hello "?
   cat = "world"?

@@ -99,10 +99,10 @@ let translate ((globals, functions), structures) =
   let strlen_func = L.declare_function "strlen" strlen_t the_module in
 
   (*Handle stringtolower, and string to upper*)
-  let to_lower_t = L.function_type i8_t [| i8_t |] in
+  let to_lower_t = L.function_type str_typ [| str_typ |] in
   let to_lower_func = L.declare_function "getLow" to_lower_t the_module in
 
-  let to_upper_t = L.function_type i8_t [| i8_t |] in
+  let to_upper_t = L.function_type str_typ [| str_typ |] in
   let to_upper_func = L.declare_function "getUp" to_upper_t the_module in
 
   (* Generate the instructions for a trivial main function *)
@@ -277,11 +277,11 @@ let translate ((globals, functions), structures) =
                L.build_call strlen_func [| temp |] "strlen" builder
 
       (*Call for str to lower case*)
-      | SCall ("tolower", [e]) -> let temp = expr builder e in
+      | SCall ("getLow", [e]) -> let temp = expr builder e in
                L.build_call to_lower_func [| temp |] "getLow" builder
 
       (*call for string to upper case*)
-      | SCall ("toupper", [e]) -> let temp = expr builder e in
+      | SCall ("getUp", [e]) -> let temp = expr builder e in
                L.build_call to_upper_func [| temp |] "getUp" builder
 
 
