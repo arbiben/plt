@@ -1,0 +1,21 @@
+struct file{
+str contents?
+str name?
+}
+
+struct dir{
+arr struct file files?
+}
+
+int main(){
+
+struct dir filez?
+struct file y?
+
+y.name = "textfile.txt"?
+y.contents = readFile(y.name)?
+filez.files = [y]?
+filez.files@0.contents = "changed it hahahaha"?
+writeFile(filez.files@0.name, filez.files@0.contents)?
+
+}
