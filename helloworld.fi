@@ -13,6 +13,10 @@ int x?
 int main(){
   str readF?
   str writeF?
+
+  str con?
+  str newStr?
+  str cat?
   arr int b?
   int s?
   struct baby geffen?
@@ -20,6 +24,12 @@ int main(){
   arr struct baby d?
   struct baby amir?
 
+  con = "con"?
+  cat = "cat"?
+
+  newStr = concat(con,cat)?
+  printstring("concatenated string: ")?
+  printstring(newStr)?
   readF= readFile("textfile.txt")?
 
   writeF = "Ha! I completly changed what this file is saying"?
