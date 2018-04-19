@@ -33,7 +33,11 @@ int main(){
   print(len)?
   printstring("")?
 
-  lowString = getLow(alongString)?
+  lowString = getUp(alongString)?
+  upString = getLow(lowString)?
+
+  printstring(lowString)?
+  printstring(upString)? 
 
   con = "hello "?
   cat = "world"?
