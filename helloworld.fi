@@ -13,10 +13,11 @@ int x?
 int main(){
   str readF?
   str writeF?
+
   str con?
   str newStr?
   str cat?
-
+  arr int b?
   int s?
   struct baby geffen?
   struct baby ben?
@@ -35,7 +36,7 @@ int main(){
   writeFile("copyOftextfile.txt", readF)?
   writeFile("newTextFile.txt", writeF)?
   d = [geffen, ben, amir]?
-
+  b = []?
   geffen.age = 5?  
   x=5?
   geffen.a = [0]?
