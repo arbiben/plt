@@ -185,16 +185,22 @@ let translate ((globals, functions), structures) =
 
            let sf = (match snd s with 
                   SId s'-> lookup s'
-                | SExtract (s, v) -> 
-                     (match snd s with SId i -> let s' = lookup i in 
+                 | SIndex(id, index) ->             
+                   let index' = expr builder index in
+                   let id' = expr builder id in
+                   let eptr = L.build_extractvalue id' 1 "eptr" builder in
+                   L.build_gep eptr [| index' |] "ev" builder 
+                | SExtract (s, v) -> (match snd s with 
+                     SId i -> let s' = lookup i in 
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
-                              (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
+                              (match typ_of_i with 
+                              A.Atyp(A.Struct(ssname)) -> 
                                  let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
                                  L.build_struct_gep s' v_pos "tmp" builder
-                              | _ -> raise (Failure("couldn't find struct type")))
-                     | _ -> raise (Failure("couldn't find id")))
+                              | _ -> raise (Failure("couldn't find struct type"))) 
+                    | _ -> raise (Failure("couldn't find id")))
                 | _ -> raise(Failure("assign failed" ^ string_of_sexpr s))) in
              let struct_name = L.struct_name(L.type_of(expr builder s)) in
              let no_option = match struct_name with None -> "" | Some a -> a in
@@ -207,7 +213,19 @@ let translate ((globals, functions), structures) =
             let sf = (match snd s with 
                   SId s'-> lookup s'
                 | SExtract (s, v) -> 
-                     (match snd s with SId i -> let s' = lookup i in
+                     (match snd s with 
+                      SIndex(id, index) ->             
+                           let index' = expr builder index in
+                           let id' = expr builder id in
+                           let eptr = L.build_extractvalue id' 1 "eptr" builder in
+                           let structval = L.build_gep eptr [| index' |] "ev" builder in
+                         let struct_name = L.struct_name(L.type_of(expr builder s)) in
+                         let no_option = match struct_name with None -> "" | Some a -> a in
+                         let final_pos = StringMap.find v (
+                             try StringMap.find no_option struct_vars with Not_found -> 
+                             raise(Failure("not able to locate this struct " ^ no_option))) in
+                         L.build_struct_gep structval final_pos "tmp" builder 
+                     | SId i -> let s' = lookup i in
                          let find_var var = snd var = i in
                          let typ_of_i = fst (List.find find_var fdecl.slocals) in
                               (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
@@ -218,7 +236,7 @@ let translate ((globals, functions), structures) =
                      | _ -> raise (Failure("couldn't find id")))
                 | _ -> raise(Failure("assign failed" ^ string_of_sexpr s))) in
             let result = expr builder e in let _  = L.build_store result sf builder in result
-      | SArrAssign (arr_name, index, new_val) -> 
+      | SAssignAtIndex (arr_name, index, new_val) -> 
                let index' = expr builder index in
                let new_val' = expr builder new_val in
                let arr_name' = expr builder arr_name in

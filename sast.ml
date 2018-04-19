@@ -19,7 +19,7 @@ and sx =
   | SExtract of sexpr * string
   | SIndex of sexpr * sexpr 
   | SArrBuild of sexpr list
-  | SArrAssign of sexpr * sexpr * sexpr
+  | SAssignAtIndex of sexpr * sexpr * sexpr
   | SNoexpr
 
 type sstmt =
@@ -64,7 +64,7 @@ let rec string_of_sexpr (t, e) =
   | SExtract(id, field) -> string_of_sexpr id ^ "." ^ field 
 
   | SArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_sexpr elems)
-  | SArrAssign(name, idx, x) -> string_of_sexpr name ^ string_of_sexpr idx ^ "]" ^ " = " ^ string_of_sexpr x
+  | SAssignAtIndex(name, idx, x) -> string_of_sexpr name ^ string_of_sexpr idx ^ "]" ^ " = " ^ string_of_sexpr x
   | SIndex(name, index) -> string_of_sexpr name ^ " @ " ^ string_of_sexpr index 
   | SNoexpr -> ""
 				  ) ^ ")"				     
