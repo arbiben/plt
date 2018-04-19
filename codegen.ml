@@ -61,10 +61,6 @@ let translate ((globals, functions), structures) =
       let new_map = StringMap.add st.ssname (fst vars_map) elems_map in new_map in
       let struct_vars = List.fold_left store_struct_vars StringMap.empty structures in
 
-  let rec ranges = function
-      0 -> []
-    | 1 -> [ 0 ]
-    | n -> ranges (n-1) @ [ n - 1 ] in
   let global_vars = 
       let global_var m (t, n) =
           let init = L.const_int (ltype_of_typ t) 0
@@ -87,16 +83,15 @@ let translate ((globals, functions), structures) =
 
   let str_typ = ltype_of_typ (A.Atyp(A.Str)) in
 
-
-  (*Hanldle reading and writing from/to files*)
-  let read_t = L.function_type (ltype_of_typ (A.Atyp(A.Str))) [| ltype_of_typ (A.Atyp(A.Str)) |] in
+  (*Handle reading and writing from/to files*)
+  let read_t = L.function_type str_typ [| str_typ |] in
   let read_func = L.declare_function "readFile" read_t the_module in
 
-  let write_t = L.function_type i32_t [| ltype_of_typ (A.Atyp(A.Str)) ; ltype_of_typ (A.Atyp(A.Str)) |] in 
+  let write_t = L.function_type i32_t [| str_typ ; str_typ |] in 
   let write_func = L.declare_function "writeFile" write_t the_module in
 
   (*Handle string concatenation*)
-  let concat_t = L.function_type (ltype_of_typ (A.Atyp(A.Str)))  [| ltype_of_typ (A.Atyp(A.Str)); (str_typ) |] in 
+  let concat_t = L.function_type str_typ  [| str_typ ; str_typ |] in 
   let concat_func = L.declare_function "concat" concat_t the_module in
 
   (* Generate the instructions for a trivial main function *)
@@ -117,12 +112,10 @@ let translate ((globals, functions), structures) =
             let _ = L.build_store p local builder in
             StringMap.add n local m
         in
-
         let add_local m (t, n) = 
             let local_var = L.build_alloca (ltype_of_typ t) n builder
             in StringMap.add n local_var m
         in 
-
         let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
               (Array.to_list (L.params the_function)) in
         List.fold_left add_local formals fdecl.slocals
@@ -130,7 +123,11 @@ let translate ((globals, functions), structures) =
     let lookup n = try StringMap.find n local_vars with Not_found ->
                         StringMap.find n global_vars 
     in 
-
+     let rec ranges = function
+         0 -> []
+       | 1 -> [ 0 ]
+       | n -> ranges (n-1) @ [ n - 1 ] 
+       in
     (* Generate LLVM code for a call to print *)
     let rec expr builder ((_, e) : sexpr) = match e with
         SLiteral i -> L.const_int i32_t i (* Generate a constant integer *)
@@ -162,17 +159,6 @@ let translate ((globals, functions), structures) =
               (match op with
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
-
-      (*call for file functions*)
-      | SCall ("readFile", [e]) -> let temp = expr builder e in
-                L.build_call read_func [| temp |] "read" builder                                              
-      | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
-               let temp2 = expr builder e2 in                                       
-               L.build_call write_func [| temp1 ; temp2 |] "write" builder
-      (*call for string concatenation*)
-      | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
-               let temp2 = expr builder e2 in                                       
-               L.build_call concat_func [| temp1 ; temp2 |] "concat" builder
       (*Call for array building function*)
       | SArrBuild(l)      ->
                let length = List.length l in
@@ -191,9 +177,7 @@ let translate ((globals, functions), structures) =
                let _ = L.build_store init_size fstore builder in
                let _ = L.build_store malloced sstore builder in
                L.build_load new_lit "al" builder
-      
            | SExtract (s, v)   -> 
-
            let sf = (match snd s with 
                   SId s'-> lookup s'
                  | SIndex(id, index) ->             
@@ -261,12 +245,21 @@ let translate ((globals, functions), structures) =
                let ev  = L.build_gep eptr [| index' |] "ev" builder in 
                (* Insert here other types of arrays: string and struct *)
                L.build_load ev "val" builder
-
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 
       | SCall ("printstring", [e]) ->  
   L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
+      (*call for file functions*)
+      | SCall ("readFile", [e]) -> let temp = expr builder e in
+                L.build_call read_func [| temp |] "read" builder                                              
+      | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
+               let temp2 = expr builder e2 in                                       
+               L.build_call write_func [| temp1 ; temp2 |] "write" builder
+      (*call for string concatenation*)
+      | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
+               let temp2 = expr builder e2 in                                       
+               L.build_call concat_func [| temp1 ; temp2 |] "concat" builder
       (* Throw an error for any other expressions *)
       | SCall (f, act) -> 
               let (fdef, _) = StringMap.find f function_decls in   (* (fdef, fdecl) --> (fdef, _) *)
