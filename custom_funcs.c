@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <memory.h>
+
 char* readFile(char * in_file_name) {
   FILE *fp;
   int len;
@@ -37,14 +38,10 @@ int writeFile(char * file_name, char * out_content){
   return num_out;
 }
 
-
-
 char* concat(char * str1, char* str2) {
         int size_for_str = (strlen(str1) + strlen(str2) + 1);
         char* return_str = (char *) malloc(size_for_str);
         strcpy(return_str, str1);
         strcat(return_str, str2);
-        printf("printing from c code: %s\n", return_str);
-
         return(return_str);
 }

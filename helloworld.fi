@@ -1,72 +1,39 @@
-$ This is the hello-world testing file that will print out "hello world"
-The print will include the actual "" for now $
-
 struct baby {
 int age?
 str annoying?
 arr int a?
 }
 
-int x?
-
 
 int main(){
-  str readF?
-  str writeF?
 
   str con?
-  str newStr?
+  str final?
   str cat?
-  arr int b?
-  int s?
+  
+  arr struct baby babies?
   struct baby geffen?
   struct baby ben?
-  arr struct baby d?
-  struct baby amir?
 
-  con = "con"?
-  cat = "cat"?
+  geffen.a = [1, 2]?
+  ben.a = [2, 3]?
+  geffen.age = ben.a@0?
+  babies = [geffen, ben]?
+  babies@1.a[0] = 2?
+  babies@1.age = babies@1.a@0?
 
-  newStr = concat(con,cat)?
-  printstring("concatenated string: ")?
-  printstring(newStr)?
-  readF= readFile("textfile.txt")?
-
-  writeF = "Ha! I completly changed what this file is saying"?
-  writeFile("copyOftextfile.txt", readF)?
-  writeFile("newTextFile.txt", writeF)?
-  d = [geffen, ben, amir]?
-  b = []?
-  geffen.age = 5?  
-  x=5?
-  geffen.a = [0]?
+  con = "hello "?
+  cat = "world"?
+  final = concat(con,cat)?
   
-  ben = d@0?
-  ben.age = 1?
-  d[0] = ben?
-  amir = d@0?
-  print(amir.age)?
-  
-  geffen.a[0] = 5?
-  print(geffen.a@0)?
-
-  if (x is geffen.age){
-    printstring("hello world")?
+  if (babies@1.age is babies@0.age){
+    printstring(final)?
   }
-
   return 0?
 }
 
 int doesnt_work(){
    $int arr a?
    a[0] = 1?
-   This fails because arr not initialized
-   
-   b = [geffen]?
-   b@0.age = 1?
-   print(b@0.age)?
-   doesnt work!
-   $
-
- 
+   This fails because arr not initialized$
 }
