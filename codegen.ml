@@ -167,9 +167,11 @@ let translate ((globals, functions), structures) =
                let built_elems = List.map build_on_fly l in
                let list_type = L.type_of (List.hd built_elems) in
                let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
-               List.iter (fun f ->
-               let next = L.build_gep malloced [| L.const_int i32_t f |] "otherTmp" builder in
-               let inter = List.nth built_elems f in ignore (L.build_store inter next builder)) (ranges length);
+               let to_iter_on nums = 
+                   let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
+                   let inter = List.nth built_elems nums in 
+                   let fin = ignore (L.build_store inter next builder) 
+                   in fin in List.iter to_iter_on (ranges length);
                let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
                let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
                let fstore = L.build_struct_gep new_lit 0 "fs" builder in
@@ -177,7 +179,7 @@ let translate ((globals, functions), structures) =
                let _ = L.build_store init_size fstore builder in
                let _ = L.build_store malloced sstore builder in
                L.build_load new_lit "al" builder
-           | SExtract (s, v)   -> 
+       | SExtract (s, v)   -> 
            let sf = (match snd s with 
                   SId s'-> lookup s'
                  | SIndex(id, index) ->             
