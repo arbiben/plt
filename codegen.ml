@@ -260,17 +260,21 @@ let translate ((globals, functions), structures) =
                let ev  = L.build_gep eptr [| index' |] "ev" builder in 
                (* Insert here other types of arrays: string and struct *)
                L.build_load ev "val" builder
+
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 
+
       | SCall ("printstring", [e]) ->  
   L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
+
       (*call for file functions*)
       | SCall ("readFile", [e]) -> let temp = expr builder e in
                 L.build_call read_func [| temp |] "read" builder                                              
       | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
                L.build_call write_func [| temp1 ; temp2 |] "write" builder
+
       (*call for string concatenation*)
       | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
@@ -289,8 +293,9 @@ let translate ((globals, functions), structures) =
                L.build_call to_upper_func [| temp |] "getUp" builder
 
       (*call for string compare*)
-      | SCall ("strcmp", [e]) -> let temp = expr builder e in
-               L.build_call strcmp_func [| temp |] "strcmp" builder
+      | SCall ("strcmp", [e1 ; e2]) -> let temp1 = expr builder e1 in
+               let temp2 = expr builder e2 in
+               L.build_call strcmp_func [| temp1 ; temp2 |] "strcmp" builder
 
 
       (* Throw an error for any other expressions *)
