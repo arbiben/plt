@@ -18,7 +18,12 @@ s = readFile("textfile.txt")?
 s = readFile("textfile.txt")?
 
 printstring(a@8)?
-printstring(b@1)?
+printstring(a@0)?
+printstring(a@1)?
+printstring(a@2)?
+printstring(a@11)?
+printstring(a@19)?
+
 $ 
 type system with the nums
 check out of bounds

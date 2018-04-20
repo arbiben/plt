@@ -125,7 +125,7 @@ let check (g_f, structs) =
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
-    let check_assign lvaluet rvaluet err =
+    let check_assign lvaluet rvaluet err = 
        if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in   
 
@@ -158,16 +158,17 @@ let check (g_f, structs) =
       | Id s       -> (type_of_identifier s, SId s)
       | StrLit s   -> (Atyp(Str), SStrLit s)
       | StructLit s -> (Atyp(Struct s), SStructLit s)
-      | ArrBuild l -> if List.length l = 0 then raise (Failure("Array cannot be empty tembel!!")) else
-              let arr_typ = expr (List.hd l) in 
-                        let _ = List.iter (fun typ -> if string_of_typ (fst arr_typ) = string_of_typ (fst (expr typ)) then () 
+      | ArrBuild (arr_name, l) -> 
+              if List.length l = 0 then raise (Failure("Array cannot be empty tembel!!")) 
+              else let arr_typ = expr (List.hd l) in 
+                let _ = List.iter (fun typ -> if string_of_typ (fst arr_typ) = string_of_typ (fst (expr typ)) then () 
        else raise (Failure( " ' " ^ string_of_typ (fst (expr typ))
            ^ " ' " ^ "Does not match the types in the array: " ^ string_of_typ (fst arr_typ)))) l in 
       (Arr(
        (match fst arr_typ with 
           Atyp(typ) -> typ
         | _ -> raise(Failure("arrays can contain ints, bools, strings, or structs"))), Literal(List.length l)
-            ), SArrBuild (List.map expr l))
+            ), SArrBuild (expr arr_name, List.map expr l))
       | Extract(el, er) -> (check_extract (fst(expr el)) er, SExtract(expr el, er))
       | Assign(var, e) as ex -> 
           let lt = expr var

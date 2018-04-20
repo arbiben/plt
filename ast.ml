@@ -22,7 +22,7 @@ type expr =
   | Call of string * expr list
   | Extract of expr * string
   | Index of expr * expr
-  | ArrBuild of expr list
+  | ArrBuild of expr * expr list
   | AssignAtIndex of expr * expr * expr
   | Noexpr
 
@@ -93,7 +93,7 @@ let rec string_of_expr = function
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")" 
   | Extract(id, field) -> string_of_expr id ^ "." ^ field 
   | Index(id, idx) -> string_of_expr id ^ " @ " ^ (string_of_expr idx) 
-  | ArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_expr elems) ^ "]"
+  | ArrBuild(arr_name, elems) ->string_of_expr arr_name ^ "= [" ^ String.concat ", " (List.map string_of_expr elems) ^ "]"
   | AssignAtIndex(name, idx, x) -> string_of_expr name ^ "[" ^ string_of_expr idx ^ "]" ^ " = " ^ string_of_expr x 
   | Noexpr -> ""
 

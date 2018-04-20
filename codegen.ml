@@ -198,25 +198,18 @@ let translate ((globals, functions), structures) =
                 A.Neg     -> L.build_neg
               | A.Not     -> L.build_not) e' "tmp" builder
       (*Call for array building function*)
-      | SArrBuild(l)      ->
+      | SArrBuild(arr_name, l)      ->
                let length = List.length l in
                let init_size = L.const_int i32_t length in
                let build_on_fly ex = expr builder ex in
                let built_elems = List.map build_on_fly l in
-               let list_type = L.type_of (List.hd built_elems) in
-               let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+               let arr_name' = expr builder arr_name in
                let to_iter_on nums = 
-                   let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
                    let inter = List.nth built_elems nums in 
-                   let fin = ignore (L.build_store inter next builder) 
-                   in fin in List.iter to_iter_on (ranges length);
-               let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
-               let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
-               let fstore = L.build_struct_gep new_lit 0 "fs" builder in
-               let sstore = L.build_struct_gep new_lit 1 "ss" builder in
-               let _ = L.build_store init_size fstore builder in
-               let _ = L.build_store malloced sstore builder in
-               L.build_load new_lit "al" builder
+                   let elemptr = L.build_extractvalue arr_name' 1 "tmpArr" builder in
+                   let next = L.build_gep elemptr [| L.const_int i32_t nums |] "otherTmp" builder in
+                   let fin = ignore(L.build_store inter next builder)
+                   in fin in let _ = List.iter to_iter_on (ranges length) in init_size
        | SExtract (s, v)   -> 
            let sf = (match snd s with 
                   SId s'-> lookup s'
