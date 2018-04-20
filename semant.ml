@@ -100,6 +100,11 @@ let check (g_f, structs) =
       typ = Atyp(Int); fname = name;
       formals = [(ty1, "str1"); (ty2, "str2")];
       locals = []; body = [] } map in
+        
+    let add_bind_split map (name, ty1, ty2, ty3) = StringMap.add name {
+      typ = Atyp(Str); fname = name;
+      formals = [(ty1, "str1"); (ty2, "str2"); (ty3, "int")];
+      locals = []; body = [] } map in
 
 
 
@@ -112,6 +117,8 @@ let check (g_f, structs) =
         [("writeFile", (Atyp(Str)), Atyp(Str))] in
     let built_in_decls = List.fold_left add_bind_concat built_in_decls
         [("concat", (Atyp(Str)), Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_split built_in_decls
+        [("split", (Atyp(Str)), (Atyp(Str)), Atyp(Int))] in
     let built_in_decls = List.fold_left add_bind_tolower built_in_decls
         [("getLow", Atyp(Str))] in
     let built_in_decls = List.fold_left add_bind_toupper built_in_decls

@@ -8,8 +8,8 @@ import subprocess
 DIR = './'
 
 #call make to create topelevel.native
-command = "make"
-os.system(command)
+#command = "make"
+#os.system(command)
 
 # create llvm file	
 command = "./toplevel.native helloworld.fi > helloworld.ll"	

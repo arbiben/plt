@@ -17,6 +17,7 @@ int main(){
   str a?
   str b?
   str c?
+  str months?
 
   arr struct baby babies?
   struct baby geffen?
@@ -35,9 +36,9 @@ int main(){
   a = "a"?
   b = "b"?
   c = "a"?
+  months = "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC"?
 
-  strcmp("hey", "there")?
-
+  printstring(split(months, ",", 4))?
   printstring("String len is: ")?
   print(len)?
   printstring("")?

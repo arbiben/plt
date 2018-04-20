@@ -5,6 +5,9 @@
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <assert.h>
+
+//opens a file, reads its contents into a string, closes the file
 char* readFile(char * in_file_name) {
   FILE *fp;
   int len;
@@ -27,7 +30,7 @@ char* readFile(char * in_file_name) {
   return buffer;
 }
 
-
+//opens a file, writes to it (replacing rather than appending) and close it
 int writeFile(char * file_name, char * out_content){
   FILE *fp;
   fp = fopen(file_name, "wb");
@@ -40,6 +43,7 @@ int writeFile(char * file_name, char * out_content){
   return num_out;
 }
 
+//takes two strings, adds them together, returns a concat string
 char* concat(char * str1, char* str2) {
         int size_for_str = (strlen(str1) + strlen(str2) + 1);
         char* return_str = (char *) malloc(size_for_str);
@@ -48,6 +52,7 @@ char* concat(char * str1, char* str2) {
         return(return_str);
 }
 
+//convert a string to lower case
 char* getLow(char *c){
     int len = strlen(c);
     char* final = (char *) malloc(len);
@@ -60,6 +65,7 @@ char* getLow(char *c){
     return final;
 }
 
+//convert a string to upper case
 char* getUp(char *c){
     int len = strlen(c);
     char* final = (char *) malloc(len);
@@ -74,3 +80,70 @@ char* getUp(char *c){
     }
     return final;
 }
+
+//split a string by delimieter and returns a c array from which fi takes only one string at index
+char* split(char* a_str, char* a_delim, int choice)
+{
+
+    char** result    = 0;
+    size_t count     = 0;
+    char* tmp        = a_str;
+     
+    char* last_comma = 0;
+    char delim[2];
+    
+    /* Count how many elements will be extracted. */
+    while (*tmp)
+    {
+        if (delim[0] == *tmp)
+        {
+            count++;
+            last_comma = tmp;
+        }
+        tmp++;
+    }
+
+    /* Add space for trailing token. */
+    count += last_comma < (a_str + strlen(a_str) - 1);
+    /* Add space for terminating null string so caller knows where the list of returned strings ends. */
+    count++;
+    result = malloc(sizeof(char*) * count);
+    
+    if (result)
+    {
+        size_t idx  = 0;
+        printf("delimiter is: %s\n", a_delim);
+        printf("string is: %s\n", a_str);
+        char* token;
+        token = strtok(a_delim, a_str);
+    }
+    /*
+        while (token)
+        {
+            assert(idx < count);
+            *(result + idx++) = strdup(token);
+            token = strtok(0, delim);
+        }
+        assert(idx == count - 1);
+        *(result + idx) = 0;
+    }
+    return result[choice];
+    */
+    return a_str;
+}
+/*
+int main()
+{
+        char months[] = "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC";
+        char** tokens;
+
+        printf("months=[%s]\n\n", months);
+        printf("chosen index = 4 (may)\n" );
+
+        tokens = split(months, ',', 4);        
+        if (tokens)
+        {
+            printf("month=[%s]\n", *tokens);
+        }
+        return 0;
+}*/
