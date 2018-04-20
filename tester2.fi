@@ -1,21 +1,26 @@
-struct file{
-str contents?
-str name?
-}
-
-struct dir{
-arr struct file files?
-}
-
 int main(){
+str s?
+arr str 20 a?
+arr str 2 b?
+arr str 2 c?
 
-struct dir filez?
-struct file y?
 
-y.name = "textfile.txt"?
-y.contents = readFile(y.name)?
-filez.files = [y]?
-filez.files@0.contents = "changed it hahahaha"?
-writeFile(filez.files@0.name, filez.files@0.contents)?
+a = ["hi", "bye"]?
+a[8] = "not malloced"?
 
+b[1] = "bahahbfajsbfa"?
+b = ["hi", "bye"]?
+c = ["hi", "bye"]?
+
+s = readFile("textfile.txt")?
+s = readFile("textfile.txt")?
+s = readFile("textfile.txt")?
+s = readFile("textfile.txt")?
+
+printstring(a@8)?
+printstring(b@1)?
+$ 
+type system with the nums
+check out of bounds
+$
 }

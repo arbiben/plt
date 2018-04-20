@@ -92,7 +92,7 @@ atyp:
   | STRUCT ID { Struct($2)   }
 typ:
     atyp         { Atyp($1)      }
-  | ARR atyp  { Arr($2)    }
+  | ARR atyp expr  { Arr($2, $3)    }
 
 vdecl_list:
     /* nothing */    { [] }

@@ -166,7 +166,7 @@ let check (g_f, structs) =
       (Arr(
        (match fst arr_typ with 
           Atyp(typ) -> typ
-        | _ -> raise(Failure("arrays can contain ints, bools, strings, or structs")))
+        | _ -> raise(Failure("arrays can contain ints, bools, strings, or structs"))), Literal(List.length l)
             ), SArrBuild (List.map expr l))
       | Extract(el, er) -> (check_extract (fst(expr el)) er, SExtract(expr el, er))
       | Assign(var, e) as ex -> 
@@ -182,7 +182,7 @@ let check (g_f, structs) =
                 if string_of_typ (fst (expr index)) != string_of_typ (Atyp(Int))
                     then raise (Failure ("Array index (" ^ string_of_expr index ^ " ) should be an int" ))
                 else match arr_type with
-                       Arr(t) -> Atyp(t)
+                       Arr(t,_) -> Atyp(t)
                        | _ -> raise (Failure ("should only be able to index arrays, not type" ^ string_of_typ arr_type))) in
             let value_type = fst(expr value) in
             let err = "illegal assignment of "  ^ (string_of_typ type_of_arr) ^ " = " ^ (string_of_typ value_type) in let _ =   
@@ -195,7 +195,7 @@ let check (g_f, structs) =
                 if string_of_typ (fst (expr index)) != string_of_typ (Atyp(Int))
                     then raise (Failure ("Array index (" ^ string_of_expr index ^ " ) should be an int" ))
                 else match arr_type with
-                       Arr(t) -> Atyp(t)
+                       Arr(t, _) -> Atyp(t)
                        | _ -> raise (Failure ("should only be able to index arrays, not type" ^ string_of_typ arr_type))) in
             (type_of_arr, SIndex(expr name, expr index))
        | Unop(op, e) as ex -> 
