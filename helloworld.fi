@@ -1,39 +1,16 @@
 struct baby {
 int age?
 str annoying?
-arr int a?
-}
+arr int 3 a?
+} 
 
 
 int main(){
 
-  str con?
-  str final?
-  str cat?
-  
-  arr struct baby babies?
   struct baby geffen?
-  struct baby ben?
-
-  geffen.a = [1, 2]?
-  ben.a = [2, 3]?
-  geffen.age = ben.a@0?
-  babies = [geffen, ben]?
-  babies@1.a[0] = 2?
-  babies@1.age = babies@1.a@0?
-
-  con = "hello "?
-  cat = "world"?
-  final = concat(con,cat)?
   
-  if (babies@1.age is babies@0.age){
-    printstring(final)?
-  }
+  geffen.a[0] = 1?
+  
+  printstring("worked")?
   return 0?
-}
-
-int doesnt_work(){
-   $int arr a?
-   a[0] = 1?
-   This fails because arr not initialized$
 }
