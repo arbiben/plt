@@ -14,6 +14,9 @@ int main(){
   str lowString?
   str upString?
   int len?
+  str a?
+  str b?
+  str c?
 
   arr struct baby babies?
   struct baby geffen?
@@ -28,6 +31,12 @@ int main(){
   
   alongString = "my length is 15"?
   len = strlen(alongString)?
+
+  a = "a"?
+  b = "b"?
+  c = "a"?
+
+  strcmp("hey", "there")?
 
   printstring("String len is: ")?
   print(len)?

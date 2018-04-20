@@ -97,6 +97,10 @@ let translate ((globals, functions), structures) =
   (*Handle string length*)
   let strlen_t = L.function_type i32_t [| str_typ |] in
   let strlen_func = L.declare_function "strlen" strlen_t the_module in
+  
+  (*Handle comparing string*)
+  let strcmp_t = L.function_type i32_t [| str_typ ; str_typ |] in 
+  let strcmp_func = L.declare_function "strcmp" strcmp_t the_module in
 
   (*Handle stringtolower, and string to upper*)
   let to_lower_t = L.function_type str_typ [| str_typ |] in
@@ -284,6 +288,9 @@ let translate ((globals, functions), structures) =
       | SCall ("getUp", [e]) -> let temp = expr builder e in
                L.build_call to_upper_func [| temp |] "getUp" builder
 
+      (*call for string compare*)
+      | SCall ("strcmp", [e]) -> let temp = expr builder e in
+               L.build_call strcmp_func [| temp |] "strcmp" builder
 
 
       (* Throw an error for any other expressions *)
