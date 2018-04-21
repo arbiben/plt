@@ -1,50 +1,37 @@
 struct baby {
 int age?
 str annoying?
-arr int a?
-}
+arr int 3 a?
+} 
 
+  struct baby g?
+  arr struct baby 5 babies?
 
 int main(){
 
-  str con?
+str con?
   str final?
   str cat?
+  struct baby o?
   str alongString?
   str lowString?
   str upString?
   int len?
-  str a?
-  str b?
-  str c?
-  str months?
 
-  arr struct baby babies?
-  struct baby geffen?
-  struct baby ben?
+  babies = [o, g]?
+  babies@0.a = [1,2]?
+  babies@1.a[0] = 1?
+  babies@1.annoying = "it worked!"?
+  if (babies@0.a@0 is babies@1.a@0){
+        printstring(babies@1.annoying)?
+  }
 
-  geffen.a = [1, 2]?
-  ben.a = [2, 3]?
-  geffen.age = ben.a@0?
-  babies = [geffen, ben]?
-  babies@1.a[0] = 2?
-  babies@1.age = babies@1.a@0?
-  
   alongString = "my length is 15"?
   len = strlen(alongString)?
-
-  a = "a"?
-  b = "b"?
-  c = "a"?
-  months = "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC"?
-
-  printstring("this should print may")?
-  printstring(split(months, ",", 4))?
-  printstring("this should print april")?
-  printstring(split(months, ",", 3))?
-  printstring("this should print january")?
-  printstring(split(months, ",", 0))?
   
+  print(len)?  
+  printstring("")?
+
   printstring("String len is: ")?
   print(len)?
   printstring("")?
@@ -57,16 +44,10 @@ int main(){
 
   con = "hello "?
   cat = "world"?
+  len = strcmp(con, cat)?
+  print(len)?
+  printstring("")?
   final = concat(con,cat)?
-  
-  if (babies@1.age is babies@0.age){
-    printstring(final)?
-  }
+  printstring(final)?
   return 0?
-}
-
-int doesnt_work(){
-   $int arr a?
-   a[0] = 1?
-   This fails because arr not initialized$
 }
