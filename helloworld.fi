@@ -18,6 +18,8 @@ str con?
   str upString?
   int len?
 
+  g.a = [1,2]?
+  g.age = 1?
   babies = [o, g]?
   babies@0.a = [1,2]?
   babies@1.a[0] = 1?

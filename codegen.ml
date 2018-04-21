@@ -401,7 +401,9 @@ let translate ((globals, functions), structures) =
                          L.build_struct_gep structval final_pos "tmp" builder 
                      | SId i -> let s' = lookup i in
                          let find_var var = snd var = i in
-                         let typ_of_i = fst (List.find find_var fdecl.slocals) in
+                         let typ_of_i = fst (
+                             try List.find find_var fdecl.slocals
+                             with Not_found -> List.find find_var globals) in
                               (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
                                  let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in
