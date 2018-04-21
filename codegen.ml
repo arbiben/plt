@@ -190,7 +190,7 @@ let translate ((globals, functions), structures) =
      L.declare_function "printf" printf_t the_module in 
 
   let str_typ = ltype_of_typ (A.Atyp(A.Str)) in
-
+ 
   (*Handle reading and writing from/to files*)
   let read_t = L.function_type str_typ [| str_typ |] in
   let read_func = L.declare_function "readFile" read_t the_module in
@@ -201,6 +201,10 @@ let translate ((globals, functions), structures) =
   (*Handle string concatenation*)
   let concat_t = L.function_type str_typ  [| str_typ ; str_typ |] in 
   let concat_func = L.declare_function "concat" concat_t the_module in
+
+  (*Handle splitting strings*)
+  let split_t = L.function_type str_typ  [| str_typ ; str_typ ; ltype_of_typ (A.Atyp(A.Int)) |] in 
+  let split_func = L.declare_function "split" split_t the_module in
 
   (*Handle string length*)
   let strlen_t = L.function_type i32_t [| str_typ |] in
@@ -441,6 +445,14 @@ let translate ((globals, functions), structures) =
       | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
                L.build_call concat_func [| temp1 ; temp2 |] "concat" builder
+ 
+      (*call for string split*)
+      | SCall ("split", [e1 ; e2 ; e3]) -> let temp1 = expr builder e1 in 
+               let temp2 = expr builder e2 in
+               let temp3 = expr builder e3 in               
+               L.build_call split_func [| temp1 ; temp2 ; temp3 |] "split" builder
+
+
 
       (*Call for string length*)
       | SCall ("strlen", [e]) -> let temp = expr builder e in

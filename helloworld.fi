@@ -3,10 +3,6 @@ int age?
 str annoying?
 arr int 3 a?
 } 
-struct babe {
-int age?
-str annoying?
-} 
 
   struct baby g?
   arr struct baby 5 babies?
