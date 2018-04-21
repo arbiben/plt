@@ -82,29 +82,41 @@ char* getUp(char *c){
 }
 
 //split a string by delimieter and returns a c array from which fi takes only one string at index
-char* split(char* a_str, char* a_delim, int choice)
+char* split(const char* a_str, const char* a_delim, int choice)
 {
+    //first copy const arguments to local vars
+    int str_size = (strlen(a_str)+1);
+    int delim_size = (strlen(a_delim)+1);
+    char* tmpStr = (char *) malloc(str_size);
+    char* tmpDelim = (char *) malloc(delim_size);
+    strcpy(tmpStr, a_str);
+    strcpy(tmpDelim, a_delim);
+
+    //printf("string is: %s\n", tmpStr);
 
     char** result    = 0;
     size_t count     = 0;
-    char* tmp        = a_str;
+    char* tmp        = tmpStr;
      
-    char* last_comma = 0;
+    char* last_delim = 0;
     char delim[2];
+
+    delim[0] = tmpDelim[0];
+    delim[1] = 0;
     
     /* Count how many elements will be extracted. */
     while (*tmp)
     {
-        if (delim[0] == *tmp)
+        if (tmpDelim[0] == *tmp)
         {
             count++;
-            last_comma = tmp;
+            last_delim = tmp;
         }
         tmp++;
     }
 
     /* Add space for trailing token. */
-    count += last_comma < (a_str + strlen(a_str) - 1);
+    count += last_delim < (tmpStr + strlen(tmpStr) - 1);
     /* Add space for terminating null string so caller knows where the list of returned strings ends. */
     count++;
     result = malloc(sizeof(char*) * count);
@@ -112,12 +124,10 @@ char* split(char* a_str, char* a_delim, int choice)
     if (result)
     {
         size_t idx  = 0;
-        printf("delimiter is: %s\n", a_delim);
-        printf("string is: %s\n", a_str);
-        char* token;
-        token = strtok(a_delim, a_str);
-    }
-    /*
+        printf("delimiter is: %s\n", tmpDelim);
+        char* token = strtok(tmpStr, delim);
+
+   
         while (token)
         {
             assert(idx < count);
@@ -128,8 +138,7 @@ char* split(char* a_str, char* a_delim, int choice)
         *(result + idx) = 0;
     }
     return result[choice];
-    */
-    return a_str;
+    
 }
 /*
 int main()
