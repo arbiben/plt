@@ -4,18 +4,19 @@ str annoying?
 arr int 3 a?
 } 
 
+str con?
+
 int main(){
 
-  str con?
   str final?
   str cat?
+  struct baby o?
   str alongString?
   str lowString?
   str upString?
   int len?
-  struct baby o?
-  struct baby g?
   arr struct baby 5 babies?
+  struct baby g?
 
   babies = [o, g]?
   babies@0.a = [1,2]?

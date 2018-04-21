@@ -65,11 +65,114 @@ let translate ((globals, functions), structures) =
       let completed = StringMap.add stc.ssname field_typs elems_map in completed in
       let struct_to_elems = List.fold_left store_struct_elems StringMap.empty structures in
 
+    let create_null_value_alltypes typ = match typ with
+              A.Atyp(A.Int)            -> L.const_int i32_t 0
+            | A.Atyp(A.Str)            -> let l = L.define_global "" (L.const_stringz context "") the_module
+                     in L.const_bitcast (L.const_gep l [|L.const_int i32_t 0|]) ptr
+            | A.Atyp(A.Bool)           -> L.const_int i1_t 0
+            | A.Atyp(A.Struct(ssname)) -> L.const_named_struct (StringMap.find ssname struct_map) [||]
+            | A.Arr(t, _) -> L.const_null (L.struct_type context 
+                                        [| i32_t ; L.pointer_type (ltype_of_typ (A.Atyp(t))) |])
+
+    in
+
+    let rec ranges num = match num with
+        0 -> []
+      | 1 -> [0]
+      | num_b -> ranges(num_b-1) @ [num_b-1] 
+    in
+   
+    let create_null_value typ = match typ with
+              A.Int            -> L.const_int i32_t 0
+            | A.Str            -> let l = L.define_global "" (L.const_stringz context "") the_module
+                     in L.const_bitcast (L.const_gep l [|L.const_int i32_t 0|]) ptr
+            | A.Bool           -> L.const_int i1_t 0
+            | A.Struct(ssname) -> L.const_named_struct (StringMap.find ssname struct_map) [||]
+    in
+
+    let create_empty_list typ length = 
+        let null_val = create_null_value typ in
+        let empty_list = [] in 
+        let rec populate l = if List.length l = length then l else populate(null_val::l) in 
+        populate empty_list 
+    in
+
+    let rec find name l = match l with
+            [] -> raise(Failure("var not found"))
+            | h :: t -> if name = h then 0 else 1 + find name t
+    in
+
   let global_vars = 
-      let global_var m (t, n) =
-          let init = L.const_int (ltype_of_typ t) 0
-          in StringMap.add n (L.define_global n init the_module) m in
-        List.fold_left global_var StringMap.empty globals in 
+      let global_var m (t, n) = 
+               let init = create_null_value_alltypes t in
+               let global_variable = L.define_global n init the_module in
+               let builder = L.builder_at_end context (L.entry_block global_variable) in
+               let global_variab =  L.build_alloca (ltype_of_typ t) n builder in
+              (match t with 
+              A.Arr(name_type, size') -> 
+                       let size = (match size' with 
+                              A.Literal s -> s 
+                            | _ -> raise(Failure("size of array was not int"))) in
+                       let init_size = L.const_int i32_t size in
+                       let built_elems = create_empty_list name_type size in
+                       let list_type = (match name_type with
+                              A.Int            -> i32_t
+                            | A.Str            -> ptr
+                            | A.Bool           -> i1_t 
+                            | A.Struct(ssname) -> StringMap.find ssname struct_map) in
+                       let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+                       let to_iter_on nums = 
+                           let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp"  builder in
+                           let plucked = List.nth built_elems nums in 
+                           let fin = ignore (L.build_store plucked next builder ) 
+                           in fin in List.iter to_iter_on (ranges size);
+                       let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
+                       let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+                       let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+                       let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+                       let _ = L.build_store init_size fstore  builder in
+                       let _ = L.build_store malloced sstore builder in
+                       let _ = L.build_load new_lit "al" builder in
+                       StringMap.add n new_lit m
+               | A.Atyp(A.Struct(ssname)) -> 
+                       let struct_fields = StringMap.find ssname struct_to_elems in
+                       let match_fields y =  (match y with 
+                           A.Arr(name_type, size') -> 
+                               let size = (match size' with 
+                                    A.Literal s -> s 
+                                  | _ -> raise(Failure("size of array was not int"))) in
+                               let init_size = L.const_int i32_t size in
+                               let built_elems = create_empty_list name_type size in
+                               let list_type = (match name_type with
+                                      A.Int            -> i32_t
+                                    | A.Str            -> ptr
+                                    | A.Bool           -> i1_t 
+                                    | A.Struct(ssname) -> StringMap.find ssname struct_map) in
+                               let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+                               let to_iter_on nums = 
+                                   let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
+                                   let plucked = List.nth built_elems nums in 
+                                   let fin = ignore (L.build_store plucked next builder ) 
+                                   in fin in List.iter to_iter_on (ranges size);
+                               let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
+                               let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+                               let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+                               let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+                               let _ = L.build_store init_size fstore builder in
+                               let _ = L.build_store malloced sstore builder in
+                               let res = L.build_load new_lit "al" builder in   
+                               let v_pos = find y struct_fields in 
+                               let result = L.build_struct_gep global_variab v_pos "tmp" builder 
+                               in let _  = L.build_store res result builder in ()
+                         | _ -> () ) (* end of match fields function. All struct vars iterated upon here*) 
+                        in let _ = List.iter match_fields struct_fields  in
+                        StringMap.add n global_variable m  
+               | _ -> (* the global var is not an array or struct. Do regular allocate then *)
+                      
+           StringMap.add n global_variable m 
+      )
+      in   List.fold_left global_var StringMap.empty globals in 
+  
   (* Declare a printf function to implement print. *)
   let printf_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
@@ -104,12 +207,6 @@ let translate ((globals, functions), structures) =
   let to_upper_t = L.function_type str_typ [| str_typ |] in
   let to_upper_func = L.declare_function "getUp" to_upper_t the_module in
 
- let rec ranges = function
-     0 -> []
-   | 1 -> [ 0 ]
-   | n -> ranges (n-1) @ [ n - 1 ] 
-   in
-   
   let function_decls = 
         let function_decl m fdecl = 
             let name = fdecl.sfname
@@ -138,26 +235,11 @@ let translate ((globals, functions), structures) =
                 let _ = L.build_store p local builder in
                 StringMap.add n local m
         in
-        let create_null_value typ = match typ with
-                  A.Int            -> L.const_int i32_t 0
-                | A.Str            -> let l = L.define_global "" (L.const_stringz context "") the_module
-                         in L.const_bitcast (L.const_gep l [|L.const_int i32_t 0|]) ptr
-                | A.Bool           -> L.const_int i1_t 0
-                | A.Struct(ssname) -> L.const_named_struct (StringMap.find ssname struct_map) [||]
-        in
-        let create_empty_list typ length = 
-            let null_val = create_null_value typ in
-            let empty_list = [] in 
-            let rec populate l = if List.length l = length then l else populate(null_val::l) in 
-            populate empty_list 
-        in    
-        let rec find name l = match l with
-                [] -> raise(Failure("var not found"))
-                | h :: t -> if name = h then 0 else 1 + find name t
-        in
         let add_local m (t, n) = (match t with
                A.Arr(name_type, size') -> 
-                       let size = (match size' with A.Literal s -> s | _ -> raise(Failure("size of array was not int"))) in
+                       let size = (match size' with 
+                              A.Literal s -> s 
+                            | _ -> raise(Failure("size of array was not int"))) in
                        let init_size = L.const_int i32_t size in
                        let built_elems = create_empty_list name_type size in
                        let list_type = (match name_type with
@@ -194,7 +276,6 @@ let translate ((globals, functions), structures) =
                                     | A.Str            -> ptr
                                     | A.Bool           -> i1_t 
                                     | A.Struct(ssname) -> StringMap.find ssname struct_map) in
-                       (*let ptr_to_arr = L.build_extractvalue local_var 2 "tmpArr" builder in *)
                                let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
                                let to_iter_on nums = 
                                    let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
