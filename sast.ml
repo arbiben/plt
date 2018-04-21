@@ -18,7 +18,7 @@ and sx =
   | SCall of string * sexpr list
   | SExtract of sexpr * string
   | SIndex of sexpr * sexpr 
-  | SArrBuild of sexpr list
+  | SArrBuild of sexpr * sexpr list
   | SAssignAtIndex of sexpr * sexpr * sexpr
   | SNoexpr
 
@@ -63,7 +63,7 @@ let rec string_of_sexpr (t, e) =
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SExtract(id, field) -> string_of_sexpr id ^ "." ^ field 
 
-  | SArrBuild(elems) -> "[" ^ String.concat ", " (List.map string_of_sexpr elems)
+  | SArrBuild(arr_name, elems) -> string_of_sexpr arr_name ^ "= [" ^ String.concat ", " (List.map string_of_sexpr elems)
   | SAssignAtIndex(name, idx, x) -> string_of_sexpr name ^ string_of_sexpr idx ^ "]" ^ " = " ^ string_of_sexpr x
   | SIndex(name, index) -> string_of_sexpr name ^ " @ " ^ string_of_sexpr index 
   | SNoexpr -> ""

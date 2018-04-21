@@ -92,7 +92,7 @@ atyp:
   | STRUCT ID { Struct($2)   }
 typ:
     atyp         { Atyp($1)      }
-  | ARR atyp  { Arr($2)    }
+  | ARR atyp expr  { Arr($2, $3)    }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -145,7 +145,7 @@ expr:
   | ID LPAREN args_opt RPAREN { Call($1, $3)  } 
   | LPAREN expr RPAREN { $2                   }
   | expr AT expr { Index($1, $3)  }
-  | LBRACKET elem_list RBRACKET { ArrBuild(List.rev $2)    }
+  | expr ASSIGN LBRACKET elem_list RBRACKET { ArrBuild($1, List.rev $4)    }
   
 elem_list:
     /* nothing */ { [] } /* allows for an empty array decl */

@@ -48,8 +48,6 @@ rule token = parse
 | "F"      { BLIT(false) }
 | "struct"  { STRUCT }
 | '.'      { DOT }
-| "file"   { FILE }
-| "dir"    { DIRECTORY }
 | digits as lxm { LITERAL(int_of_string lxm) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']*    as lxm { ID(lxm) }
 | ['\"'] [^'\"']* ['\"']  as lxm { STRLIT(String.sub (lxm) 1 (String.length (lxm) -2)) }

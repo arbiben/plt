@@ -1,8 +1,8 @@
 struct baby {
 int age?
 str annoying?
-}
-
+arr int 3 a?
+} 
 
 int main(){
 
@@ -13,16 +13,9 @@ int main(){
   str lowString?
   str upString?
   int len?
-  str a?
-  str b?
-  str c?
 
   alongString = "my length is 15"?
   len = strlen(alongString)?
-
-  a = "a"?
-  b = "b"?
-  c = "a"?
 
   len = strcmp(a, b)?
   
@@ -44,4 +37,3 @@ int main(){
   
   return 0?
 }
-
