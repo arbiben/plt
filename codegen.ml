@@ -137,6 +137,10 @@ let translate ((globals, functions), structures) =
             let rec populate l = if List.length l = length then l else populate(null_val::l) in 
             populate empty_list 
         in    
+        let rec find name l = match l with
+                [] -> raise(Failure("var not found"))
+                | h :: t -> if name = h then 0 else 1 + find name t
+        in
         let add_local m (t, n) = (match t with
                A.Arr(name_type, size') -> 
                        let size = (match size' with A.Literal s -> s | _ -> raise(Failure("size of array was not int"))) in
@@ -189,7 +193,11 @@ let translate ((globals, functions), structures) =
                                let sstore = L.build_struct_gep new_lit 1 "ss" builder in
                                let _ = L.build_store init_size fstore builder in
                                let _ = L.build_store malloced sstore builder in
-                               let _ = L.build_load new_lit "al" builder in ()  
+                               let res = L.build_load new_lit "al" builder in   
+                                 let v_pos = find y struct_fields in 
+                                 let result = L.build_struct_gep local_var v_pos "tmp" builder
+                                 in let _  = L.build_store res result builder in ()
+
                          | _ -> () ) (* end of matched fields *) 
                         in let _ = List.iter match_fields struct_fields  in
                         StringMap.add n local_var m 
