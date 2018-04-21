@@ -50,7 +50,7 @@ let translate ((globals, functions), structures) =
       let set_bod = L.struct_set_body (StringMap.find struct_decl.ssname struct_map) elements_array true 
       in ignore(set_bod) in 
       let create_action = List.map structure_bods structures 
-      in ignore(create_action);
+      in ignore(create_action); 
 
   let store_struct_vars elems_map st =  
       let var tup = snd tup in 
@@ -58,7 +58,13 @@ let translate ((globals, functions), structures) =
       let make_map pair v = ((StringMap.add v ((snd pair) + 1) (fst pair)), (snd pair) + 1) in  
       let vars_map = List.fold_left make_map (StringMap.empty, -1) vars in
       let new_map = StringMap.add st.ssname (fst vars_map) elems_map in new_map in
-      let struct_vars = List.fold_left store_struct_vars StringMap.empty structures in
+      let struct_vars = List.fold_left store_struct_vars StringMap.empty structures in 
+ 
+  let store_struct_elems elems_map stc = 
+      let field_typ tup = fst tup in
+      let field_typs = List.map field_typ stc.selements in
+      let completed = StringMap.add stc.ssname field_typs elems_map in completed in
+      let struct_to_elems = List.fold_left store_struct_elems StringMap.empty structures in
 
   let global_vars = 
       let global_var m (t, n) =
@@ -112,7 +118,8 @@ let translate ((globals, functions), structures) =
     let local_vars = 
         let add_formal m (t, n) p =
                 let () = L.set_value_name n p in
-                let local = L.build_alloca (ltype_of_typ t) n builder in
+                let local = 
+                L.build_alloca (ltype_of_typ t) n builder in
                 let _ = L.build_store p local builder in
                 StringMap.add n local m
         in
@@ -130,6 +137,10 @@ let translate ((globals, functions), structures) =
             let rec populate l = if List.length l = length then l else populate(null_val::l) in 
             populate empty_list 
         in    
+        let rec find name l = match l with
+                [] -> raise(Failure("var not found"))
+                | h :: t -> if name = h then 0 else 1 + find name t
+        in
         let add_local m (t, n) = (match t with
                A.Arr(name_type, size') -> 
                        let size = (match size' with A.Literal s -> s | _ -> raise(Failure("size of array was not int"))) in
@@ -154,10 +165,46 @@ let translate ((globals, functions), structures) =
                        let _ = L.build_store malloced sstore builder in
                        let _ = L.build_load new_lit "al" builder in
                        StringMap.add n new_lit m
+               | A.Atyp(A.Struct(ssname)) -> 
+                       let local_var = L.build_alloca (ltype_of_typ t) n builder in
+                       let struct_fields = StringMap.find ssname struct_to_elems in
+                       let match_fields y =  (match y with 
+                           A.Arr(name_type, size') -> 
+                               let size = (match size' with 
+                                    A.Literal s -> s 
+                                  | _ -> raise(Failure("size of array was not int"))) in
+                               let init_size = L.const_int i32_t size in
+                               let built_elems = create_empty_list name_type size in
+                               let list_type = (match name_type with
+                                      A.Int            -> i32_t
+                                    | A.Str            -> ptr
+                                    | A.Bool           -> i1_t 
+                                    | A.Struct(ssname) -> StringMap.find ssname struct_map) in
+                       (*let ptr_to_arr = L.build_extractvalue local_var 2 "tmpArr" builder in *)
+                               let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+                               let to_iter_on nums = 
+                                   let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
+                                   let inter = List.nth built_elems nums in 
+                                   let fin = ignore (L.build_store inter next builder) 
+                                   in fin in List.iter to_iter_on (ranges size);
+                               let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
+                               let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
+                               let fstore = L.build_struct_gep new_lit 0 "fs" builder in
+                               let sstore = L.build_struct_gep new_lit 1 "ss" builder in
+                               let _ = L.build_store init_size fstore builder in
+                               let _ = L.build_store malloced sstore builder in
+                               let res = L.build_load new_lit "al" builder in   
+                                 let v_pos = find y struct_fields in 
+                                 let result = L.build_struct_gep local_var v_pos "tmp" builder
+                                 in let _  = L.build_store res result builder in ()
+
+                         | _ -> () ) (* end of matched fields *) 
+                        in let _ = List.iter match_fields struct_fields  in
+                        StringMap.add n local_var m 
                | _ ->
                     let local_var = L.build_alloca (ltype_of_typ t) n builder
                     in StringMap.add n local_var m
-            )
+        )
         in 
         let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
               (Array.to_list (L.params the_function)) in
