@@ -65,7 +65,16 @@ let translate ((globals, functions), structures) =
       let completed = StringMap.add stc.ssname field_typs elems_map in completed in
       let struct_to_elems = List.fold_left store_struct_elems StringMap.empty structures in
 
-    let create_null_value_alltypes typ = match typ with
+  let function_decls = 
+        let function_decl m fdecl = 
+            let name = fdecl.sfname
+            and formal_types = 
+                Array.of_list (List.map (fun (t, _) -> ltype_of_typ t) fdecl.sformals)
+               in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in 
+               StringMap.add name (L.define_function name ftype the_module, fdecl) m in
+             List.fold_left function_decl StringMap.empty functions in
+  
+  let create_null_value_alltypes typ = match typ with
               A.Atyp(A.Int)            -> L.const_int i32_t 0
             | A.Atyp(A.Str)            -> let l = L.define_global "" (L.const_stringz context "") the_module
                      in L.const_bitcast (L.const_gep l [|L.const_int i32_t 0|]) ptr
@@ -104,10 +113,8 @@ let translate ((globals, functions), structures) =
 
   let global_vars = 
       let global_var m (t, n) = 
-               let init = create_null_value_alltypes t in
-               let global_variable = L.define_global n init the_module in
-               let builder = L.builder_at_end context (L.entry_block global_variable) in
-               let global_variab =  L.build_alloca (ltype_of_typ t) n builder in
+          let (f,_) = StringMap.find "main" function_decls in
+          let builder = L.builder_at_end context (L.entry_block f) in
               (match t with 
               A.Arr(name_type, size') -> 
                        let size = (match size' with 
@@ -135,6 +142,7 @@ let translate ((globals, functions), structures) =
                        let _ = L.build_load new_lit "al" builder in
                        StringMap.add n new_lit m
                | A.Atyp(A.Struct(ssname)) -> 
+                       let gv = L.build_alloca (ltype_of_typ t) n builder in
                        let struct_fields = StringMap.find ssname struct_to_elems in
                        let match_fields y =  (match y with 
                            A.Arr(name_type, size') -> 
@@ -162,13 +170,15 @@ let translate ((globals, functions), structures) =
                                let _ = L.build_store malloced sstore builder in
                                let res = L.build_load new_lit "al" builder in   
                                let v_pos = find y struct_fields in 
-                               let result = L.build_struct_gep global_variab v_pos "tmp" builder 
+                               let result = L.build_struct_gep gv v_pos "tmp" builder 
                                in let _  = L.build_store res result builder in ()
                          | _ -> () ) (* end of match fields function. All struct vars iterated upon here*) 
                         in let _ = List.iter match_fields struct_fields  in
-                        StringMap.add n global_variable m  
+                        StringMap.add n gv m  
                | _ -> (* the global var is not an array or struct. Do regular allocate then *)
                       
+               let init = create_null_value_alltypes t in
+               let global_variable = L.define_global n init the_module in
            StringMap.add n global_variable m 
       )
       in   List.fold_left global_var StringMap.empty globals in 
@@ -206,15 +216,6 @@ let translate ((globals, functions), structures) =
 
   let to_upper_t = L.function_type str_typ [| str_typ |] in
   let to_upper_func = L.declare_function "getUp" to_upper_t the_module in
-
-  let function_decls = 
-        let function_decl m fdecl = 
-            let name = fdecl.sfname
-            and formal_types = 
-                Array.of_list (List.map (fun (t, _) -> ltype_of_typ t) fdecl.sformals)
-               in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in 
-               StringMap.add name (L.define_function name ftype the_module, fdecl) m in
-             List.fold_left function_decl StringMap.empty functions in
              
   (* Generate the instructions for a trivial main function *)
   let build_function_body fdecl =

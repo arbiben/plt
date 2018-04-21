@@ -3,11 +3,17 @@ int age?
 str annoying?
 arr int 3 a?
 } 
+struct babe {
+int age?
+str annoying?
+} 
 
-str con?
+  struct baby g?
+  arr struct baby 5 babies?
 
 int main(){
 
+str con?
   str final?
   str cat?
   struct baby o?
@@ -15,8 +21,6 @@ int main(){
   str lowString?
   str upString?
   int len?
-  arr struct baby 5 babies?
-  struct baby g?
 
   babies = [o, g]?
   babies@0.a = [1,2]?
