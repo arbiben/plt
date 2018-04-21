@@ -13,13 +13,23 @@ int main(){
   str lowString?
   str upString?
   int len?
+  struct baby o?
+  struct baby g?
+  arr struct baby 5 babies?
+
+  babies = [o, g]?
+  babies@0.a = [1,2]?
+  babies@1.a[0] = 1?
+  babies@1.annoying = "it worked!"?
+  if (babies@0.a@0 is babies@1.a@0){
+        printstring(babies@1.annoying)?
+  }
 
   alongString = "my length is 15"?
   len = strlen(alongString)?
-
-  len = strcmp(a, b)?
   
   print(len)?  
+  printstring("")?
 
   printstring("String len is: ")?
   print(len)?
@@ -33,7 +43,10 @@ int main(){
 
   con = "hello "?
   cat = "world"?
+  len = strcmp(con, cat)?
+  print(len)?
+  printstring("")?
   final = concat(con,cat)?
-  
+  printstring(final)?
   return 0?
 }
