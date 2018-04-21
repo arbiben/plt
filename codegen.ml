@@ -33,7 +33,6 @@ let translate ((globals, functions), structures) =
       let new_map = StringMap.add struct_decl.ssname struct_name map in new_map in
   let struct_map = List.fold_left structure_decls StringMap.empty structures in
 
-
     (* Convert Fi types to LLVM types *)
   let rec ltype_of_typ = function
       A.Atyp(A.Int)            -> i32_t
@@ -77,15 +76,6 @@ let translate ((globals, functions), structures) =
   let printf_func : L.llvalue = 
      L.declare_function "printf" printf_t the_module in 
 
-  let function_decls = 
-        let function_decl m fdecl = 
-            let name = fdecl.sfname
-            and formal_types = 
-                Array.of_list (List.map (fun (t, _) -> ltype_of_typ t) fdecl.sformals)
-               in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in 
-               StringMap.add name (L.define_function name ftype the_module, fdecl) m in
-             List.fold_left function_decl StringMap.empty functions in
-
   let str_typ = ltype_of_typ (A.Atyp(A.Str)) in
 
   (*Handle reading and writing from/to files*)
@@ -99,11 +89,36 @@ let translate ((globals, functions), structures) =
   let concat_t = L.function_type str_typ  [| str_typ ; str_typ |] in 
   let concat_func = L.declare_function "concat" concat_t the_module in
 
+  (*Handle string length*)
+  let strlen_t = L.function_type i32_t [| str_typ |] in
+  let strlen_func = L.declare_function "strlen" strlen_t the_module in
+  
+  (*Handle comparing string*)
+  let strcmp_t = L.function_type i32_t [| str_typ ; str_typ |] in 
+  let strcmp_func = L.declare_function "strcmp" strcmp_t the_module in
+
+  (*Handle stringtolower, and string to upper*)
+  let to_lower_t = L.function_type str_typ [| str_typ |] in
+  let to_lower_func = L.declare_function "getLow" to_lower_t the_module in
+
+  let to_upper_t = L.function_type str_typ [| str_typ |] in
+  let to_upper_func = L.declare_function "getUp" to_upper_t the_module in
+
  let rec ranges = function
      0 -> []
    | 1 -> [ 0 ]
    | n -> ranges (n-1) @ [ n - 1 ] 
    in
+   
+  let function_decls = 
+        let function_decl m fdecl = 
+            let name = fdecl.sfname
+            and formal_types = 
+                Array.of_list (List.map (fun (t, _) -> ltype_of_typ t) fdecl.sformals)
+               in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in 
+               StringMap.add name (L.define_function name ftype the_module, fdecl) m in
+             List.fold_left function_decl StringMap.empty functions in
+             
   (* Generate the instructions for a trivial main function *)
   let build_function_body fdecl =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
@@ -123,7 +138,6 @@ let translate ((globals, functions), structures) =
                 let _ = L.build_store p local builder in
                 StringMap.add n local m
         in
-        
         let create_null_value typ = match typ with
                   A.Int            -> L.const_int i32_t 0
                 | A.Str            -> let l = L.define_global "" (L.const_stringz context "") the_module
@@ -154,8 +168,8 @@ let translate ((globals, functions), structures) =
                        let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
                        let to_iter_on nums = 
                            let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
-                           let inter = List.nth built_elems nums in 
-                           let fin = ignore (L.build_store inter next builder) 
+                           let plucked = List.nth built_elems nums in 
+                           let fin = ignore (L.build_store plucked next builder) 
                            in fin in List.iter to_iter_on (ranges size);
                        let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
                        let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
@@ -184,8 +198,8 @@ let translate ((globals, functions), structures) =
                                let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
                                let to_iter_on nums = 
                                    let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
-                                   let inter = List.nth built_elems nums in 
-                                   let fin = ignore (L.build_store inter next builder) 
+                                   let plucked = List.nth built_elems nums in 
+                                   let fin = ignore (L.build_store plucked next builder) 
                                    in fin in List.iter to_iter_on (ranges size);
                                let new_lit_typ = L.struct_type context [| i32_t ; L.pointer_type list_type |] in
                                let new_lit = L.build_malloc new_lit_typ "arr_literal" builder in
@@ -194,14 +208,13 @@ let translate ((globals, functions), structures) =
                                let _ = L.build_store init_size fstore builder in
                                let _ = L.build_store malloced sstore builder in
                                let res = L.build_load new_lit "al" builder in   
-                                 let v_pos = find y struct_fields in 
-                                 let result = L.build_struct_gep local_var v_pos "tmp" builder
-                                 in let _  = L.build_store res result builder in ()
-
-                         | _ -> () ) (* end of matched fields *) 
+                               let v_pos = find y struct_fields in 
+                               let result = L.build_struct_gep local_var v_pos "tmp" builder
+                               in let _  = L.build_store res result builder in ()
+                         | _ -> () ) (* end of match fields function. All struct vars iterated upon here*) 
                         in let _ = List.iter match_fields struct_fields  in
                         StringMap.add n local_var m 
-               | _ ->
+               | _ -> (* the local var is not an array or struct. Do regular allocate then *)
                     let local_var = L.build_alloca (ltype_of_typ t) n builder
                     in StringMap.add n local_var m
         )
@@ -252,10 +265,10 @@ let translate ((globals, functions), structures) =
                let built_elems = List.map build_on_fly l in
                let arr_name' = expr builder arr_name in
                let to_iter_on nums = 
-                   let inter = List.nth built_elems nums in 
+                   let plucked = List.nth built_elems nums in 
                    let elemptr = L.build_extractvalue arr_name' 1 "tmpArr" builder in
                    let next = L.build_gep elemptr [| L.const_int i32_t nums |] "otherTmp" builder in
-                   let fin = ignore(L.build_store inter next builder)
+                   let fin = ignore(L.build_store plucked next builder)
                    in fin in let _ = List.iter to_iter_on (ranges length) in init_size
        | SExtract (s, v)   -> 
            let sf = (match snd s with 
@@ -325,29 +338,51 @@ let translate ((globals, functions), structures) =
                let ev  = L.build_gep eptr [| index' |] "ev" builder in 
                (* Insert here other types of arrays: string and struct *)
                L.build_load ev "val" builder
+
       | SCall ("print", [e]) -> (* Generate a call instruction *)
                         L.build_call printf_func [| int_format_str ; (expr builder e) |]
                                 "printf" builder 
+
       | SCall ("printstring", [e]) ->  
-  L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
+                        L.build_call printf_func [| str_format_str ; (expr builder e) |] 
+                                "printf" builder
+
       (*call for file functions*)
       | SCall ("readFile", [e]) -> let temp = expr builder e in
-                L.build_call read_func [| temp |] "read" builder                                              
+                L.build_call read_func [| temp |] "read" builder
+                
       | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
                L.build_call write_func [| temp1 ; temp2 |] "write" builder
+
       (*call for string concatenation*)
       | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
                L.build_call concat_func [| temp1 ; temp2 |] "concat" builder
+
+      (*Call for string length*)
+      | SCall ("strlen", [e]) -> let temp = expr builder e in
+               L.build_call strlen_func [| temp |] "strlen" builder
+
+      (*Call for str to lower case*)
+      | SCall ("getLow", [e]) -> let temp = expr builder e in
+               L.build_call to_lower_func [| temp |] "getLow" builder
+
+      (*call for string to upper case*)
+      | SCall ("getUp", [e]) -> let temp = expr builder e in
+               L.build_call to_upper_func [| temp |] "getUp" builder
+
+      (*call for string compare*)
+      | SCall ("strcmp", [e1 ; e2]) -> let temp1 = expr builder e1 in
+               let temp2 = expr builder e2 in
+               L.build_call strcmp_func [| temp1 ; temp2 |] "strcmp" builder
+
       (* Throw an error for any other expressions *)
       | SCall (f, act) -> 
               let (fdef, _) = StringMap.find f function_decls in   (* (fdef, fdecl) --> (fdef, _) *)
               let actuals = List.rev (List.map (expr builder) (List.rev act)) in
               let result = f ^ "_result" in
-              L.build_call fdef (Array.of_list actuals) result builder 
-              
-      
+              L.build_call fdef (Array.of_list actuals) result builder       
       in
 
    (* Each basic block in a program ends with a "terminator" instruction i.e.

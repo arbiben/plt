@@ -2,7 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <memory.h>
-
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
 char* readFile(char * in_file_name) {
   FILE *fp;
   int len;
@@ -44,4 +46,31 @@ char* concat(char * str1, char* str2) {
         strcpy(return_str, str1);
         strcat(return_str, str2);
         return(return_str);
+}
+
+char* getLow(char *c){
+    int len = strlen(c);
+    char* final = (char *) malloc(len);
+    int i = 0; 
+    while (i < len - 1){
+        final[i] = tolower(c[i]); 
+        i = i + 1;
+    }
+    final[i] = c[i];
+    return final;
+}
+
+char* getUp(char *c){
+    int len = strlen(c);
+    char* final = (char *) malloc(len);
+    int i = 0; 
+    while (i < len - 1){
+        final[i] = toupper(c[i]); 
+        i = i + 1;
+    }
+    final[i] = c[i];
+    if(strcmp("hello", "word") == 0){
+        printf("1");
+    }
+    return final;
 }

@@ -84,6 +84,25 @@ let check (g_f, structs) =
       typ = Atyp(Str); fname = name;
       formals = [(ty1, "str1"); (ty2, "str2")];
       locals = []; body = [] } map in
+    let add_bind_tolower map (name, ty) = StringMap.add name {
+      typ = Atyp(Str); fname = name; 
+      formals = [(ty, "str")];
+      locals = []; body = [] } map in
+    let add_bind_toupper map (name, ty) = StringMap.add name {
+      typ = Atyp(Str); fname = name; 
+      formals = [(ty, "str")];
+      locals = []; body = [] } map in
+    let add_bind_strlen map (name, ty) = StringMap.add name {
+      typ = Atyp(Int); fname = name; 
+      formals = [(ty, "str")];
+      locals = []; body = [] } map in
+    let add_bind_strcmp map (name, ty1, ty2) = StringMap.add name {
+      typ = Atyp(Int); fname = name;
+      formals = [(ty1, "str1"); (ty2, "str2")];
+      locals = []; body = [] } map in
+
+
+
     let built_in_decls = 
     List.fold_left add_bind_ints StringMap.empty [ ("print", Atyp(Int));
                                                  ("printstring", Atyp(Str)) ] in
@@ -93,6 +112,14 @@ let check (g_f, structs) =
         [("writeFile", (Atyp(Str)), Atyp(Str))] in
     let built_in_decls = List.fold_left add_bind_concat built_in_decls
         [("concat", (Atyp(Str)), Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_tolower built_in_decls
+        [("getLow", Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_toupper built_in_decls
+        [("getUp", Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_strlen built_in_decls
+        [("strlen", Atyp(Str))] in
+    let built_in_decls = List.fold_left add_bind_strcmp built_in_decls
+        [("strcmp", (Atyp(Str)), Atyp(Str))] in
 
   (* Add function name to symbol table *)
   let add_func map fd = 

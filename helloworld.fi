@@ -4,13 +4,36 @@ str annoying?
 arr int 3 a?
 } 
 
-
 int main(){
 
-  struct baby geffen?
+  str con?
+  str final?
+  str cat?
+  str alongString?
+  str lowString?
+  str upString?
+  int len?
+
+  alongString = "my length is 15"?
+  len = strlen(alongString)?
+
+  len = strcmp(a, b)?
   
-  geffen.a[0] = 1?
+  print(len)?  
+
+  printstring("String len is: ")?
+  print(len)?
+  printstring("")?
+
+  lowString = getUp(alongString)?
+  upString = getLow(lowString)?
+
+  printstring(lowString)?
+  printstring(upString)? 
+
+  con = "hello "?
+  cat = "world"?
+  final = concat(con,cat)?
   
-  printstring("worked")?
   return 0?
 }
