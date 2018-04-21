@@ -164,15 +164,20 @@ let translate ((globals, functions), structures) =
                | A.Atyp(A.Struct(ssname)) -> 
                        let local_var = L.build_alloca (ltype_of_typ t) n builder in
                        let struct_fields = StringMap.find ssname struct_to_elems in
-                       let matched_fields y =  (match y with 
+                       let match_fields y =  (match y with 
                            A.Arr(name_type, size') -> 
                                let size = (match size' with 
                                     A.Literal s -> s 
                                   | _ -> raise(Failure("size of array was not int"))) in
                                let init_size = L.const_int i32_t size in
                                let built_elems = create_empty_list name_type size in
-                               let ptr_to_arr = L.build_extractvalue local_var 2 "tmpArr" builder in
-                               let malloced = L.build_array_malloc ptr_to_arr init_size "tmpArr" builder in
+                               let list_type = (match name_type with
+                                      A.Int            -> i32_t
+                                    | A.Str            -> ptr
+                                    | A.Bool           -> i1_t 
+                                    | A.Struct(ssname) -> StringMap.find ssname struct_map) in
+                       (*let ptr_to_arr = L.build_extractvalue local_var 2 "tmpArr" builder in *)
+                               let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
                                let to_iter_on nums = 
                                    let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp" builder in
                                    let inter = List.nth built_elems nums in 
@@ -186,7 +191,7 @@ let translate ((globals, functions), structures) =
                                let _ = L.build_store malloced sstore builder in
                                let _ = L.build_load new_lit "al" builder in ()  
                          | _ -> () ) (* end of matched fields *) 
-                        in let _ = List.iter matched_fields struct_fields  in
+                        in let _ = List.iter match_fields struct_fields  in
                         StringMap.add n local_var m 
                | _ ->
                     let local_var = L.build_alloca (ltype_of_typ t) n builder
