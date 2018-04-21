@@ -38,7 +38,13 @@ int main(){
   c = "a"?
   months = "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC"?
 
+  printstring("this should print may")?
   printstring(split(months, ",", 4))?
+  printstring("this should print april")?
+  printstring(split(months, ",", 3))?
+  printstring("this should print january")?
+  printstring(split(months, ",", 0))?
+  
   printstring("String len is: ")?
   print(len)?
   printstring("")?

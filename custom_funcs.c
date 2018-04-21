@@ -92,15 +92,11 @@ char* split(const char* a_str, const char* a_delim, int choice)
     strcpy(tmpStr, a_str);
     strcpy(tmpDelim, a_delim);
 
-    //printf("string is: %s\n", tmpStr);
-
     char** result    = 0;
     size_t count     = 0;
     char* tmp        = tmpStr;
-     
     char* last_delim = 0;
     char delim[2];
-
     delim[0] = tmpDelim[0];
     delim[1] = 0;
     
@@ -124,35 +120,18 @@ char* split(const char* a_str, const char* a_delim, int choice)
     if (result)
     {
         size_t idx  = 0;
-        printf("delimiter is: %s\n", tmpDelim);
         char* token = strtok(tmpStr, delim);
 
-   
         while (token)
         {
             assert(idx < count);
             *(result + idx++) = strdup(token);
             token = strtok(0, delim);
         }
+        
         assert(idx == count - 1);
         *(result + idx) = 0;
     }
     return result[choice];
-    
 }
-/*
-int main()
-{
-        char months[] = "JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC";
-        char** tokens;
 
-        printf("months=[%s]\n\n", months);
-        printf("chosen index = 4 (may)\n" );
-
-        tokens = split(months, ',', 4);        
-        if (tokens)
-        {
-            printf("month=[%s]\n", *tokens);
-        }
-        return 0;
-}*/
