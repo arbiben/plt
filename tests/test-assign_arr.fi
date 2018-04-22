@@ -1,0 +1,15 @@
+$tests filling struct arrays only partially and printing their contents/default values$
+
+int main(){
+
+arr int 6 a?
+arr str 20 b?
+b = ["not", "filled", "arrays :)"]?
+printstring(b@20)?
+a = [1, 2, 3]?
+print(a@1)?
+printstring(" ")?
+print(a@5)?
+printstring(b@2)?
+
+}

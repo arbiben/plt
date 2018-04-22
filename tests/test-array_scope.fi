@@ -1,0 +1,10 @@
+arr int 6 a?
+arr str 6 b?
+
+int main(){
+
+arr str 3 c?
+a = [2, 3, 4, 5, 6]?
+b = ["you", "are", "an", "array"]?
+c = ["some", "strings", "here"]?
+}

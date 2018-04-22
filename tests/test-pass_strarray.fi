@@ -1,0 +1,14 @@
+arr str 2 changeString(arr str 2 x){
+x[0] = "new string"?
+return x?
+}
+
+int main(){
+arr str 2 strz?
+strz = ["hi", "bye"]?
+changeString(strz)?
+printstring(strz@0)?
+
+}
+
+

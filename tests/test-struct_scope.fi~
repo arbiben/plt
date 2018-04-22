@@ -1,0 +1,14 @@
+struct baby {
+int age?
+str current_status?
+}
+
+struct baby ben?
+$ben.current_status = "partying"?$
+
+int main(){
+
+struct baby geffen?
+geffen.age = 5?
+$ben.age = 3?$
+}

@@ -1,0 +1,22 @@
+struct baby{
+int age?
+str last_name?
+arr int 6 hobbies?
+}
+
+struct baby birthday(struct baby x){
+x.age = 6?
+return x?
+}
+
+int main(){
+struct baby geffen?
+struct baby gadalti_bshana?
+geffen.age = 5?
+$geffen.last_name = "huberman"?
+printstring(geffen.last_name)?
+gadalti_bshana = birthday(geffen)?
+print(gadalti_bshana.age)?$
+}
+
+

@@ -1,0 +1,10 @@
+arr int 6 a?
+arr str 20 b?
+
+int main(){
+
+printstring(b@20)?
+print(a@1)?
+printstring(" ")?
+printstring("bye!")?
+}

@@ -1,0 +1,21 @@
+struct baby{
+arr int 6 height_by_year?
+}
+
+arr int 6 addOne(arr int 6 x){
+x[0] = x@0 + 1?
+return x?
+}
+
+int main(){
+arr int 6 a?
+struct baby geffen?
+
+a = [1, 2, 3, 4, 5, 6]?
+addOne(a)?
+print(a@0)?
+geffen.height_by_year = [2, 3, 4, 5, 6, 7]?
+addOne(geffen.height_by_year)?
+printstring("should be 3")?
+print(geffen.height_by_year@0)?
+}
