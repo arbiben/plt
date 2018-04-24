@@ -8,11 +8,14 @@ struct person{
     str secret?
 }
 
-int main(){
+struct person o?
+arr str 4 bm?
 
+int main(){
     struct person ori?
     struct person ggg?
     ori.age = 5?
+    bm[0] = "hello!"?
     ggg = getOlder(ori)?
     print(ggg.age)?
     printstring(ggg.secret)?
@@ -21,10 +24,11 @@ int main(){
 }
 
 
-struct person getOlder(struct person o){
+struct person getOlder(struct person om){
     o.age = 7?
     o.secret = "hi"?
-    o.family[0] = "ori"?
+    o.family[0] = "hi"?
+    printstring(bm@0)?
     return o?
 }
 
