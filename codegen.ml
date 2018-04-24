@@ -128,6 +128,8 @@ let translate ((globals, functions), structures) =
                             | A.Bool           -> i1_t 
                             | A.Struct(ssname) -> StringMap.find ssname struct_map) in
                        let malloced = L.build_array_malloc list_type init_size "tmpArr" builder in
+                       let init = create_null_value_alltypes t in
+                       let global = L.define_global n init the_module in
                        let to_iter_on nums = 
                            let next = L.build_gep malloced [| L.const_int i32_t nums |] "otherTmp"  builder in
                            let plucked = List.nth built_elems nums in 
@@ -143,6 +145,8 @@ let translate ((globals, functions), structures) =
                        StringMap.add n new_lit m
                | A.Atyp(A.Struct(ssname)) -> 
                        let gv = L.build_alloca (ltype_of_typ t) n builder in
+                       let init = create_null_value_alltypes t in
+                       let global = L.define_global n init the_module in
                        let struct_fields = StringMap.find ssname struct_to_elems in
                        let match_fields y =  (match y with 
                            A.Arr(name_type, size') -> 
@@ -174,7 +178,7 @@ let translate ((globals, functions), structures) =
                                in let _  = L.build_store res result builder in ()
                          | _ -> () ) (* end of match fields function. All struct vars iterated upon here*) 
                         in let _ = List.iter match_fields struct_fields  in
-                        StringMap.add n gv m  
+                        StringMap.add n global m  
                | _ -> (* the global var is not an array or struct. Do regular allocate then *)
                       
                let init = create_null_value_alltypes t in
