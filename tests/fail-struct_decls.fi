@@ -1,0 +1,21 @@
+$tests passing structs into functions (should fail)$
+
+struct person{
+int age?
+int occupation?
+arr str 5 family?
+str secret?
+}
+
+struct person getOlder(struct person pers){
+pers.age = pers.age + 1?
+return pers?
+}
+
+struct person ori?
+getOlder(ori)?
+int main(){
+$struct person ori?
+ori.age = 5?
+ori = getOlder(ori)?$
+}
