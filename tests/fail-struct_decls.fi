@@ -15,12 +15,16 @@ int main(){
     ori.age = 5?
     ggg = getOlder(ori)?
     print(ggg.age)?
+    printstring(ggg.secret)?
+    printstring(ggg.family@0)?
 
 }
 
 
 struct person getOlder(struct person o){
     o.age = 7?
+    o.secret = "hi"?
+    o.family[0] = "ori"?
     return o?
 }
 
