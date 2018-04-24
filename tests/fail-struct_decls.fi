@@ -20,6 +20,7 @@ int main(){
     print(ggg.age)?
     printstring(ggg.secret)?
     printstring(ggg.family@0)?
+    printstring(bm@1)?
 
 }
 
@@ -29,6 +30,8 @@ struct person getOlder(struct person om){
     o.secret = "hi"?
     o.family[0] = "hi"?
     printstring(bm@0)?
+    bm[1] = "/nyo!!!/n"?
+    printstring(bm@1)?
     return o?
 }
 

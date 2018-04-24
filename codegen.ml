@@ -141,7 +141,8 @@ let translate ((globals, functions), structures) =
                        let sstore = L.build_struct_gep new_lit 1 "ss" builder in
                        let _ = L.build_store init_size fstore  builder in
                        let _ = L.build_store malloced sstore builder in
-                       let _ = L.build_load new_lit "al" builder in
+                       let result = L.build_load new_lit "al" builder in
+                       let _  = L.build_store result global_variable builder in
                        StringMap.add n global_variable m
                | A.Atyp(A.Struct(ssname)) -> 
                        let struct_fields = StringMap.find ssname struct_to_elems in
