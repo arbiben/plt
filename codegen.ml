@@ -230,7 +230,7 @@ let translate ((globals, functions), structures) =
     
     (* Create a pointer to a format string for printf *)
     let int_format_str = L.build_global_stringptr "%d" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in 
+    let str_format_str = L.build_global_stringptr "%s" "fmt" builder in 
     
     let local_vars = 
         let add_formal m (t, n) p =
@@ -402,8 +402,9 @@ let translate ((globals, functions), structures) =
                      | SId i -> let s' = lookup i in
                          let find_var var = snd var = i in
                          let typ_of_i = fst (
-                             try List.find find_var fdecl.slocals
-                             with Not_found -> List.find find_var globals) in
+                             try List.find find_var fdecl.slocals with Not_found ->
+                             try List.find find_var fdecl.sformals with Not_found -> 
+                             List.find find_var globals) in
                               (match typ_of_i with A.Atyp(A.Struct(ssname)) -> 
                                  let positions = StringMap.find ssname struct_vars in
                                  let v_pos = StringMap.find v positions in

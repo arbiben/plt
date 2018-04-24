@@ -20,7 +20,7 @@ clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff toplevel scanner.ml parser.ml parser.mli
 	rm -rf custom_funcs.o
-	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe
+	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe *~ *.un~
 
 #build manually (not with ocamlbuild)
 scanner.ml : scanner.mll
