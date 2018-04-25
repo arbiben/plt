@@ -83,6 +83,7 @@ Check() {
     reffile=`echo $1 | sed 's/.fi$//'`
     basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
 
+
     echo -n "$basename..."
 
     echo 1>&2
@@ -164,9 +165,12 @@ LLIFail() {
 
 which "$LLI" >> $globallog || LLIFail
 
-if [ $# -ge 1 ]
+if [ $# -eq 1 ]
 then
-    files="tests/$@"
+    givenFile="$1"
+    filebname="$(basename $givenFile)"
+    echo "$filebname"
+    files="tests/$filebname"
 else
     files="tests/test-*.fi tests/fail-*.fi"
 fi
