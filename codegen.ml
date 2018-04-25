@@ -438,7 +438,7 @@ let translate ((globals, functions), structures) =
 
       (*call for file functions*)
       | SCall ("readFile", [e]) -> let temp = expr builder e in
-                L.build_call read_func [| temp |] "read" builder
+                L.build_call read_func [| temp |] "readFile" builder
                 
       | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
