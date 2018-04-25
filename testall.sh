@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Regression testing script for MicroC
+# Regression testing script for TopLevel 
 # Author: Stephen Edwards
 # Step through a list of files
 #  Compile, run, and check the output of each expected-to-work test
@@ -15,15 +15,15 @@ LLC="llc"
 # Path to the C compiler
 CC="cc"
 
-# Path to the microc compiler.  Usually "./microc.native"
-# Try "_build/microc.native" if ocamlbuild was unable to create a symbolic link.
+# Path to the toplevel compiler.  Usually "./toplevel.native"
+# Try "_build/toplevel.native" if ocamlbuild was unable to create a symbolic link.
 TOPLEVEL="./toplevel.native"
 
 # Set time limit for all operations
 ulimit -t 30
 
 globallog=testall.log
-rm -f $globallog
+rm -f $gltoplevelg
 error=0
 globalerror=0
 
@@ -166,7 +166,7 @@ which "$LLI" >> $globallog || LLIFail
 
 if [ $# -ge 1 ]
 then
-    files=$@
+    files="tests/$@"
 else
     files="tests/test-*.fi tests/fail-*.fi"
 fi
