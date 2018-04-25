@@ -442,7 +442,7 @@ let translate ((globals, functions), structures) =
                 
       | SCall ("writeFile", [e1 ; e2]) -> let temp1 = expr builder e1 in 
                let temp2 = expr builder e2 in                                       
-               L.build_call write_func [| temp1 ; temp2 |] "write" builder
+               L.build_call write_func [| temp1 ; temp2 |] "writeFile" builder
 
       (*call for string concatenation*)
       | SCall ("concat", [e1 ; e2]) -> let temp1 = expr builder e1 in 
