@@ -1,0 +1,60 @@
+$ this test file tests writing a string to a non-existing file, then reading a string from an existing text file, then writing this string to two different files. One in which the string in converted to lower case and one in which it is converted to upper-case. then it prints the contents of all files$
+$ Does not exist in MicroC $
+$ Expects the follwing output: 
+  
+Original File: ThiS IS A StrinG
+Lower Case File: this is a string
+Upper Case File: THIS IS A STRING
+$
+
+int main() {
+    str some_string?
+    str low_string?
+    str up_string?
+    str original_file?
+    str lc_file?
+    str uc_file?
+    str readOrigin?
+    str readLow?
+    str readUp?
+
+    some_string = "ThiS IS A StrinG"? 
+    
+    original_file = "test-rwr-original.txt"?
+    lc_file = "test-rwr-lower.txt"?
+    uc_file = "test-rwr-upper.txt"?
+ 
+    writeFile(original_file, some_string)?
+
+    readOrigin = readFile(original_file)?
+    
+    low_string = getLow(readOrigin)?
+    up_string = getUp(readOrigin)?
+
+
+    writeFile(lc_file, low_string)? 
+    writeFile(uc_file, up_string)? 
+
+    readLow = readFile(lc_file)?
+    readUp = readFile(uc_file)?
+
+    printstring("Original File: " )?
+    printstring(readOrigin)?
+
+   printstring("
+")?   
+ 
+    printstring("Lower Case File: " )?
+    printstring(readLow)?
+
+   printstring("
+")?   
+ 
+    printstring("Upper Case File: " )?
+    printstring(readUp)?
+
+
+
+    return 0?
+
+}
