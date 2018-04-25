@@ -1,0 +1,15 @@
+$ this test file tests writing an empty string into a non-existing text file $
+$ Does not exist in MicroC $
+$ Expects an output of a new file write_example.txt containing the string "Hello World! $
+
+int main() {
+    str word?
+    str filename?
+
+    word = ""? 
+    filename = "write_example.txt"?
+
+    writeFile(filename, word)?
+
+    return 0?
+}
