@@ -20,7 +20,7 @@ clean :
 	ocamlbuild -clean
 	rm -rf testall.log *.diff toplevel scanner.ml parser.ml parser.mli
 	rm -rf custom_funcs.o
-	rm -rf *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe *~ *.un~
+	rm -rf *.err *.cmx *.cmi *.cmo *.cmx *.o *.s *.ll *.out *.exe *~ *.un~
 	rm -rf tests/*.o tests/*.s tests/*.ll tests/*.exe tests/*~ tests/*.un~
 	rm -rf tests/compiled/*.o tests/compiled/*.s tests/compiled/*.ll 
 	rm -rf tests/compiled/*.exe tests/compiled/*~ tests/compiled/*.un~ tests/compiled/*.out

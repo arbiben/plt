@@ -80,12 +80,9 @@ Check() {
     error=0
     basename=`echo $1 | sed 's/.*\\///
                              s/.fi//'`
-    echo "basenam is: $basename"
     reffile=`echo $1 | sed 's/.fi$//'`
-    echo "reffile is $reffile"
     basedir="`echo $1 | sed 's/\/[^\/]*$//'`/."
-    echo "basedir is: $basedir"
-    
+
     echo -n "$basename..."
 
     echo 1>&2
@@ -96,7 +93,7 @@ Check() {
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
     Run "$TOPLEVEL" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "custom_funcs.o" "-lm" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "custom_funcs.o" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 
@@ -167,10 +164,9 @@ LLIFail() {
 
 which "$LLI" >> $globallog || LLIFail
 
-if [ $# -eq 1 ]
+if [ $# -ge 1 ]
 then
-    files="tests/$1"
-    echo "$files"
+    files=$@
 else
     files="tests/test-*.fi tests/fail-*.fi"
 fi
