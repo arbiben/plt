@@ -1,0 +1,16 @@
+$ this test file tests reading the contents of a file into an array of strings that is a  member of a struct $
+$ Does not exist in MicroC $
+
+struct boss {
+    int age?
+    bool interesting?
+    str description?
+    arr str 5 fav_colors?
+}
+
+int main (){
+    struct boss Richard?
+        Richard.fav_colors[3] = readFile("blue.txt")?
+        printstring(Richard.fav_colors[i])?
+    return 0?
+}
