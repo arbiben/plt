@@ -1,0 +1,16 @@
+$ this test file tests reading the contents of a non-existing text file $
+$ Does not exist in MicroC $
+$ Expects an error since file does not exist $ 
+
+int main() {
+    str content?
+    str filename?
+
+    filename = "read_err.txt"?
+
+    content = readFile(filename)?
+
+    printstring(content)?
+
+    return 0?
+}
