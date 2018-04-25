@@ -1,6 +1,0 @@
-$ this file tests the print function, which just prints an integer $
-
-int main() {
-    print(1)?
-    return 0?
-}

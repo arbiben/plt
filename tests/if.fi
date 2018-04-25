@@ -1,9 +1,0 @@
-$ this file tests that a simple if statement works as expected $
-$ Also tests a boolean expression evaluation $
-$ Expects an output of 1 $
-
-int main() {
-    if (T is T){
-        print(1)?
-    }
-}
