@@ -57,7 +57,7 @@ char* getLow(char *c){
     int len = strlen(c);
     char* final = (char *) malloc(len);
     int i = 0; 
-    while (i < len - 1){
+    while (i < len ){
         final[i] = tolower(c[i]); 
         i = i + 1;
     }
@@ -70,7 +70,7 @@ char* getUp(char *c){
     int len = strlen(c);
     char* final = (char *) malloc(len);
     int i = 0; 
-    while (i < len - 1){
+    while (i < len){
         final[i] = toupper(c[i]); 
         i = i + 1;
     }

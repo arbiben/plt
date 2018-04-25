@@ -169,7 +169,6 @@ if [ $# -eq 1 ]
 then
     givenFile="$1"
     filebname="$(basename $givenFile)"
-    echo "$filebname"
     files="tests/$filebname"
 else
     files="tests/test-*.fi tests/fail-*.fi"
