@@ -1,0 +1,25 @@
+$tests structs containing arrays of structs and the assignment to their struct fields$
+
+struct tree{
+arr int 20 leaves?
+str trunk?
+}
+
+struct garden{
+arr struct tree 5 treez?
+}
+
+int main(){
+struct tree love?
+struct tree love2?
+struct garden beauty?
+love.leaves = [0, 1, 2, 3]?
+love2.leaves = [4, 5, 6, 7]?
+beauty.treez = [love, love2]?
+beauty.treez[0] = beauty.treez@1?
+print(beauty.treez@0.leaves@0)?
+beauty.treez@0.trunk = "hello"?
+beauty.treez@1.leaves[0] = 9?
+print(beauty.treez@1.leaves@0)?
+return 1?
+}
