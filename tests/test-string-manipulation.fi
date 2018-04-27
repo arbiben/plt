@@ -3,7 +3,7 @@ $Not possible in microc.$
 $Expected output: APRIL is the 4th month$
 
 
-int main(){
+int main() {
 str months?
 str numbers?
 str april?
@@ -15,8 +15,9 @@ str result?
 txt1 = "IL is the "?
 txt2 = "th month"?
 
-months = "JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC"
-mumbers = "1,2,3,4,5,6,7,8,9,10,11,12"
+
+months = "JAN, FEB, MAR, APR, MAY, JUN, JUL, AUG, SEP, OCT, NOV, DEC"?
+numbers = "1,2,3,4,5,6,7,8,9,10,11,12"?
 
 april = getUp(split(months, ",", 3))?
 four = split(numbers, ",", 3)?
@@ -25,5 +26,5 @@ result = concat(concat(april, txt1), concat(four,txt2))?
 
 printstring(result)?
 
-return 0 
+return 0?
 }
