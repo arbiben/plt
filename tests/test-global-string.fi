@@ -1,26 +1,20 @@
 $ this test file tests declaring global string variables and using them across multiple functionse $
-$ Not in MicroC $
-$ Expects output of: hello world $
+$ Expects output of: hello WORLD $
 
 
 str hello?
 str world?
 
-hello = "hello"?
-world = "world"?
 
-int low() {
-    str low_hello?
-    low_hello = getLow(hello)?
-    low_hello?
-    return 0?
+
+str low() {
+    hello = getLow("HELLO ")?
+    return hello?
 }
 
-int up() {
-    str up_world?
-    up_world = getUp(world)?
-    printstring(up_world)?
-    return 0?
+str up() {
+    world = getUp("world")?
+    return world?
 }
 
 int conc() {
@@ -29,6 +23,7 @@ int conc() {
     printstring(concstr)?
     return 0?
 }
+
 
 int main() {
 
