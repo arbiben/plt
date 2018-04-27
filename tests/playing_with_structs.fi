@@ -1,0 +1,94 @@
+$ This is a demo program used to illustrate how awesome Fi is. 
+  Cool features shown:
+        structs that have arrays of structs in them
+        using direc + file structs
+        reading files
+        writing files
+        structs and arrays as args into functions
+        returning complicated struct
+        global struct variables used
+        strcmp used
+        awesome syntax: struct.array-struct.field
+        concat in action
+$
+
+
+struct file{
+    str name?
+    str content?
+    bool changeable?
+}
+
+struct direc{
+    str name?
+    arr struct file 5 files?
+    int size?
+}
+
+struct file final?
+struct direc demos?
+
+
+struct direc add_to_demos(arr struct file 4 to_add){
+    int i?
+    for (i=0? i<(demos.size - 1)? i = i + 1?){
+        
+        to_add@i.changeable = T?
+        to_add@i.content = readFile(to_add@i.name)?
+        demos.files[i] = to_add@i?
+    }
+    return demos?
+}
+
+
+str add_demos_to_final(struct direc dems){
+    int i?
+    bool is_final?
+    str tmp?
+
+    tmp = final?
+
+    for (i=0? i<dems.size? i = i + 1){
+        is_final = strcmp(dems.files@i.name, final.name)?
+        if (not is_final){
+            tmp = concat(tmp, dems.files@1.content)?
+    }
+    
+    return tmp?
+}
+$
+
+int main(){
+    struct file tomer?
+    struct file ori?
+    struct file geffen?
+    struct file ben?
+    arr struct file 4 to_add?
+    
+    tomer.name = "tomer"?
+    ori.name = "ori"?
+    geffen.name = "geffen"?
+    ben.name = "ben"?
+
+    to_add[0] = tomer?
+    to_add[1] = ori?
+    to_add[2] = geffen?
+    to_add[3] = ben?
+
+    final.name = "final"?
+    final.changeable = T?
+    
+    demos.name = "demos"?
+    demos.size = 5?
+        
+    demos = add_to_demos(to_add)?
+
+    demos.files[5] = final?
+    
+    final.content = add_demos_to_final(demos)?
+
+    writeFile(final.name, final.content)?   
+    printstring(final.content)?
+}
+
+
