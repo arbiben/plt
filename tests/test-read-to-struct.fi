@@ -10,7 +10,7 @@ struct boss {
 int main (){
     struct boss Richard?
 
-    Richard.description = readFile(about_Richard.txt)?
+    Richard.description = readFile("tests/txts/about_Richard.txt")?
     
     printstring(Richard.description)?
     return 0?
