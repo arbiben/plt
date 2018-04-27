@@ -76,9 +76,6 @@ char* getUp(char *c){
         i = i + 1;
     }
     final[i] = c[i];
-    if(strcmp("hello", "word") == 0){
-        printf("1");
-    }
     return final;
 }
 

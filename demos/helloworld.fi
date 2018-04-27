@@ -2,14 +2,14 @@ $ This is a demo program used to illustrate how awesome Fi is.
   Cool features shown:
         structs that have arrays of structs in them
         using direc + file structs
-        reading files
-        writing files
+        reading multiple files
+        writing files that don't exist
         structs and arrays as args into functions
         returning complicated struct
         global struct variables used
-        strcmp used
         awesome syntax: struct.array-struct.field
         concat in action
+        strcmp in action
 $
 
 
@@ -50,7 +50,7 @@ str add_demos_to_final(struct direc dems){
     is_final = 0?
     for (i=0? i<(dems.size)? i = i + 1){
         is_final = strcmp(dems.files@i.name, final.name)?
-        if (is_final > 0){
+        if (not(is_final is 0)){
             tmp = concat(tmp, dems.files@i.content)?
         }
     }

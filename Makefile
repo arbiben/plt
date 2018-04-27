@@ -24,6 +24,7 @@ clean :
 	rm -rf tests/*.o tests/*.s tests/*.ll tests/*.exe tests/*~ tests/*.un~
 	rm -rf tests/compiled/*.o tests/compiled/*.s tests/compiled/*.ll 
 	rm -rf tests/compiled/*.exe tests/compiled/*~ tests/compiled/*.un~ tests/compiled/*.out
+	rm -rf demos/*.s demos/*.exe demos/*.out
 
 #build manually (not with ocamlbuild)
 scanner.ml : scanner.mll
