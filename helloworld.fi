@@ -84,10 +84,10 @@ int main(){
         
     demos = add_to_demos(to_add)?
 
-    demos.files[5] = final?
-    
+    demos.files[4] = final?
+    $
     final.content = add_demos_to_final(demos)?
-
+$
     writeFile(final.name, final.content)?   
     printstring(final.content)?
 }
