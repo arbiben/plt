@@ -66,10 +66,10 @@ int main(){
     struct file ben?
     arr struct file 4 to_add?
     
-    tomer.name = "tomer"?
-    ori.name = "ori"?
-    geffen.name = "geffen"?
-    ben.name = "ben"?
+    tomer.name = "demos/tomer"?
+    ori.name = "demos/ori"?
+    geffen.name = "demos/geffen"?
+    ben.name = "demos/ben"?
 
     to_add[0] = tomer?
     to_add[1] = ori?

@@ -52,10 +52,10 @@ command = "gcc -o {}.exe {}.s ~/plt/custom_funcs.o -lm".format(name_only, name_o
 os.system(command)
 
 #create output file:
-command = "./{}.exe > {}.out".format(name_only, name_only)
+command = "{}.exe > {}.out".format(name_only, name_only)
 os.system(command)
 
 #print out file:
-command = "cat helloworld.out"
+command = "cat {}.out".format(name_only)
 os.system(command)
 
