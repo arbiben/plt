@@ -1,0 +1,25 @@
+$structs of structs can be created but not assigned to$
+
+struct baby{
+int age?
+arr int 6 years?
+}
+
+struct event{
+struct baby babe?
+int number?
+}
+
+struct baby pardes?
+int main(){
+struct event party?
+pardes.age = 5?
+party.babe = pardes?
+print(party.babe.age)?
+party.babe.age = 6? $uncommenting this list will cause failure$
+return 1?
+}
+
+
+
+
