@@ -10,7 +10,7 @@ struct boss {
 
 int main (){
     struct boss Richard?
-        Richard.fav_colors[3] = readFile("blue.txt")?
-        printstring(Richard.fav_colors[i])?
+        Richard.fav_colors[3] = readFile("tests/txts/blue.txt")?
+        printstring(Richard.fav_colors@3)?
     return 0?
 }
