@@ -1,0 +1,60 @@
+$ This is a demo program used to illustrate how awesome Fi is. 
+  Cool features shown:
+        
+        reading a file
+        writing to an existing file and overwriting it
+        splitting a file on a delimiter multiple times
+        concatenating two split files
+        global array variable used
+        passing arrays into functions
+        returning arrays
+        one array assigned to another
+$
+
+struct file{
+    str name?
+    str content?
+    bool changeable?
+}
+
+arr str 10 to_concat?
+
+arr str 10 split_on_semi(str og, arr str 10 buffers){
+    buffers[1] = split(og, ";", 0)?
+    buffers[2] = split(og, ";", 1)?
+    buffers[3] = readFile("demos/troll_richard.txt")?
+    buffers[4] = split(og, ";", 2)?
+    return buffers?
+}
+
+str merge_concat_strs(){
+    int i?
+    str tmp?
+    tmp = to_concat@0?
+    for (i=1? i<5? i = i + 1){
+        tmp = concat(tmp, to_concat@i)?
+    }
+    return tmp?
+}
+
+int main(){
+    arr str 10 tmp_concating?
+    struct file original?
+    int i?
+    
+    for (i=0? i<10? i = i + 1){
+        tmp_concating[i] = "trollin! "?
+    }
+    
+    original.name = "demos/about_Richard.txt"?
+    original.content = readFile(original.name)?
+    
+    to_concat = split_on_semi(original.content, tmp_concating)?
+
+    original.content = merge_concat_strs()?
+
+    writeFile(original.name, original.content)?
+    printstring(original.content)? 
+}
+
+
