@@ -27,6 +27,7 @@ char* readFile(char * in_file_name) {
   fseek(fp, 0, SEEK_SET);
   fread(buffer, len + 1, sizeof(char), fp);
   fclose(fp);
+  buffer[sizeof(char) * (len)] = '\0';
   return buffer;
 }
 

@@ -8,26 +8,29 @@ $
 
 
 
-int i?
-str tmp?
-arr str 5 files?
-files[0] = "file1.txt"?
-files[1] = "file2.txt"?
-files[2] = "file3.txt"?
-files[3] = "file4.txt"?
-files[4] = "file5.txt"?
-files[5] = "file6.txt"?
-files[6] = "file7.txt"?
-files[7] = "file8.txt"?
-files[8] = "file9.txt"?
-files[9] = "file10.txt"?
-
-
 int main(){
-
-for(i = 0; i<10;i++)
-{
-    tmp = readFile(files@i)?
-    printstring(tmp)?
-    printstring(" ")?
+    int i?
+    str tmp?
+    arr str 10 files?
+    str dir?
+    str content?
+    dir = "tests/txts/"?
+    files[0] = "file1.txt"?
+    files[1] = "file2.txt"?
+    files[2] = "file3.txt"?
+    files[3] = "file4.txt"?
+    files[4] = "file5.txt"?
+    files[5] = "file6.txt"?
+    files[6] = "file7.txt"?
+    files[7] = "file8.txt"?
+    files[8] = "file9.txt"?
+    files[9] = "file10.txt"?
+    
+    for(i=0?i<10?i = i+1)
+    {
+        tmp = concat(dir,files@i)? 
+        content = readFile(tmp)?
+        printstring(content)?
+    }
+    return 0?
 }
