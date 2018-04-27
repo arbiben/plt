@@ -31,6 +31,6 @@ int main(){
         tmp = concat(dir,files@i)? 
         content = readFile(tmp)?
         printstring(content)?
-    }
+    
     return 0?
 }
