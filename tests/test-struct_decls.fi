@@ -1,0 +1,41 @@
+$tests passing structs into functions $
+$demonstrates that structs can be declared globally or locally$
+$as well as arrays$
+$and that global structs can be assigned in functions$
+$local structs can be passed into functions, manipulated, and returned with changes$
+
+
+struct person{
+    int age?
+    int occupation?
+    arr str 5 family?
+    str secret?
+}
+
+struct person o?
+arr str 4 bm?
+
+int main(){
+    struct person ori?
+    struct person ggg?
+    ori.age = 5?
+    bm[0] = "hello!"?
+    ggg = getOlder(ori)?
+    print(ggg.age)?
+    printstring(ggg.secret)?
+    printstring(ggg.family@0)?
+    printstring(bm@1)?
+
+}
+
+
+struct person getOlder(struct person om){
+    o.age = 7?
+    o.secret = "hi"?
+    o.family[0] = "hi"?
+    printstring(bm@0)?
+    bm[1] = "/nyo!!!/n"?
+    printstring(bm@1)?
+    return o?
+}
+
