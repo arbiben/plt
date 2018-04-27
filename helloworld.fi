@@ -47,7 +47,7 @@ str add_demos_to_final(struct direc dems){
     str tmp?
 
     tmp = final.content?
-
+    is_final = 0?
     for (i=0? i<(dems.size)? i = i + 1){
         is_final = strcmp(dems.files@i.name, final.name)?
         if (is_final is 0){
@@ -78,16 +78,17 @@ int main(){
 
     final.name = "final"?
     final.changeable = T?
-    
+    final.content = ""?
+       
     demos.name = "demos"?
     demos.size = 5?
         
     demos = add_to_demos(to_add)?
 
     demos.files[4] = final?
-    $
+    
     final.content = add_demos_to_final(demos)?
-$
+
     writeFile(final.name, final.content)?   
     printstring(final.content)?
 }
