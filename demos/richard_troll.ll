@@ -101,35 +101,50 @@ while_body:                                       ; preds = %while
   br label %while
 
 merge:                                            ; preds = %while
-  %tmp32 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
-  store i8* getelementptr inbounds ([24 x i8], [24 x i8]* @tmp.2, i32 0, i32 0), i8** %tmp32
-  %tmp33 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
-  %original34 = load %file, %file* %original
-  %tmp35 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
-  %tmp36 = load i8*, i8** %tmp35
-  %readFile = call i8* @readFile(i8* %tmp36)
-  store i8* %readFile, i8** %tmp33
-  %tmp_concating37 = load { i32, i8** }, { i32, i8** }* %arr_literal24
-  %original38 = load %file, %file* %original
-  %tmp39 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
-  %tmp40 = load i8*, i8** %tmp39
-  %split_on_semi_result = call { i32, i8** } @split_on_semi(i8* %tmp40, { i32, i8** } %tmp_concating37)
+  %tmp32 = getelementptr inbounds %file, %file* %original, i32 0, i32 2
+  store i1 true, i1* %tmp32
+  %tmp33 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
+  store i8* getelementptr inbounds ([24 x i8], [24 x i8]* @tmp.2, i32 0, i32 0), i8** %tmp33
+  %tmp34 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
+  %original35 = load %file, %file* %original
+  %tmp36 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
+  %tmp37 = load i8*, i8** %tmp36
+  %readFile = call i8* @readFile(i8* %tmp37)
+  store i8* %readFile, i8** %tmp34
+  %tmp_concating38 = load { i32, i8** }, { i32, i8** }* %arr_literal24
+  %original39 = load %file, %file* %original
+  %tmp40 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
+  %tmp41 = load i8*, i8** %tmp40
+  %split_on_semi_result = call { i32, i8** } @split_on_semi(i8* %tmp41, { i32, i8** } %tmp_concating38)
   store { i32, i8** } %split_on_semi_result, { i32, i8** }* @to_concat
-  %tmp41 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
+  %tmp42 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
   %merge_concat_strs_result = call i8* @merge_concat_strs()
-  store i8* %merge_concat_strs_result, i8** %tmp41
-  %original42 = load %file, %file* %original
-  %tmp43 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
-  %tmp44 = load i8*, i8** %tmp43
-  %original45 = load %file, %file* %original
-  %tmp46 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
-  %tmp47 = load i8*, i8** %tmp46
-  %writeFile = call i32 @writeFile(i8* %tmp44, i8* %tmp47)
-  %original48 = load %file, %file* %original
-  %tmp49 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
-  %tmp50 = load i8*, i8** %tmp49
-  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @fmt.1, i32 0, i32 0), i8* %tmp50)
+  store i8* %merge_concat_strs_result, i8** %tmp42
+  %original43 = load %file, %file* %original
+  %tmp44 = getelementptr inbounds %file, %file* %original, i32 0, i32 2
+  %tmp45 = load i1, i1* %tmp44
+  %tmp46 = icmp eq i1 %tmp45, true
+  br i1 %tmp46, label %then, label %else
+
+merge47:                                          ; preds = %else, %then
+  %original54 = load %file, %file* %original
+  %tmp55 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
+  %tmp56 = load i8*, i8** %tmp55
+  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @fmt.1, i32 0, i32 0), i8* %tmp56)
   ret i32 0
+
+then:                                             ; preds = %merge
+  %original48 = load %file, %file* %original
+  %tmp49 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
+  %tmp50 = load i8*, i8** %tmp49
+  %original51 = load %file, %file* %original
+  %tmp52 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
+  %tmp53 = load i8*, i8** %tmp52
+  %writeFile = call i32 @writeFile(i8* %tmp50, i8* %tmp53)
+  br label %merge47
+
+else:                                             ; preds = %merge
+  br label %merge47
 }
 
 define i8* @merge_concat_strs() {

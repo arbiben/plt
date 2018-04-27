@@ -46,14 +46,16 @@ int main(){
         tmp_concating[i] = "trollin! "?
     }
     
+    original.changeable = T? 
     original.name = "demos/about_Richard.txt"?
     original.content = readFile(original.name)?
     
     to_concat = split_on_semi(original.content, tmp_concating)?
 
     original.content = merge_concat_strs()?
-
-    writeFile(original.name, original.content)?
+    if (original.changeable is T){
+        writeFile(original.name, original.content)?
+    }
     printstring(original.content)? 
 }
 

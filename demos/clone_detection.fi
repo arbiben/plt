@@ -1,0 +1,83 @@
+$ This is a demo program used to illustrate how awesome Fi is. 
+  Cool features shown:
+        
+        reading files
+        using strlen 
+        using strcmp
+        using concat
+        using a to-lowercase function- get_low
+        global str variable used
+        passing file structs into functions
+        assigning from a struct into another variable
+$
+
+struct file{
+    str name?
+    str content?
+    bool changeable?
+}
+
+str original?
+
+bool check_clone(struct file tocheck){
+    str tmp?
+ 
+    tocheck.content = readFile(tocheck.name)?
+    tmp = concat("for file: ", tocheck.name)?
+    printstring(tmp)?
+
+    tmp = "string length comparison: "?
+    
+    if( strlen(tocheck.content) is strlen(original)){
+        tmp = concat(tmp,"they have the same length! ")?
+        printstring(tmp)?
+    }
+    else{
+        tmp = concat(tmp, "they don't have the same length. Not clones!")?
+        printstring(tmp)?
+        return F?
+    }
+   
+    if (strcmp(getLow(original), getLow(tocheck.content)) is 0){
+        printstring("they are clones! here is their content: ")?
+        printstring(original)?
+        return T?
+    }
+    else{
+        printstring("their content differs. Can you spot the dif?")?
+        printstring(original)?
+        printstring(tocheck.content)?
+        return F?
+    }
+}
+
+int main(){
+    struct file og?
+    struct file tocheck1?
+    struct file tocheck2?
+    struct file tocheck3?
+    str tmp?
+
+    og.name = "demos/rick.txt"?
+    tocheck1.name = "demos/clone.txt"?
+    tocheck2.name = "demos/notclone.txt"?
+    tocheck3.name = "demos/notclone2.txt"?
+
+    og.content = readFile(og.name)?
+    original = og.content?
+
+
+    printstring("")?
+    tmp = concat("checking clones for original file: ", og.name)?
+    printstring(tmp)?
+    printstring("")?
+
+    check_clone(tocheck1)?
+    printstring("")?
+    check_clone(tocheck2)?
+    printstring("")?
+    check_clone(tocheck3)?
+    printstring("")?
+}
+
+
