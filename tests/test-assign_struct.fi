@@ -9,7 +9,6 @@ struct boss {
 
 int main (){
     struct boss Richard?
-
     Richard.interesting = F?
     return 0?
 }
