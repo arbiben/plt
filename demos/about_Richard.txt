@@ -1,9 +1,9 @@
+
 Richard Townsend is a 5th year PhD student at Columbia University studying
 Programming Languages and Compilers under Stephen A. Edwards and Martha A.
 Kim;
 His research focuses on the use of functional languages and high-level
 optimizations to translate recursive algorithms with irregular memory access
 patterns into efficient hardware designs;
-This work revolves around his
-research group's current project: an optimizing Haskell-to-SystemVerilog
+This work revolves around his research group's current project: an optimizing Haskell-to-SystemVerilog
 compiler.

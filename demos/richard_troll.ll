@@ -6,17 +6,20 @@
 @0 = global [1 x i8] zeroinitializer
 @fmt = private unnamed_addr constant [3 x i8] c"%d\00"
 @fmt.1 = private unnamed_addr constant [3 x i8] c"%s\00"
+@fmt.2 = private unnamed_addr constant [4 x i8] c"%s\0A\00"
 @1 = global [1 x i8] zeroinitializer
 @tmp = private unnamed_addr constant [10 x i8] c"trollin! \00"
-@tmp.2 = private unnamed_addr constant [24 x i8] c"demos/about_Richard.txt\00"
-@fmt.3 = private unnamed_addr constant [3 x i8] c"%d\00"
-@fmt.4 = private unnamed_addr constant [3 x i8] c"%s\00"
-@fmt.5 = private unnamed_addr constant [3 x i8] c"%d\00"
-@fmt.6 = private unnamed_addr constant [3 x i8] c"%s\00"
-@tmp.7 = private unnamed_addr constant [2 x i8] c";\00"
-@tmp.8 = private unnamed_addr constant [2 x i8] c";\00"
-@tmp.9 = private unnamed_addr constant [24 x i8] c"demos/troll_richard.txt\00"
+@tmp.3 = private unnamed_addr constant [24 x i8] c"demos/about_Richard.txt\00"
+@fmt.4 = private unnamed_addr constant [3 x i8] c"%d\00"
+@fmt.5 = private unnamed_addr constant [3 x i8] c"%s\00"
+@fmt.6 = private unnamed_addr constant [4 x i8] c"%s\0A\00"
+@fmt.7 = private unnamed_addr constant [3 x i8] c"%d\00"
+@fmt.8 = private unnamed_addr constant [3 x i8] c"%s\00"
+@fmt.9 = private unnamed_addr constant [4 x i8] c"%s\0A\00"
 @tmp.10 = private unnamed_addr constant [2 x i8] c";\00"
+@tmp.11 = private unnamed_addr constant [2 x i8] c";\00"
+@tmp.12 = private unnamed_addr constant [24 x i8] c"demos/troll_richard.txt\00"
+@tmp.13 = private unnamed_addr constant [2 x i8] c";\00"
 
 define i32 @main() {
 entry:
@@ -104,7 +107,7 @@ merge:                                            ; preds = %while
   %tmp32 = getelementptr inbounds %file, %file* %original, i32 0, i32 2
   store i1 true, i1* %tmp32
   %tmp33 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
-  store i8* getelementptr inbounds ([24 x i8], [24 x i8]* @tmp.2, i32 0, i32 0), i8** %tmp33
+  store i8* getelementptr inbounds ([24 x i8], [24 x i8]* @tmp.3, i32 0, i32 0), i8** %tmp33
   %tmp34 = getelementptr inbounds %file, %file* %original, i32 0, i32 1
   %original35 = load %file, %file* %original
   %tmp36 = getelementptr inbounds %file, %file* %original, i32 0, i32 0
@@ -190,24 +193,24 @@ entry:
   %buffers2 = alloca { i32, i8** }
   store { i32, i8** } %buffers, { i32, i8** }* %buffers2
   %og3 = load i8*, i8** %og1
-  %split = call i8* @split(i8* %og3, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @tmp.7, i32 0, i32 0), i32 0)
+  %split = call i8* @split(i8* %og3, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @tmp.10, i32 0, i32 0), i32 0)
   %buffers4 = load { i32, i8** }, { i32, i8** }* %buffers2
   %eptr = extractvalue { i32, i8** } %buffers4, 1
   %ev = getelementptr i8*, i8** %eptr, i32 1
   store i8* %split, i8** %ev
   %og5 = load i8*, i8** %og1
-  %split6 = call i8* @split(i8* %og5, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @tmp.8, i32 0, i32 0), i32 1)
+  %split6 = call i8* @split(i8* %og5, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @tmp.11, i32 0, i32 0), i32 1)
   %buffers7 = load { i32, i8** }, { i32, i8** }* %buffers2
   %eptr8 = extractvalue { i32, i8** } %buffers7, 1
   %ev9 = getelementptr i8*, i8** %eptr8, i32 2
   store i8* %split6, i8** %ev9
-  %readFile = call i8* @readFile(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @tmp.9, i32 0, i32 0))
+  %readFile = call i8* @readFile(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @tmp.12, i32 0, i32 0))
   %buffers10 = load { i32, i8** }, { i32, i8** }* %buffers2
   %eptr11 = extractvalue { i32, i8** } %buffers10, 1
   %ev12 = getelementptr i8*, i8** %eptr11, i32 3
   store i8* %readFile, i8** %ev12
   %og13 = load i8*, i8** %og1
-  %split14 = call i8* @split(i8* %og13, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @tmp.10, i32 0, i32 0), i32 2)
+  %split14 = call i8* @split(i8* %og13, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @tmp.13, i32 0, i32 0), i32 2)
   %buffers15 = load { i32, i8** }, { i32, i8** }* %buffers2
   %eptr16 = extractvalue { i32, i8** } %buffers15, 1
   %ev17 = getelementptr i8*, i8** %eptr16, i32 4

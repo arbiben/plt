@@ -76,7 +76,7 @@ int main(){
     to_add[2] = geffen?
     to_add[3] = ben?
 
-    final.name = "final"?
+    final.name = "demos/final"?
     final.changeable = T?
     final.content = ""?
        
