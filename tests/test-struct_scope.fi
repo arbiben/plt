@@ -1,5 +1,6 @@
-#testing creation of global and local structs
-#and the in-function assignment of their fields 
+$testing creation of global and local structs
+and the in-function assignment of their fields $
+
 struct baby {
 int age?
 str current_status?
@@ -16,15 +17,15 @@ struct gentlebabe boos?
 
 int main(){
 
-struct baby geffen?
-geffen.age = 5?
-ben.age = 3?
-boos.babies = [ben]?
-boos.babies@0.age = 3?
-printstring("expecting 5")?
-print(geffen.age)?
-printstring("expecting 3")?
-print(boos.babies@0.age)?
+    struct baby geffen?
+    geffen.age = 5?
+    ben.age = 3?
+    boos.babies = [ben]?
+    boos.babies@0.age = 3?
+    printstring("expecting 5")?
+    print(geffen.age)?
+    printstring("expecting 3")?
+    print(boos.babies@0.age)?
 
 return 1?
 }

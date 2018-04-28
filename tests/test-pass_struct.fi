@@ -1,3 +1,8 @@
+$ testing passing a struct and returning it changed
+  expecting output of "huberman5"
+$
+
+
 struct baby{
 int age?
 str last_name?
@@ -13,10 +18,10 @@ int main(){
 struct baby geffen?
 struct baby gadalti_bshana?
 geffen.age = 5?
-$geffen.last_name = "huberman"?
+geffen.last_name = "huberman"?
 printstring(geffen.last_name)?
 gadalti_bshana = birthday(geffen)?
-print(gadalti_bshana.age)?$
+print(gadalti_bshana.age)?
 }
 
 

@@ -1,6 +1,6 @@
 $ this test file tests writing an empty string into a non-existing text file $
 $ Does not exist in MicroC $
-$ Expects an output of a new file write_example.txt containing the string "Hello World! $
+$ Expects an output of an empty new file write_example.txt$
 
 int main() {
     str word?
