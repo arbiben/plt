@@ -1,3 +1,6 @@
+$ testing global variable of a struct
+does not output anything $
+
 struct baby {
 int age?
 str current_status?
