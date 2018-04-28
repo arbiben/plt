@@ -229,8 +229,8 @@ let translate ((globals, functions), structures) =
     let builder = L.builder_at_end context (L.entry_block the_function) in
     
     (* Create a pointer to a format string for printf *)
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in 
+    let int_format_str = L.build_global_stringptr "%d" "fmt" builder in
+    let str_format_str = L.build_global_stringptr "%s" "fmt" builder in 
     
     let local_vars = 
         let add_formal m (t, n) p =
