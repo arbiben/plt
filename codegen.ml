@@ -231,6 +231,7 @@ let translate ((globals, functions), structures) =
     (* Create a pointer to a format string for printf *)
     let int_format_str = L.build_global_stringptr "%d" "fmt" builder in
     let str_format_str = L.build_global_stringptr "%s" "fmt" builder in 
+    let line_format_str = L.build_global_stringptr "%s\n" "fmt" builder in 
     
     let local_vars = 
         let add_formal m (t, n) p =
@@ -434,6 +435,10 @@ let translate ((globals, functions), structures) =
 
       | SCall ("printstring", [e]) ->  
                         L.build_call printf_func [| str_format_str ; (expr builder e) |] 
+                                "printf" builder
+
+      | SCall ("printline", [e]) ->  
+                        L.build_call printf_func [| line_format_str ; (expr builder e) |] 
                                 "printf" builder
 
       (*call for file functions*)

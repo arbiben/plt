@@ -110,7 +110,8 @@ let check (g_f, structs) =
 
     let built_in_decls = 
     List.fold_left add_bind_ints StringMap.empty [ ("print", Atyp(Int));
-                                                 ("printstring", Atyp(Str)) ] in
+                                                 ("printstring", Atyp(Str)); 
+                                                 ("printline", Atyp(Str)) ] in
     let built_in_decls = List.fold_left add_bind_read built_in_decls 
         [("readFile", Atyp(Str))] in
     let built_in_decls = List.fold_left add_bind_write built_in_decls 

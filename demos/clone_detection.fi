@@ -24,29 +24,29 @@ bool check_clone(struct file tocheck){
  
     tocheck.content = readFile(tocheck.name)?
     tmp = concat("for file: ", tocheck.name)?
-    printstring(tmp)?
+    printline(tmp)?
 
     tmp = "string length comparison: "?
     
     if( strlen(tocheck.content) is strlen(original)){
         tmp = concat(tmp,"they have the same length! ")?
-        printstring(tmp)?
+        printline(tmp)?
     }
     else{
         tmp = concat(tmp, "they don't have the same length. Not clones!")?
-        printstring(tmp)?
+        printline(tmp)?
         return F?
     }
    
     if (strcmp(getLow(original), getLow(tocheck.content)) is 0){
-        printstring("they are clones! here is their content: ")?
-        printstring(original)?
+        printline("they are clones! here is their content: ")?
+        printline(original)?
         return T?
     }
     else{
-        printstring("their content differs. Can you spot the dif?")?
-        printstring(original)?
-        printstring(tocheck.content)?
+        printline("their content differs. Can you spot the dif?")?
+        printline(original)?
+        printline(tocheck.content)?
         return F?
     }
 }
@@ -67,17 +67,16 @@ int main(){
     original = og.content?
 
 
-    printstring("")?
+    printline("")?
     tmp = concat("checking clones for original file: ", og.name)?
-    printstring(tmp)?
-    printstring("")?
+    printline(tmp)?
+    printline("")?
 
     check_clone(tocheck1)?
-    printstring("")?
+    printline("")?
     check_clone(tocheck2)?
-    printstring("")?
+    printline("")?
     check_clone(tocheck3)?
-    printstring("")?
+    printline("")?
 }
-
 
