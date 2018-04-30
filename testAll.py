@@ -24,7 +24,7 @@ def comp(filename):
     os.system(command)
     
     #create exe file:
-    command = "cc -o {}/compiled/{}.exe {}/compiled/{}.s".format(dirname,filename,dirname,filename)
+    command = "cc -o {}/compiled/{}.exe {}/compiled/{}.s custom_funcs.o".format(dirname,filename,dirname,filename)
     print(command)
     os.system(command)
 
