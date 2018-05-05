@@ -1,0 +1,26 @@
+struct person{
+str name?
+int age?
+arr struct person 3 besties?
+}
+
+int main(){
+arr struct person 5 people?
+
+struct person ben?
+struct person benji?
+struct person benjamin?
+struct person benhor?
+struct person benathon?
+
+people = [ben, benji, benjamin, benhor, benathon]?
+people@0.name = "ben"?
+ben.age = 1?
+benji.name = "benji"?
+benji.age = 5?
+
+printstring(people@0.name)?
+
+people@0.besties[0] = people@1?
+
+}
