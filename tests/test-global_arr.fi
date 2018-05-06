@@ -1,0 +1,8 @@
+arr int 10 a?
+
+int main(){
+
+a[0] = 12?
+print(a@0)?
+
+}
