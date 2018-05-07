@@ -20,7 +20,7 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
 
 ### Automatically Compiling our compiler and executing the compiler using a script
         - To run the compiler automatically on all of our tests:
-                1. Run 'make', which compiles the compiler, and produces a .native file
+                1. Run `make`, which compiles the compiler, and produces a .native file
                 2. Run './testall.sh', and you should see the validation for each test by seeing an 'ok'
                    What this does: For each file in our tests folder, this script then:
                         - runs an automatic process which produces an ll file, links the code, and executes the executable
