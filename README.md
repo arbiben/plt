@@ -25,7 +25,7 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
                    What this does: For each file in our tests folder, this script then:
                         - runs an automatic process which produces an ll file, links the code, and executes the executable
                         - validates the output against a gold standard and confirms the results are the same
-        - To run the compiler automatically against one specific test, run 'python testAll.py <filename>'
+        - To run the compiler automatically against one specific test, run 'python run_fi.py <filename>'
                 - This does all of the above, just only on one specific file and does not validate the output
                 - However, it will show the compilation steps and the output of your program
 
@@ -42,7 +42,8 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
                 Note: <yourfilename> represents the location + name of your file. For example,
                       if your .fi file is in fi/tests and is called test_me.fi, then <yourfilename> 
                       will be ./tests/test_me 
-        3) 'cc -o <yourfilename>.exe <yourfilename>.s' (this will link your code and produce a .exe file)
+        3) 'gcc -o <yourfilename>.exe <yourfilename>.s <absolute/relative_path_to>custom_funcs.o -lm' 
+		(this will link your code and produce a .exe file)
         4) '<yourfilename>.exe' (this will run the .exe file and produce your output)
 
 ### Descriptions for each test
