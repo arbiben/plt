@@ -59,6 +59,7 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
         *7) access_struct.fi: tests that a struct field that has been assigned to can be accessed without error, then prints a "1"
 
         Negative tests:
-        1) unop_err.fi: tests that a sematic error results when a unop operator is applied to a string, which is the wrong type
-        2) binop_err.fi: tests that a sematic error results when a binop operator is applied to a string, which is the wrong type
-        3) scope_err.fi: tests that a semantic error results when a variable is named without being declared first
+        1) fail-unop_err.fi: tests that a sematic error results when a unop operator is applied to a string, which is the wrong type
+        2) fail-binop_err.fi: tests that a sematic error results when a binop operator is applied to a string, which is the wrong type
+        3) fail-scope_err.fi: tests that a semantic error results when a variable is named without being declared first
+        4) fail-struct_strcts.fi: testing if structs of structs can be created and assigned to. result: can be created but not assigned to
