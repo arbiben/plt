@@ -1,0 +1,11 @@
+int main(){
+arr int 6 a?
+arr int 6 b?
+
+a = [1,2,3,4,5,6]?
+b = [1,2,3,4,5,6]?
+
+if (a@1 is b@1){
+printstring("a@1 is b@1!")?
+}
+}

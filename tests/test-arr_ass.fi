@@ -1,0 +1,15 @@
+int main(){
+
+arr int 6 a?
+int i?
+
+i = 0?
+while(i<6){
+a[i] = i?
+print(a@i)?
+i = i+1?
+}
+printstring(" done")?
+
+}
+

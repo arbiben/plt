@@ -20,12 +20,12 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
 
 ### Automatically Compiling our compiler and executing the compiler using a script
         - To run the compiler automatically on all of our tests:
-                1. Run 'make', which compiles the compiler, and produces a .native file
+                1. Run `make`, which compiles the compiler, and produces a .native file
                 2. Run './testall.sh', and you should see the validation for each test by seeing an 'ok'
                    What this does: For each file in our tests folder, this script then:
                         - runs an automatic process which produces an ll file, links the code, and executes the executable
                         - validates the output against a gold standard and confirms the results are the same
-        - To run the compiler automatically against one specific test, run 'python testAll.py <filename>'
+        - To run the compiler automatically against one specific test, run 'python run_fi.py <filename>'
                 - This does all of the above, just only on one specific file and does not validate the output
                 - However, it will show the compilation steps and the output of your program
 
@@ -42,7 +42,8 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
                 Note: <yourfilename> represents the location + name of your file. For example,
                       if your .fi file is in fi/tests and is called test_me.fi, then <yourfilename> 
                       will be ./tests/test_me 
-        3) 'cc -o <yourfilename>.exe <yourfilename>.s' (this will link your code and produce a .exe file)
+        3) 'gcc -o <yourfilename>.exe <yourfilename>.s <absolute/relative_path_to>custom_funcs.o -lm' 
+		(this will link your code and produce a .exe file)
         4) '<yourfilename>.exe' (this will run the .exe file and produce your output)
 
 ### Descriptions for each test
@@ -58,6 +59,7 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
         *7) access_struct.fi: tests that a struct field that has been assigned to can be accessed without error, then prints a "1"
 
         Negative tests:
-        1) unop_err.fi: tests that a sematic error results when a unop operator is applied to a string, which is the wrong type
-        2) binop_err.fi: tests that a sematic error results when a binop operator is applied to a string, which is the wrong type
-        3) scope_err.fi: tests that a semantic error results when a variable is named without being declared first
+        1) fail-unop_err.fi: tests that a sematic error results when a unop operator is applied to a string, which is the wrong type
+        2) fail-binop_err.fi: tests that a sematic error results when a binop operator is applied to a string, which is the wrong type
+        3) fail-scope_err.fi: tests that a semantic error results when a variable is named without being declared first
+        4) fail-struct_strcts.fi: testing if structs of structs can be created and assigned to. result: can be created but not assigned to
