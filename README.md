@@ -73,14 +73,13 @@ files
         14) test-pass_intarray.fi: tests passing an array of integers to a function, modifying its contents, and returns. pritns: 2should be 33
         15) test-pass_struct.fi: tests passing a struct and returning it changed; prints huberman6
         16) test-read-to-array.fi: tests reading contents of a file into an array of strings that is a member of a struct; prints blue
-        17) test-read-to-struct.fi: 
-        18) test-rwr.fi: 
-        19) test-struct-arr_structs.fi
-        20) test-struct_decls.fi
-        21) test-struct_scope.fi
-        22) test-struct_struct.fi
-        23) test-write-blank.fi
-        24) test-write.fi
+        17) test-rwr.fi: tests different string manipulations with different files; prints Original File: ThiS IS A StrinG
+Lower Case File: this is a string
+Upper Case File: THIS IS A STRING
+        18) test-struct_decls.fi: tests passings structs and arrays into functions; prints hello!/nyo!!!/n7hihi/nyo!!!/n
+        19) test-struct_scope.fi: testing creation of global and local structs and the infunction assignment of their fields; prints expecting 55expecting 33
+        20) test-write-blank.fi: tests writing an empty string into a nonexistent test file; expects an output of an empty new file write_example.txt
+        21) test-write.fi: tests writing a string into a nonexistent file; expects an output file write_example.txt containing the string "Hello World!"
   
         Negative tests:
         1) unop_err.fi: tests that a sematic error results when a unop operator is applied to a string, which is the wrong type
