@@ -58,16 +58,7 @@ This is the README for the GitHub repo of Team Fi's PLT project, Spring 2019
         7) test-access_struct.fi: tests that a struct field that has been assigned to can be accessed without error, then prints a "1"
         8) test-array_scope.fi: tests that an array can be declared globally and assigned locally, or assigned and declared locally
         9) test-assign_arr.fi: tests filling struct arrays only partially and printing their contents/default values; prints (null)2 0arrays :) 
-        10) test-for-loop-read.fi: tests looping through an array of file names, reading the contents of each and prints them out; prints Hello
-I
-am
-a
-sentence
-composed
-out
-of
-ten
-files
+        10) test-for-loop-read.fi: tests looping through an array of file names, reading the contents of each and prints them out; prints Hello I am a sentence composed out of ten files
         11) test-global-string.fi: tests declaring global string variables and using them across multiple functions; prints hello WORLD
         12) test-global_struct.fi: test declaring struct as a global variable
         13) test-helloworld.fi: the original helloworld testing file that will print helloworld
